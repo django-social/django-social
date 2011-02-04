@@ -255,11 +255,10 @@ def install_uwsgi():
     run('pip install http://projects.unbit.it/downloads/uwsgi-latest.tar.gz')
 
 
-def pip_global():
+def pip_global(upgrade=0):
     put('../requirements.pip', '/tmp/requirements.pip')
     try:
-        run('pip install -r /tmp/requirements.pip')
-        #run('pip install --upgrade -r /tmp/requirements.pip')
+        run('pip install -r /tmp/requirements.pip %s' % ('--upgrade' if upgrade else ''))
     finally:
         run('rm /tmp/requirements.pip')
 
