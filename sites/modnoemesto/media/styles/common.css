@@ -1792,7 +1792,22 @@ a.fancy-image+a.delete
     width: 150px;
 	text-align: right;
 }
-
+div.folder, div.aplications
+{
+	margin: 20px 10px;
+	overflow: hidden;
+}
+div.folder a, div.aplications a
+{
+	float: left;
+}
+.folder_description
+{
+	float: right;
+	width: 300px;
+	padding: 10px;
+	color: #666;
+}
 
 
 
