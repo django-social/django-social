@@ -44,15 +44,7 @@ $(document).ready(function() {
 
             <li id="group"><a href="{% url user_group_list %}">Мои группы{% if user.groups_events_count %} <b>({{ user.groups_events_count }})</b>{% endif %}</a></li>
 
-            {% comment %}
-                 временно показываем урл медиафайлов только суперюзерам
-            {% endcomment %}
-            {% if request.user.is_superuser %}
                 <li id="foto"><p><a href="{% url social:static 'elib' %}">Электронная библиотека</a></p></li>
-            {% else %}    
-                <li id="foto"><p>{% comment %}<a href="{% url social:static 'elib' %}">{% endcomment %}Электронная библиотека{% comment %}</a>{% endcomment %}</p></li>
-            {% endif %}
-            
             {% endif %}
 			<br />
             {% if request.user.is_staff %}
