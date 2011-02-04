@@ -1,6 +1,7 @@
+from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import permission_required
+from django.shortcuts import redirect
 from django.views.generic.simple import direct_to_template
-from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.conf import settings
 
 from apps.utils.paginator import paginate
@@ -30,6 +31,10 @@ def log_list(request):
         query_list = LogEntry.objects.filter(**filter_data).order_by('-date')
     else:
         query_list = LogEntry.objects.order_by('-date')
+
+    if request.GET.get('clear', '') == 'yes':
+        query_list.delete()
+        return redirect('logging:log_list')
 
     query_count = len(query_list)
     objects = paginate(request, query_list, query_count, settings.LOGS_PER_PAGE)
