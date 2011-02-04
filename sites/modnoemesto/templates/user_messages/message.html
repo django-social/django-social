@@ -48,7 +48,7 @@
                     </p>
                 </div>
                 <div class="message_text_view rounded">
-                    <p>{{ msg.text }}</p>
+                    <p>{{ msg.text|linebreaks }}</p>
                 </div>
             </div>
             {% if not msg.sender == user %}
