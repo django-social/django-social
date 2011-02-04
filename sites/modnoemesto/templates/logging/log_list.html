@@ -6,7 +6,6 @@
 <link href="/media/styles/drop_down.css" type="text/css" rel="stylesheet" />
 <style>
 	.logging-filter {
-		1border: 1px solid #CCC;
 		padding: 20px 20px;
 	}
 
@@ -16,7 +15,25 @@
 
     }
 
+    .logging-filter .delete {
+		float:right;
+	}
+
 </style>
+{% endblock %}
+
+{% block js %}
+{{ block.super }}
+<script type="text/javascript">
+$(document).ready(function(){
+    $('.logging-filter .delete').click(function(e) {
+        if (confirm("Вы действительно желаете удалить текущий лог?")) {
+            return true;
+        }
+        return false;
+    });
+});
+</script>
 {% endblock %}
 
 {% block base_content %}
@@ -38,7 +55,9 @@
         <a href="{% url logging:log_list %}?level={{ level }}&logger={{ current_logger }}&message={{ current_message }}">{{ level }}</a>
         {% endifequal %}
     {% endfor %}
-    
+
+<a href="{% url logging:log_list %}?level={{ current_level }}&logger={{ current_logger }}&message={{ current_message }}&clear=yes" class="delete">{% trans "Clear Current Log" %}</a>
+
 <br />
 
 	<b>{% trans "Logger" %}:</b>

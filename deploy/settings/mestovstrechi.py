@@ -62,5 +62,3 @@ EMAIL_HOST = 'mail1.modnoemesto.ru'
 EMAIL_HOST = '10.10.10.11'
 
 ROBOKASSA_TEST_MODE = False
-
-CELERYD_LOG_TO_CONSOLE = False

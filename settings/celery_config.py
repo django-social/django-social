@@ -1,3 +1,5 @@
+import os
+os.environ["CELERY_LOADER"] = "django"
 
 CELERY_RESULT_BACKEND = "mongodb"
 
@@ -33,5 +35,3 @@ CELERY_EMAIL_TASK_CONFIG = {
     'delivery_mode' : 1, # non persistent
     'rate_limit' : '50/m', # 50 emails per minute
 }
-
-CELERYD_LOG_TO_CONSOLE = True
