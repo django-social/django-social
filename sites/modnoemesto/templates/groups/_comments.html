@@ -12,7 +12,7 @@
                     {% include 'includes/datetime.html' %}
             {% endwith %}
         </p>
-        <p>{{ msg.text }}</p>
+        <p>{{ msg.text|linebreaks }}</p>
     </div>
     {% if is_admin %}
     <div class="operation">

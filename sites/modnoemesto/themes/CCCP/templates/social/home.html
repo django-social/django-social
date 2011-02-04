@@ -127,7 +127,7 @@ $(document).ready(function() {
                 <p class="grafa">{{ profile.mobile }}</p>
                 <p class="fild" id="mobile">{% trans "Mobile" %}</p>{% endif %}
             {% if profile.website %}
-                <p class="grafa"><a href="{{ profile.website }}">{{ profile.website }}</a></p>
+                <p class="grafa"><a target="_blank" href="{{ profile.website }}">{{ profile.website }}</a></p>
                 <p class="fild" id="website">{% trans "Website" %}</p>{% endif %}
         
     </div>
@@ -147,7 +147,7 @@ $(document).ready(function() {
     <div id="anounce_info" class="about_persone transparent">
              <p>{% trans "Announce" %}</p>
          <p class="event_announce">
-             {{ profile.announce }}
+             {{ profile.announce|linebreaks }}
          </p>
     </div>
 		{% if camera %}
