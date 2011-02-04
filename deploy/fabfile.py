@@ -210,7 +210,7 @@ def install_app_server_software():
     run('apt-get --yes install python-imaging python-software-properties')
     run('apt-get --yes install python-lxml')
     run('apt-get --yes install rabbitmq-server python-mysqldb python-redis')
-    run('apt-get --yes install mplayer')
+    run('apt-get --yes install mplayer ffmpeg')
 
 
 def remove_nginx():
