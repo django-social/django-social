@@ -17,8 +17,7 @@
 
     $(function(){
         function formatTitle(title, currentArray, currentIndex, currentOpts) {
-            return '<div id="fancybox-title-inside"><span><a href="javascript:;" onclick="$.fancybox.close();">' +
-                    '<img src="/media/images/close.gif" /></a></span>' + 
+            return '<div id="fancybox-title-inside">' + 
                     '<b>' + title + '</b>'  + '<br />' +
                     $(currentArray[currentIndex]).attr('_description') + 
                     '</div>';

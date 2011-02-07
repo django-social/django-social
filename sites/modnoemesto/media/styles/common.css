@@ -1794,7 +1794,7 @@ a.fancy-image+a.delete
 }
 div.folder, div.aplications
 {
-	margin: 20px 10px;
+	margin: 20px 20px;
 	overflow: hidden;
 }
 div.folder a, div.aplications a
@@ -1804,8 +1804,8 @@ div.folder a, div.aplications a
 .folder_description
 {
 	float: right;
-	width: 300px;
-	padding: 10px;
+	width: 310px;
+	padding: 50px 10px 10px 10px;
 	color: #666;
 }
 
