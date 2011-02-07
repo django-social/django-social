@@ -97,11 +97,18 @@ def image_index(request, id=None):
                        settings.LIBRARY_IMAGES_PER_PAGE
                        )
 
+    n = objects.paginator.count
+    for i, obj in enumerate(objects.object_list):
+        if not obj.is_folder:
+            n = i
+            break
+
     return direct_to_template(request, 'media_library/image_index.html',
-                              dict(
-                                      objects=objects,
-                                      can_manage=can_manage_library(request.user),
-                                      current_folder=current_folder,
+                              dict(objects=objects,
+                                   can_manage=can_manage_library(request.user),
+                                   current_folder=current_folder,
+                                   folders=objects.object_list[:n],
+                                   files=objects.object_list[n:]
                                    )
                               )
 
@@ -185,10 +192,18 @@ def video_index(request, id=None):
                        settings.LIBRARY_VIDEO_PER_PAGE
                        )
 
+    n = objects.paginator.count
+    for i, obj in enumerate(objects.object_list):
+        if not obj.is_folder:
+            n = i
+            break
+
     return direct_to_template(request, 'media_library/video_index.html',
                               dict(objects=objects,
                                    can_manage=can_manage_library(request.user),
                                    current_folder=current_folder,
+                                   folders=objects.object_list[:n],
+                                   files=objects.object_list[n:]
                                    ))
 
 

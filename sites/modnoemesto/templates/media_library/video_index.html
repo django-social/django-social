@@ -13,7 +13,26 @@
     <script type="text/javascript" src="/media/js/flowplayer-3.1.1.min.js"></script>
     <script type="text/javascript" src="/media/js/fancyplayer.js"></script>
     <script type="text/javascript">
-	
+
+    $(function(){
+        function formatTitle(title, currentArray, currentIndex, currentOpts) {
+            return '<div id="fancybox-title-inside">' +
+                    '<b>' + title + '</b>'  + '<br />' +
+                    $(currentArray[currentIndex]).attr('_description') +
+                    '</div>';
+        }
+
+        $('a.fancy-image').fancybox({
+            'titlePosition'	: 'inside',
+            'transitionIn': 'elastic',
+            'transitionOut': 'elastic',
+            'speedIn': 600,
+            'speedOut': 200,
+            'overlayShow': true,
+            'titleFormat': formatTitle
+        });
+    });
+
 	var videopath = "";
 	var swfplayer = "/media/swf/flowplayer-3.2.5.swf";
 	
@@ -40,38 +59,36 @@
 
 <div id="content-main">
 
-{% for node in objects.object_list  %}
-
-{% if node.is_folder %}
+{% for node in folders  %}
 <div class="media_holder">
     <a class="fancy-folder" href="{% url media_library:video_index node.id %}"
        title="{{ node.name }}">
         <img src="/media/images/videofolder_min.png"
              alt="{{ node.name }}" />
-    </a><div class="title"><p><b>{{ node.name }}</b></p>
+    </a>
+    <div class="title"><p><b>{{ node.name }}</b></p>
     {% if can_manage %}
-        <a class="delete" title="{% trans 'Delete' %}" href="{% url media_library:image_folder_delete node.id %}">{% trans "Delete" %}</a></div>
-        </div>
-
+        <a class="delete" title="{% trans 'Delete' %}" href="{% url media_library:image_folder_delete node.id %}">{% trans "Delete" %}</a>
     {% endif %}
-                <div style="clear:both"></div>
-
-{% else %}
+    </div>
+</div>
+{% endfor %}
+<div style="clear:both"></div>
+{% for file in files %}
 {% with node.get_document as file %}
 <div class="media_holder">
-    <a class="fancy-image" class="video_link fancy-image" href="{% media_url file library_video_mini.flv %}">
+    <a class="video_link fancy-image" href="{% media_url file library_video_mini.flv %}">
         <img src="{% media_url file library_video_thumbnail.png %}" alt="" />
-    </a><p><b>{{ file.name }}</b></p>
+    </a>
+    <div class="title"><p><b>{{ file.name }}</b></p>
     {% if can_manage %}
         <a class="delete" title="{% trans 'Delete' %}" href="{% url media_library:video_delete id=file.id %}">{% trans "Delete" %}</a>
     {% endif %}
     </div>
+</div>
 {% endwith %}
-{% endif %}
-
 {% endfor %}
 </div>
-
 
 {% include 'includes/paginator.html' %}
 </div>    
