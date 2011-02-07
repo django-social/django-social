@@ -10,14 +10,14 @@ fi
 
 for I in {2..7}
 do
+    if [ "$WAIT" = "yes" ]
+    then
+        echo press any key for continue at as$I or ^C for interrupt
+        read
+    fi
+
     fab -R bal bal_disable_server:$I
     fab -H as$I.modnoemesto.ru $@
     fab -R bal bal_enable_server:$I
-
-    if [ "$WAIT" = "yes" ]
-    then
-        echo press any key for continue at as$(( $I + 1 )) or ^C for interrupt
-        read
-    fi
 done
 
