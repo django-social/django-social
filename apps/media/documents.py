@@ -144,8 +144,7 @@ class Tree(Document):
                 if i[0] == n.id:
                     items = i[3]
                     break
-        if node.is_folder:
-            ids = self.get_children_ids(node)
+        ids = self.get_children_ids(node) if node.is_folder else []
         items.remove(node.data)
         return [node.id] + ids
 
@@ -154,6 +153,7 @@ class Tree(Document):
 
     def get(self, id):
         def search(items, ancestors=[]):
+            print len(items), items
             for item in items:
                 node = TreeNode(item, ancestors)
                 if node.id == id:
