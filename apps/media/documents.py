@@ -94,6 +94,17 @@ class Tree(Document):
     name = StringField()
     root = DictField(default=lambda: { "data": [] })
 
+    @staticmethod
+    def sort_by_name(items):
+        folders = []
+        files = []
+        for i in items:
+            if i.is_folder:
+                folders.append(i)
+            else:
+                files.append(i)
+        return sorted(folders, key=lambda i: i.name) + sorted(files, key=lambda i: i.name)
+
     def get_data(self):
         return self.root["data"]
 
