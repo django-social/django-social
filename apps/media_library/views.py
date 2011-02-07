@@ -32,19 +32,22 @@ def redirect_by_id(url, id=None):
     return redirect(reverse(url, args=[id]) if id else url)
 
 
-def folder_add(request, library, id):
+def folder_add(request, library, template, id):
+    tree = get_library(library)
+
+    if id:
+        folder = get_document_or_404(Folder, id=id)
+        parent = tree.get(folder.id)
+        if not parent:
+            raise Http404()
+        current_folder = parent
+    else:
+        current_folder = None
+
     if request.POST:
         form = FolderEditForm(request.POST)
 
         if form.is_valid():
-            tree = get_library(library)
-
-            if id:
-                folder = get_document_or_404(Folder, id=id)
-                parent = tree.get(folder.id)
-                if not parent:
-                    raise Http404()
-
             folder = Folder(name=form.cleaned_data['name'])
             folder.save()
 
@@ -57,7 +60,7 @@ def folder_add(request, library, id):
             return
     else:
         form = FolderEditForm()
-    return direct_to_template(request, 'media_library/folder_add.html', dict( form=form ) )
+    return direct_to_template(request, template, dict( form=form, current_folder=current_folder ) )
 
 
 def folder_delete(request, library, id):
@@ -103,17 +106,20 @@ def image_index(request, id=None):
 
 @user_passes_test(can_manage_library)
 def image_add(request, id=None):
+    tree = get_library(LIBRARY_TYPE_IMAGE)
+
+    if id:
+        folder = get_document_or_404(Folder, id=id)
+        parent = tree.get(folder.id)
+        if not parent:
+            raise Http404()
+        current_folder = parent
+    else:
+        current_folder = None
+
     if request.POST:
         form = ImageAddForm(request.POST, request.FILES)
         if form.is_valid():
-            tree = get_library(LIBRARY_TYPE_IMAGE)
-
-            if id:
-                folder = get_document_or_404(Folder, id=id)
-                parent = tree.get(folder.id)
-                if not parent:
-                    raise Http404()
-
             file = form.fields['file'].save('library_image', settings.LIBRARY_IMAGE_SIZES, LIBRARY_IMAGE_RESIZE_TASK)
 
             file.name = form.cleaned_data['name']
@@ -129,12 +135,12 @@ def image_add(request, id=None):
             return redirect_by_id('media_library:image_index', id)
     else:
         form = ImageAddForm()
-    return direct_to_template(request, 'media_library/image_add.html', dict( form=form ) )
+    return direct_to_template(request, 'media_library/image_add.html', dict( form=form, current_folder=current_folder ) )
 
 
 @user_passes_test(can_manage_library)
 def image_folder_add(request, id=None):
-    response = folder_add(request, LIBRARY_TYPE_IMAGE, id)
+    response = folder_add(request, LIBRARY_TYPE_IMAGE, 'media_library/image_folder_add.html', id)
     if response is None:
         return redirect_by_id('media_library:image_index', id)
     return response
@@ -184,16 +190,21 @@ def video_index(request, id=None):
 
 @user_passes_test(can_manage_library)
 def video_add(request, id=None):
+    tree = get_library(LIBRARY_TYPE_VIDEO)
+
+    if id:
+        folder = get_document_or_404(Folder, id=id)
+        parent = tree.get(folder.id)
+        if not parent:
+            raise Http404()
+        current_folder = parent
+    else:
+        current_folder = None
+
     if request.POST:
         form = VideoAddForm(request.POST, request.FILES)
         if form.is_valid():
-            tree = get_library(LIBRARY_TYPE_VIDEO)
 
-            if id:
-                folder = get_document_or_404(Folder, id=id)
-                parent = tree.get(folder.id)
-                if not parent:
-                    raise Http404()
 
             file = form.fields['file'].save('library_video', settings.LIBRARY_VIDEO_SIZES,
                                             LIBRARY_VIDEO_RESIZE_TASK)
@@ -213,12 +224,12 @@ def video_add(request, id=None):
     else:
         form = VideoAddForm()
 
-    return direct_to_template(request, 'media_library/video_add.html', dict( form=form ) )
+    return direct_to_template(request, 'media_library/video_add.html', dict( form=form, current_folder=current_folder ) )
 
 
 @user_passes_test(can_manage_library)
 def video_folder_add(request, id=None):
-    response = folder_add(request, LIBRARY_TYPE_VIDEO, id)
+    response = folder_add(request, LIBRARY_TYPE_VIDEO, 'media_library/video_folder_add.html', id)
     if response is None:
         return redirect_by_id('media_library:video_index', id)
     return response

@@ -25,6 +25,8 @@
 <div id="filter_box">
 <h2>Видеозаписи</h2>
 
+{% include "media_library/_video_breadcrumb.html" %}
+
 {% if can_manage %}
     <div class="actions">
     <a href="{% if current_folder %}{% url media_library:video_folder_add current_folder.id %}{% else %}{% url media_library:video_folder_add %}{% endif %}">{% trans "Add folder" %}</a>
