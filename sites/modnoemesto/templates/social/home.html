@@ -116,7 +116,7 @@ $(document).ready(function() {
             {% if profile.mobile %}<dt id="mobile">{% trans "Mobile" %}</dt>
                 <dd>{{ profile.mobile }}</dd>{% endif %}
             {% if profile.website %}<dt id="website">{% trans "Website" %}</dt>
-                <dd><a href="{{ profile.website }}">{{ profile.website }}</a></dd>{% endif %}
+                <dd><a target="_blank" href="{{ profile.website }}">{{ profile.website }}</a></dd>{% endif %}
         </dl>
     </div>
     <div id="education_info" class="about_persone transparent">
@@ -133,7 +133,7 @@ $(document).ready(function() {
     <div id="anounce_info" class="about_persone transparent">
              <p>{% trans "Announce" %}</p>
          <p class="event_announce">
-             {{ profile.announce }}
+             {{ profile.announce|linebreaks }}
          </p>
     </div>
 		{% if camera %}

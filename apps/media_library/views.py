@@ -11,7 +11,7 @@ from django.core.paginator import Paginator, EmptyPage, InvalidPage
 
 from mongoengine.django.shortcuts import get_document_or_404
 
-from apps.media.documents import File, FileSet
+from apps.media.documents import File, FileSet, Tree
 
 from apps.utils.stringio import StringIO
 
@@ -24,25 +24,29 @@ from .forms import ImageAddForm, VideoAddForm
 
 from .constants import *
 
-def get_library(type):
-    assert type in (LIBRARY_TYPE_IMAGE, LIBRARY_TYPE_AUDIO, LIBRARY_TYPE_VIDEO, )
-    library, created = FileSet.objects.get_or_create(type='common_%s_library' % type)
+def get_library(name):
+    assert name in (LIBRARY_TYPE_IMAGE, LIBRARY_TYPE_AUDIO, LIBRARY_TYPE_VIDEO, )
+    library, created = Tree.objects.get_or_create(name='common_%s_library' % name)
     return library
+
 
 def can_manage_library(user):
     return user.has_perm('superuser')
 
-#@login_required
+
 def image_index(request):
-    library = get_library(LIBRARY_TYPE_IMAGE)
-    if can_manage_library(request.user):
+    tree = get_library(LIBRARY_TYPE_IMAGE)
+    can_manage = can_manage_library(request.user)
+    if can_manage:
         form = ImageAddForm()
     else:
         form = None
 
+    items = tree.get_children()
+
     objects = paginate(request,
-                       library.files,
-                       len(library.files),
+                       items,
+                       len(items),
                        settings.LIBRARY_IMAGES_PER_PAGE
                        )
 
@@ -50,7 +54,7 @@ def image_index(request):
                               dict(
                                       objects=objects,
                                       form=form,
-                                      can_manage=can_manage_library(request.user),
+                                      can_manage=can_manage,
                                    )
                               )
 
@@ -59,29 +63,30 @@ def image_add(request):
     form = ImageAddForm(request.POST, request.FILES)
 
     if form.is_valid():
-        library = get_library(LIBRARY_TYPE_IMAGE)
+        tree = get_library(LIBRARY_TYPE_IMAGE)
         file = form.fields['file'].save('library_image', settings.LIBRARY_IMAGE_SIZES, LIBRARY_IMAGE_RESIZE_TASK)
 
-        file.title = form.cleaned_data['title']
+        file.name = form.cleaned_data['name']
         file.description = form.cleaned_data['description']
         file.save()
 
-        library.add_file(file)
+        tree.add(file)
+        tree.save()
         messages.add_message(request, messages.SUCCESS, _('Image successfully added'))
-
     return redirect('media_library:image_index')
 
 
 @user_passes_test(can_manage_library)
 def image_delete(request, id):
-    library = get_library(LIBRARY_TYPE_IMAGE)
+    tree = get_library(LIBRARY_TYPE_IMAGE)
     image = get_document_or_404(File, id=id)
-    library.remove_file(image)
+    ids = tree.remove(image)
+    tree.save()
     messages.add_message(request, messages.SUCCESS, _('Image successfully removed'))
     return redirect('media_library:image_index')
 
 
-@login_required
+
 def video_index(request):
     library = get_library(LIBRARY_TYPE_VIDEO)
     if can_manage_library(request.user):
@@ -108,7 +113,7 @@ def video_add(request):
         file = form.fields['file'].save('library_video', settings.LIBRARY_VIDEO_SIZES,
                                         LIBRARY_VIDEO_RESIZE_TASK)
 
-        file.title = form.cleaned_data['title']
+        file.name = form.cleaned_data['name']
         file.description = form.cleaned_data['description']
         file.save()
 

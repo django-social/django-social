@@ -22,7 +22,7 @@ class File(Document):
     source = ReferenceField('File')
     transformation = StringField()
 
-    title = StringField()
+    name = StringField()
     description = StringField()
 
     meta = {
@@ -110,3 +110,88 @@ class FileSet(Document):
 
 
 
+class Folder(Document):
+    name = StringField()
+
+
+class Tree(Document):
+    name = StringField()
+    root = DictField(default=lambda: { "data": [] })
+
+    def get_data(self):
+        return self.root["data"]
+
+    def add(self, item, folder=None):
+        is_folder = isinstance(item, Folder)
+        data = [ item.id, item.name, is_folder ]
+        if is_folder:
+            data.append([])
+        items = self.get_data()
+        if folder:
+            node = self.get(folder.id)
+            for n in node.ancestors + [ node ]:
+                for i in items:
+                    if i[0] == n.id:
+                        items = i[3]
+                        break
+        items.append(data)
+
+    def remove(self, item):
+        items = self.get_data()
+        node = self.get(item.id)
+        for n in node.ancestors:
+            for i in items:
+                if i[0] == n.id:
+                    items = i[3]
+                    break
+        if node.is_folder:
+            ids = self.get_children_ids(node)
+        items.remove(node.data)
+        return [node.id] + ids
+
+    def clear(self):
+        self.root["data"] = []
+
+    def get(self, id):
+        def search(items, ancestors=[]):
+            for item in items:
+                node = TreeNode(item, ancestors)
+                if node.id == id:
+                    return node
+                if node.is_folder:
+                    el = search(node.children, ancestors + [node])
+                    if el:
+                        return el
+        return search(self.get_data())
+
+    def get_children_ids(self, node):
+        ids = []
+        def search(items):
+            for node in items:
+                ids.append(node.id)
+                if node.is_folder:
+                    search(node.get_children())
+        search(node.get_children())
+        return ids
+
+    def get_children(self):
+        return [TreeNode(i) for i in self.get_data()]
+
+
+class TreeNode(object):
+
+    def __init__(self, item, ancestors=[]):
+        if len(item) == 3:
+            item.append(None)
+        self.id, self.name, self.is_folder, self.children = item
+        self.ancestors = ancestors
+        self.data = item
+
+    def get_children(self):
+        return [TreeNode(i) for i in self.children]
+
+    def get_document(self):
+        if self.is_folder:
+            return Folder.objects.get(id=self.id)
+        else:
+            return File.objects.get(id=self.id)

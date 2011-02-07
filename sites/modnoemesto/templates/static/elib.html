@@ -1,0 +1,31 @@
+{% extends base_template %}
+<title>{% block title %}Модное место – видеотрансляция в сети. Модное место – видеотрансляции онлайн.{% endblock %}</title>
+{% block css %}
+{{ block.super }}
+<link href="/media/styles/page_info.css" rel="stylesheet" type="text/css" />
+
+{% endblock %}
+
+{% block content %}
+<div id="filter_box">
+    <h2>Электронная библиотека</h2>
+    <div class="folder">
+        <a href="{% url media_library:image_index %}"><img src="/media/images/photofolder.png" alt="picture" /></a>
+        <div class="folder_description">
+            Изображения
+        </div>
+    </div>
+    <div class="folder">
+        <a href="{% url media_library:video_index %}"><img src="/media/images/videofolder.png" alt="video" /></a>
+        <div class="folder_description">
+            Видео
+        </div>
+    </div>
+    <div class="folder">
+        <a href="{% url social:in_dev %}"><img src="/media/images/audiofolder.png" alt="audio" /></a>
+        <div class="folder_description">
+            Аудио
+        </div>
+    </div>
+</div>
+{% endblock %}
