@@ -88,6 +88,10 @@ def deploy_head(reinstall=False):
     revision = repo.commit('master').id
     deploy(revision, reinstall=reinstall)
 
+def remove_obsolete_versions(days=14):
+    env.user = 'appserver'
+    run("find . -maxdepth 1 -mtime +%d -type d | grep -E '[0-9a-f]{40}' | xargs rm -rf" % int(days))
+
 
 def install_keys(user='root', key_file=None):
     if key_file:
