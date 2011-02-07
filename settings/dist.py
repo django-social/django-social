@@ -214,7 +214,7 @@ SERVER_EMAIL = 'modnoemesto.ru <modnoemesto@modnoemesto.ru>'
 
 MAX_USER_MESSAGES_COUNT = 500
 
-LIBRARY_IMAGES_PER_PAGE = 2
+LIBRARY_IMAGES_PER_PAGE = 10
 
 MESSAGES_ON_PAGE = 10
 

@@ -144,8 +144,7 @@ class Tree(Document):
                 if i[0] == n.id:
                     items = i[3]
                     break
-        if node.is_folder:
-            ids = self.get_children_ids(node)
+        ids = self.get_children_ids(node) if node.is_folder else []
         items.remove(node.data)
         return [node.id] + ids
 

@@ -13,3 +13,6 @@ class ImageAddForm(PhotoForm, MediaAddForm):
 
 class VideoAddForm(VideoForm, MediaAddForm):
     pass
+
+class FolderEditForm(forms.Form):
+    name = forms.CharField(label=_("name"), required=True)

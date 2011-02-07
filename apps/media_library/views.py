@@ -1,26 +1,20 @@
 # -*- coding: utf-8 -*-
+from django.core.urlresolvers import reverse
 from apps.utils.paginator import paginate
 from django.shortcuts import redirect
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import user_passes_test
 from django.http import HttpResponse, Http404
 from django.views.generic.simple import direct_to_template
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import messages
 from django.conf import settings
-from django.core.paginator import Paginator, EmptyPage, InvalidPage
 
 from mongoengine.django.shortcuts import get_document_or_404
 
-from apps.media.documents import File, FileSet, Tree
+from apps.media.documents import File, Tree, Folder
 
-from apps.utils.stringio import StringIO
 
-from apps.media.transformations import BatchFileTransformation
-from apps.media.transformations.video import VideoThumbnail
-
-from apps.media.tasks import apply_file_transformations
-
-from .forms import ImageAddForm, VideoAddForm
+from .forms import ImageAddForm, VideoAddForm, FolderEditForm
 
 from .constants import *
 
@@ -34,15 +28,63 @@ def can_manage_library(user):
     return user.has_perm('superuser')
 
 
-def image_index(request):
-    tree = get_library(LIBRARY_TYPE_IMAGE)
-    can_manage = can_manage_library(request.user)
-    if can_manage:
-        form = ImageAddForm()
-    else:
-        form = None
+def redirect_by_id(url, id=None):
+    return redirect(reverse(url, args=[id]) if id else url)
 
-    items = tree.get_children()
+
+def folder_add(request, library, id):
+    if request.POST:
+        form = FolderEditForm(request.POST)
+
+        if form.is_valid():
+            tree = get_library(library)
+
+            if id:
+                folder = get_document_or_404(Folder, id=id)
+                parent = tree.get(folder.id)
+                if not parent:
+                    raise Http404()
+
+            folder = Folder(name=form.cleaned_data['name'])
+            folder.save()
+
+            if id:
+                tree.add(folder, parent)
+            else:
+                tree.add(folder)
+            tree.save()
+            messages.add_message(request, messages.SUCCESS, _('Folder successfully added'))
+            return
+    else:
+        form = FolderEditForm()
+    return direct_to_template(request, 'media_library/folder_add.html', dict( form=form ) )
+
+
+def folder_delete(request, library, id):
+    tree = get_library(library)
+    folder = get_document_or_404(Folder, id=id)
+    node = tree.get(folder.id)
+    if not node:
+        raise Http404()
+    ids = tree.remove(node)
+    tree.save()
+    messages.add_message(request, messages.SUCCESS, _('Folder successfully removed'))
+    return redirect('media_library:image_index')
+
+
+def image_index(request, id=None):
+    tree = get_library(LIBRARY_TYPE_IMAGE)
+    
+    if id:
+        folder = get_document_or_404(Folder, id=id)
+        parent = tree.get(folder.id)
+        if not parent:
+            raise Http404()
+        items = parent.get_children()
+        current_folder = parent
+    else:
+        items = tree.get_children()
+        current_folder = None
 
     objects = paginate(request,
                        items,
@@ -53,27 +95,54 @@ def image_index(request):
     return direct_to_template(request, 'media_library/image_index.html',
                               dict(
                                       objects=objects,
-                                      form=form,
-                                      can_manage=can_manage,
+                                      can_manage=can_manage_library(request.user),
+                                      current_folder=current_folder,
                                    )
                               )
 
+
 @user_passes_test(can_manage_library)
-def image_add(request):
-    form = ImageAddForm(request.POST, request.FILES)
+def image_add(request, id=None):
+    if request.POST:
+        form = ImageAddForm(request.POST, request.FILES)
+        if form.is_valid():
+            tree = get_library(LIBRARY_TYPE_IMAGE)
 
-    if form.is_valid():
-        tree = get_library(LIBRARY_TYPE_IMAGE)
-        file = form.fields['file'].save('library_image', settings.LIBRARY_IMAGE_SIZES, LIBRARY_IMAGE_RESIZE_TASK)
+            if id:
+                folder = get_document_or_404(Folder, id=id)
+                parent = tree.get(folder.id)
+                if not parent:
+                    raise Http404()
 
-        file.name = form.cleaned_data['name']
-        file.description = form.cleaned_data['description']
-        file.save()
+            file = form.fields['file'].save('library_image', settings.LIBRARY_IMAGE_SIZES, LIBRARY_IMAGE_RESIZE_TASK)
 
-        tree.add(file)
-        tree.save()
-        messages.add_message(request, messages.SUCCESS, _('Image successfully added'))
-    return redirect('media_library:image_index')
+            file.name = form.cleaned_data['name']
+            file.description = form.cleaned_data['description']
+            file.save()
+
+            if id:
+                tree.add(file, parent)
+            else:
+                tree.add(file)
+            tree.save()
+            messages.add_message(request, messages.SUCCESS, _('Image successfully added'))
+            return redirect_by_id('media_library:image_index', id)
+    else:
+        form = ImageAddForm()
+    return direct_to_template(request, 'media_library/image_add.html', dict( form=form ) )
+
+
+@user_passes_test(can_manage_library)
+def image_folder_add(request, id=None):
+    response = folder_add(request, LIBRARY_TYPE_IMAGE, id)
+    if response is None:
+        return redirect_by_id('media_library:image_index', id)
+    return response
+
+
+@user_passes_test(can_manage_library)
+def image_folder_delete(request, id):
+    return folder_delete(request, LIBRARY_TYPE_IMAGE, id)
 
 
 @user_passes_test(can_manage_library)
@@ -86,52 +155,89 @@ def image_delete(request, id):
     return redirect('media_library:image_index')
 
 
+def video_index(request, id=None):
+    tree = get_library(LIBRARY_TYPE_VIDEO)
 
-def video_index(request):
-    library = get_library(LIBRARY_TYPE_VIDEO)
-    if can_manage_library(request.user):
-        form = VideoAddForm()
+    if id:
+        folder = get_document_or_404(Folder, id=id)
+        parent = tree.get(folder.id)
+        if not parent:
+            raise Http404()
+        items = parent.get_children()
+        current_folder = parent
     else:
-        form = None
+        items = tree.get_children()
+        current_folder = None
 
     objects = paginate(request,
-                       library.files,
-                       len(library.files),
+                       items,
+                       len(items),
                        settings.LIBRARY_VIDEO_PER_PAGE
                        )
 
     return direct_to_template(request, 'media_library/video_index.html',
-                              dict(objects=objects,form=form,
-                                      can_manage=can_manage_library(request.user),
+                              dict(objects=objects,
+                                   can_manage=can_manage_library(request.user),
+                                   current_folder=current_folder,
                                    ))
 
+
 @user_passes_test(can_manage_library)
-def video_add(request):
-    form = VideoAddForm(request.POST, request.FILES)
-    if form.is_valid():
-        library = get_library(LIBRARY_TYPE_VIDEO)
-        file = form.fields['file'].save('library_video', settings.LIBRARY_VIDEO_SIZES,
-                                        LIBRARY_VIDEO_RESIZE_TASK)
+def video_add(request, id=None):
+    if request.POST:
+        form = VideoAddForm(request.POST, request.FILES)
+        if form.is_valid():
+            tree = get_library(LIBRARY_TYPE_VIDEO)
 
-        file.name = form.cleaned_data['name']
-        file.description = form.cleaned_data['description']
-        file.save()
+            if id:
+                folder = get_document_or_404(Folder, id=id)
+                parent = tree.get(folder.id)
+                if not parent:
+                    raise Http404()
 
-        library.add_file(file)
+            file = form.fields['file'].save('library_video', settings.LIBRARY_VIDEO_SIZES,
+                                            LIBRARY_VIDEO_RESIZE_TASK)
 
-        messages.add_message(request, messages.SUCCESS, _('Video successfully added'))
+            file.name = form.cleaned_data['name']
+            file.description = form.cleaned_data['description']
+            file.save()
+
+            if id:
+                tree.add(file, parent)
+            else:
+                tree.add(file)
+            tree.save()
+
+            messages.add_message(request, messages.SUCCESS, _('Video successfully added'))
+            return redirect_by_id('media_library:video_index', id)
     else:
-        print form.errors
+        form = VideoAddForm()
 
-    return redirect('media_library:video_index')
+    return direct_to_template(request, 'media_library/video_add.html', dict( form=form ) )
+
+
+@user_passes_test(can_manage_library)
+def video_folder_add(request, id=None):
+    response = folder_add(request, LIBRARY_TYPE_VIDEO, id)
+    if response is None:
+        return redirect_by_id('media_library:video_index', id)
+    return response
+
+
+@user_passes_test(can_manage_library)
+def video_folder_delete(request, id):
+    return folder_delete(request, LIBRARY_TYPE_VIDEO, id)
+
 
 @user_passes_test(can_manage_library)
 def video_delete(request, id):
-    library = get_library(LIBRARY_TYPE_VIDEO)
+    tree = get_library(LIBRARY_TYPE_VIDEO)
     video = get_document_or_404(File, id=id)
-    library.remove_file(video)
+    ids = tree.remove(video)
+    tree.save()
     messages.add_message(request, messages.SUCCESS, _('Video successfully removed'))
     return redirect('media_library:video_index')
+
 
 def audio_index(request):
     return HttpResponse()

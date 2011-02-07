@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-DEBUG = TEMPLATE_DEBUG = 0
+DEBUG = TEMPLATE_DEBUG = 1
 
 ADMINS = (
     ('tech', 'tech@web-mark.ru'),
@@ -31,3 +31,9 @@ DATABASES = {
 #EMAIL_BACKEND = 'apps.async_email.backends.CeleryEmailBackend'
 
 VIDEO_PROXY_SERVER_URL = 'rtmp://109.234.158.4/cam3'
+
+TASKS_ENABLED = dict(
+        AVATAR_RESIZE=1,
+        LIBRARY_VIDEO_RESIZE=1,
+)
+

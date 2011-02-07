@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load media %}
+
+{% block content %}
+<div id="filter_box">
+    <h2>Добавление папки</h2>
+
+    <form method="post">
+    <div class="filt rounded">
+    <table>
+    <tbody>
+        <tr>
+            <td class="label"><label for="id_name">Название:</label></td>
+            <td><div class="input_holder rounded"><input type="text" id="id_name" name="name"></div></td>
+        </tr>
+    </tbody>
+    </table>
+    </div>
+    <div class="but">
+    <input type="submit" value="{% trans "Add" %}"/>
+    </div>
+    </form>
+</div>    
+{% endblock %}
