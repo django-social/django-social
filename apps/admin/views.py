@@ -17,8 +17,10 @@ def statistic(request):
 
 @permission_required('statistic')
 def user_list(request):
+    users = User.objects.order_by('-date_joined')
+    users.snapshot(True)
     objects = paginate(request,
-                       User.objects.order_by('-date_joined'),
-                       User.objects.count(),
+                       users,
+                       users.count(),
                        25)
     return direct_to_template(request, 'admin/user_list.html', {'objects': objects})
