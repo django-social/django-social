@@ -38,10 +38,12 @@ $(document).ready(function(){
 
 {% block base_content %}
 {% include "_left_box_menu.html" %}
-
+<div id="filterColumn">
 <h2>{% trans "Log" %}</h2>
 <div class="logging-filter">
-    <b>{% trans "Level" %}:</b>
+<div class="filt rounded">
+<form action="{% url logging:log_list %}" method="get" style="display:inline">
+    <b>{% trans "Level" %}:</b>&nbsp;
     {% ifequal level current_level %}
     <b>{% trans "All" %}</b>
     {% else %}
@@ -58,9 +60,9 @@ $(document).ready(function(){
 
 <a href="{% url logging:log_list %}?level={{ current_level }}&logger={{ current_logger }}&message={{ current_message }}&clear=yes" class="delete">{% trans "Clear Current Log" %}</a>
 
-<br />
+<br /><br />
 
-	<b>{% trans "Logger" %}:</b>
+	<b>{% trans "Logger" %}:</b>&nbsp;
 	{% if current_logger %}
 		<a href="{% url logging:log_list %}?level={{ current_level }}&message={{ current_message }}">{% trans "All" %}</a>
 	{% else %}
@@ -76,15 +78,22 @@ $(document).ready(function(){
 		{% endifequal %}
 	{% endfor %}
 
-<br />
-    <b>{% trans "Message" %}:</b>
-    <form action="{% url logging:log_list %}" method="get" style="display:inline">
+<br /><br />
+    <div  class="somewhat"><b>{% trans "Message" %}:</b></div>
+    
+    	 <div class="input_holder rounded" style="margin-left:65px;">
         <input type="hidden" name="level" value="{{ current_level }}" />
         <input type="hidden" name="logger" value="{{ current_logger }}" />
         <input type="text" name="message" value="{{ current_message }}" />
+   		</div>
+    <div class="but">
         <input type="submit" value="{% trans 'Send' %}" />
-    </form>
+    </div>
+   
+  </div>
+   </form>
 </div>
+
 <table cellspacing="0" class="log_view">
     <thead>
         <tr>
@@ -117,5 +126,5 @@ $(document).ready(function(){
 
 {% include "includes/paginator.html" %}
 
-
+</div>
 {% endblock %}

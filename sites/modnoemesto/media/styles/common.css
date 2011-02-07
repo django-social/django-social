@@ -963,7 +963,7 @@ div.all
 }
 div.all p
 {
-    color: #bebebe;
+    color: #666;
     float: left;
     display: inline;
     padding-right: 5px;
@@ -1767,25 +1767,38 @@ a.delete
 	float: left;
 	overflow: hidden;
 	margin-right: 10px;
-	width: 245px;
+	width: 225px;
+	padding: 0px 9px 9px 10px;
 }
 a.fancy-image
 {
 	height: 98px;
-    margin: 0px 9px 9px 10px;
     overflow: hidden;
     text-align: center;
     width: 200px;
 	display: inline-block;
 	float: left;
+	margin-bottom: 5px;
 }
-a.fancy-image+a.delete
+a.fancy-folder
+{
+	overflow: hidden;
+	display: inline-block;
+	float: left;
+	width: 128px;
+	height: 128px;
+}
+	
+a.fancy-image+p+a.delete
 {
 	width: 17px;
 	overflow: hidden;
 	padding: 0px;
 	text-indent: 9999px;
-	float: right;
+}
+a.fancy-image+p
+{
+	float: left;
 }
 .label {
     font-weight: bold;
@@ -1794,7 +1807,7 @@ a.fancy-image+a.delete
 }
 div.folder, div.aplications
 {
-	margin: 20px 20px;
+	margin: 20px 15px;
 	overflow: hidden;
 }
 div.folder a, div.aplications a
@@ -1805,10 +1818,53 @@ div.folder a, div.aplications a
 {
 	float: right;
 	width: 310px;
-	padding: 50px 10px 10px 10px;
+	padding: 10px;
 	color: #666;
 }
-
-
-
-
+.padtop
+{
+	padding-top: 50px;
+}
+.somewhat
+{
+	float: left;
+	margin-right: 5px;
+	width: 60px;
+}
+.logging-filter a
+{
+	color: #fff;
+	font-weight: bold;
+}
+.but.media a
+{
+	padding: 2px 28px 5px;
+}
+.but.fold
+{
+	float: left;
+}
+.but.media
+{
+	float: right;
+}
+.actions
+{
+	overflow: hidden;
+}
+.breadcrumb
+{
+	margin-bottom: 10px;
+}
+.title
+{
+	width: 90px;
+	height: 128px;
+	text-align: center;
+	float: right;
+	
+}
+.title a.delete
+{
+	width: 50px;
+}
