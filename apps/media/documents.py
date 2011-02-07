@@ -66,6 +66,9 @@ class File(Document):
         return derivatives
 
     def get_derivative(self, transformation_name):
+        if self.transformation==transformation_name:
+            return self
+
         derivative = File.objects(source=self, transformation=transformation_name).first()
 
         if not derivative:

@@ -13,6 +13,20 @@ from .common import file_path, create_image_file, create_video_file, TextTransfo
 
 
 class FileTransformationTest(TestCase):
+
+    def test_dummy_transformation(self):
+        TRANSFORMATION_NAME = 'dummy.png'
+
+        file = create_image_file()
+        file.transformation = TRANSFORMATION_NAME
+        file.save()
+        file.reload()
+
+        derivative = file.get_derivative(TRANSFORMATION_NAME)
+
+        self.failUnless(derivative is file)
+
+
     def test_apply_transformations(self):
 
         TRANSFORMATION_NAME = 'thumbnail'
