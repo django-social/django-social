@@ -194,3 +194,6 @@ class TreeNode(object):
             return Folder.objects.get(id=self.id)
         else:
             return File.objects.get(id=self.id)
+
+    def breadcrumb(self):
+        return self.ancestors + [self]
