@@ -42,11 +42,28 @@
 <div id="filter_box">
 <h2>Фотографии</h2>
 
+{% include "media_library/_image_breadcrumb.html" %}
+
+{% if can_manage %}
+    <div class="actions">
+    <a href="{% if current_folder %}{% url media_library:image_folder_add current_folder.id %}{% else %}{% url media_library:image_folder_add %}{% endif %}">{% trans "Add folder" %}</a>
+    <a href="{% if current_folder %}{% url media_library:image_add current_folder.id %}{% else %}{% url media_library:image_add %}{% endif %}">{% trans "Add image" %}</a>
+    </div>
+{% endif %}
+
 <div id="content-main">
+
 {% for node in objects.object_list  %}
 	<div class="media_holder">
 {% if node.is_folder %}
-Folder
+    <a href="{% url media_library:image_index node.id %}"
+       title="{{ node.name }}">
+        <img src="/media/images/photofolder.png"
+             alt="{{ node.name }}" />
+    </a>
+    {% if can_manage %}
+        <a class="delete" title="{% trans 'Delete' %}" href="{% url media_library:image_folder_delete node.id %}">{% trans "Delete" %}</a>
+    {% endif %}
 {% else %}
 {% with node.get_document as file %}
     <a class="fancy-image" href="{% media_url file library_image_full.png %}"
@@ -55,7 +72,7 @@ Folder
              alt="{{ file.title }}" />
     </a>
     {% if can_manage %}
-        <a class="delete" title="удалить" href="{% url media_library:image_delete id=file.id %}">{% trans "Delete" %}</a>
+        <a class="delete" title="{% trans 'Delete' %}" href="{% url media_library:image_delete id=file.id %}">{% trans "Delete" %}</a>
     {% endif %}
 {% endwith %}
 {% endif %}
@@ -64,42 +81,5 @@ Folder
 </div>
 
 {% include "includes/paginator.html" %}
-<br />
-    {% if can_manage %}
-        <form action="{% url media_library:image_add %}" method="post" enctype="multipart/form-data">
-		<div class="filt rounded">
-        <table>
-        <tbody>
-            <tr>
-                <td class="label"><label for="id_file">Изображение:</label></td>
-                <td><input type="file" id="id_file" name="file"></td>
-            </tr>
-            <tr>
-                 <td style="height:10px"></td>
-                 <td class="empty_filt"></td>
-                 <td style="height:10px"></td>
-            </tr>
-            <tr>
-                <td class="label"><label for="id_name">Заголовок:</label></td>
-                <td><div class="input_holder rounded"><input type="text" id="id_name" name="name"></div></td>
-            </tr>
-            <tr>
-                 <td style="height:10px"></td>
-                 <td class="empty_filt"></td>
-                 <td style="height:10px"></td>
-            </tr>
-            <tr>
-                <td class="label"><label for="id_description">Описание:</label></td>
-                <td><div class="input_holder rounded"><input type="text" id="id_description" name="description"></div></td>
-            </tr>
-        </tbody>
-        </table>
-        </div>
-        <div class="but">
-        <input type="submit" value="{% trans "Add" %}"/>
-        </div>
-        </form>
-
-    {% endif %}
 </div>    
 {% endblock %}
