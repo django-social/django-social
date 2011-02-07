@@ -9,6 +9,7 @@ urlpatterns = patterns('apps.media_library.views',
    url(r'^video/$', 'video_index', name='video_index'),
    url(r'^video/(?P<id>[a-f0-9]{24})/$', 'video_index', name='video_index'),
    url(r'^video/add/$', 'video_add', name='video_add'),
+   url(r'^video/(?P<id>[a-f0-9]{24})/add/$', 'video_add', name='video_add'),
    url(r'^video/(?P<id>[a-f0-9]{24})/delete/$', 'video_delete', name='video_delete'),
 
    url(r'^video/folder/add/$', 'video_folder_add', name='video_folder_add'),
