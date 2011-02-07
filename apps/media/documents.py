@@ -153,7 +153,6 @@ class Tree(Document):
 
     def get(self, id):
         def search(items, ancestors=[]):
-            print len(items), items
             for item in items:
                 node = TreeNode(item, ancestors)
                 if node.id == id:
