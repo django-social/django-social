@@ -85,7 +85,7 @@ $(document).ready(function(){
             <td class="empty"></td>
             
             <td class="left_corner"></td>
-            <td class="menu_but"><a class="curent" href="{% url social:in_dev %}">приложения</a></td>
+            <td class="menu_but"><a class="curent" href="{% url social:static 'aplication' %}">приложения</a></td>
             <td class="right_corner"></td>
             <td class="empty"></td>
             
@@ -109,14 +109,6 @@ $(document).ready(function(){
 
         <div id="mainContent">
         
-        {% if user.is_authenticated %}<div class="marquee" style="color:#08889F; font-size: 18px; height:25px; width:970px; overflow:hidden;">
-			<div class="move" style="overflow:hidden; width:99999px;">
-				<p style="float:left; margin:0;">
-					{{ request.last_news.text }}&nbsp;
-				</p>
-			</div>
-		</div>
-        {% endif %}
 
 <div id="call_message"></div>
 

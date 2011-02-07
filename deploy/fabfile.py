@@ -210,7 +210,7 @@ def install_app_server_software():
     run('apt-get --yes install python-imaging python-software-properties')
     run('apt-get --yes install python-lxml')
     run('apt-get --yes install rabbitmq-server python-mysqldb python-redis')
-    run('apt-get --yes install mplayer')
+    run('apt-get --yes install mplayer ffmpeg')
 
 
 def remove_nginx():
@@ -255,11 +255,10 @@ def install_uwsgi():
     run('pip install http://projects.unbit.it/downloads/uwsgi-latest.tar.gz')
 
 
-def pip_global():
+def pip_global(upgrade=0):
     put('../requirements.pip', '/tmp/requirements.pip')
     try:
-        run('pip install -r /tmp/requirements.pip')
-        #run('pip install --upgrade -r /tmp/requirements.pip')
+        run('pip install -r /tmp/requirements.pip %s' % ('--upgrade' if upgrade else ''))
     finally:
         run('rm /tmp/requirements.pip')
 

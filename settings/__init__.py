@@ -2,16 +2,11 @@ import sys
 import mongoengine
 
 
-
-
-
-
 from dist import *
 try:
     from local import *
 except ImportError:
     pass
-
 
 
 # logging patches for django 1.2 series
@@ -31,19 +26,10 @@ if django.VERSION[1] < 3:
 # end logging patches for django 1.2 series
 
 
-# celery logging patches
-
-if not CELERYD_LOG_TO_CONSOLE:
-    import celery.log
-    celery.log._setup = True
-# end  celery logging patches
-
-
-
 mongoengine.connect(MONGO_DATABASE +
                     ('_test' if 'test' in sys.argv else ''),
                     host=MONGO_HOST
     )
 
-import djcelery
-djcelery.setup_loader()
+#import djcelery
+#djcelery.setup_loader()
