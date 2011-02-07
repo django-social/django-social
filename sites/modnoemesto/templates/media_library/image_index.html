@@ -65,7 +65,7 @@
     </a><div class="title"><p><b>{{ node.name }}</b></p>
     {% if can_manage %}
         <a class="delete" title="{% trans 'Delete' %}" href="{% url media_library:image_folder_delete node.id %}">{% trans "Delete" %}</a>
-    {% endif %}</div>
+    {% endif %}</div><br />
 {% else %}
 {% with node.get_document as file %}
     <a class="fancy-image" href="{% media_url file library_image_full.png %}"
