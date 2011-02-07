@@ -25,4 +25,6 @@ class Command(BaseCommand):
         for user in src_group_users:
             if not user in dst_group_users:
                 if not dst_group.add_member(user):
-                    print 'Can not add',  user
+                    print 'Can not add', user
+                else:
+                    print 'Added', user
