@@ -44,16 +44,22 @@
 <h2>Фотографии</h2>
 
 <div id="content-main">
-{% for file in objects.object_list  %}
+{% for node in objects.object_list  %}
 	<div class="media_holder">
+{% if node.is_folder %}
+Folder
+{% else %}
+{% with node.get_document as file %}
     <a class="fancy-image" href="{% media_url file library_image_full.png %}"
-       title="{{ file.title }}" _description="{{ file.description }}">
+       title="{{ file.name }}" _description="{{ file.description }}">
         <img src="{% media_url file library_image_thumbnail.png %}"
              alt="{{ file.title }}" />
     </a>
     {% if can_manage %}
         <a class="delete" title="удалить" href="{% url media_library:image_delete id=file.id %}">{% trans "Delete" %}</a>
     {% endif %}
+{% endwith %}
+{% endif %}
     </div>
 {% endfor %}
 </div>
@@ -75,8 +81,8 @@
                  <td style="height:10px"></td>
             </tr>
             <tr>
-                <td class="label"><label for="id_title">Заголовок:</label></td>
-                <td><div class="input_holder rounded"><input type="text" id="id_title" name="title"></div></td>
+                <td class="label"><label for="id_name">Заголовок:</label></td>
+                <td><div class="input_holder rounded"><input type="text" id="id_name" name="name"></div></td>
             </tr>
             <tr>
                  <td style="height:10px"></td>

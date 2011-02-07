@@ -122,7 +122,7 @@ def cam_view_notify(request, format):
     def log_debug(text):
         info = '\n'.join([
             "session_key=%s" % session_key,
-            "user_id=%s" % user.id if user else None,
+            "user_id=%s" % (user.id if user else None),
             "camera_id=%s" % camera_id,
         ])
         logger.debug('cam_view_notify %s\n%s\n%s' % (request_id, info, text))
