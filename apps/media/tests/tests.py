@@ -108,54 +108,6 @@ class FileViewTest(TestCase):
         self.failUnlessEqual(404, response.status_code)
         
 
-
-
-class FileSetTest(TestCase):
-    def test_add_file(self):
-        file_set = FileSet(type='liba')
-        file_set.save()
-
-        file = create_image_file()
-
-        file_set.add_file(file)
-        
-        self.failUnlessEqual(1, len(file_set.files))
-        file_set.save()
-
-        file_set.reload()
-        self.failUnlessEqual(1, len(file_set.files))
-
-    def test_add_file_without_save(self):
-        file_set = FileSet(type='liba')
-        file_set.save()
-
-        file = create_image_file()
-
-        file_set.add_file(file)
-        
-        self.failUnlessEqual(1, len(file_set.files))
-
-        file_set.reload()
-        self.failUnlessEqual(1, len(file_set.files))
-
-    def test_remove_file(self):
-        file_set = FileSet(type='liba')
-        file_set.save()
-
-        file1 = create_image_file()
-        file2 = create_image_file()
-
-        file_set.add_file(file1)
-        file_set.add_file(file2)
-
-        self.failUnlessEqual(2, len(file_set.files))
-
-        file_set.remove_file(file1)
-        self.failUnlessEqual(1, len(file_set.files))
-
-        file_set.reload()
-        self.failUnlessEqual(1, len(file_set.files))
-
 class VideoTest(TestCase):
     def test_validate_video(self):
         validator = VideoFileValidator()
