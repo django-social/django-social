@@ -89,6 +89,8 @@ def image_index(request, id=None):
         items = tree.get_children()
         current_folder = None
 
+    items = Tree.sort_by_name(items)
+
     objects = paginate(request,
                        items,
                        len(items),
@@ -174,6 +176,8 @@ def video_index(request, id=None):
     else:
         items = tree.get_children()
         current_folder = None
+
+    items = Tree.sort_by_name(items)
 
     objects = paginate(request,
                        items,

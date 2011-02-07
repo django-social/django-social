@@ -10,6 +10,7 @@ from django.template import loader
 
 from mongoengine.connection import _get_db
 import gridfs
+from apps.social.documents import User
 
 from ..documents import *
 
@@ -22,6 +23,7 @@ class ThemeTest(TestCase):
         Theme.objects.delete()
         ThemeFile.objects.delete()
         ThemeTemplate.objects.delete()
+        User.objects.delete()
 
     def _test_theme(self, theme):
         self.failUnless(isinstance(theme, Theme))
@@ -76,6 +78,8 @@ class ThemeTest(TestCase):
         theme = Theme.from_zip(os.path.join(os.path.dirname(__file__),
                                             'files/theme1.zip'))
         client = Client()
+        user = User.create_user(email='test1@web-mark.ru', password='123')
+        client.login(email='test1@web-mark.ru', password='123')
 
         response = client.get(reverse('themes:file_view',
                                       kwargs=dict(theme_id=theme.id,
@@ -91,6 +95,8 @@ class ThemeTest(TestCase):
         theme = Theme.from_zip(os.path.join(os.path.dirname(__file__),
                                             'files/theme1.zip'))
         client = Client()
+        user = User.create_user(email='test1@web-mark.ru', password='123')
+        client.login(email='test1@web-mark.ru', password='123')
         response = client.get(reverse('themes:file_view',
                                       kwargs=dict(theme_id=theme.id,
                                                   file_name='not_found.css')

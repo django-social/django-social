@@ -66,6 +66,9 @@ class File(Document):
         return derivatives
 
     def get_derivative(self, transformation_name):
+        if self.transformation==transformation_name:
+            return self
+
         derivative = File.objects(source=self, transformation=transformation_name).first()
 
         if not derivative:
@@ -86,30 +89,6 @@ class File(Document):
         return super(File, self).__getattribute__(item)
 
 
-class FileSet(Document):
-    author = ReferenceField('User')
-    name = StringField()
-    type = StringField(regex='^\w+$', required=True)
-    files = ListField(ReferenceField(File))
-
-    meta = {
-        'indexes': [
-                'author',
-                'type',
-        ],
-    }
-
-
-    def add_file(self, file):
-        self.files.append(file)
-        self.__class__.objects(id=self.id).update_one(push__files=file)
-
-    def remove_file(self, file):
-        self.files.remove(file)
-        self.__class__.objects(id=self.id).update_one(pull__files=file)
-
-
-
 class Folder(Document):
     name = StringField()
 
@@ -117,6 +96,17 @@ class Folder(Document):
 class Tree(Document):
     name = StringField()
     root = DictField(default=lambda: { "data": [] })
+
+    @staticmethod
+    def sort_by_name(items):
+        folders = []
+        files = []
+        for i in items:
+            if i.is_folder:
+                folders.append(i)
+            else:
+                files.append(i)
+        return sorted(folders, key=lambda i: i.name) + sorted(files, key=lambda i: i.name)
 
     def get_data(self):
         return self.root["data"]
