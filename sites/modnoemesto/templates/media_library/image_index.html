@@ -46,9 +46,11 @@
 
 {% if can_manage %}
     <div class="actions">
-    <a href="{% if current_folder %}{% url media_library:image_folder_add current_folder.id %}{% else %}{% url media_library:image_folder_add %}{% endif %}">{% trans "Add folder" %}</a>
-    <a href="{% if current_folder %}{% url media_library:image_add current_folder.id %}{% else %}{% url media_library:image_add %}{% endif %}">{% trans "Add image" %}</a>
-    </div>
+    <div class="but fold">
+    <a href="{% if current_folder %}{% url media_library:image_folder_add current_folder.id %}{% else %}{% url media_library:image_folder_add %}{% endif %}">Добавить папку</a></div>
+    <div class="but media">
+    <a href="{% if current_folder %}{% url media_library:image_add current_folder.id %}{% else %}{% url media_library:image_add %}{% endif %}">Добавить изображение</a></div>
+    </div><br />
 {% endif %}
 
 <div id="content-main">
@@ -56,14 +58,14 @@
 {% for node in objects.object_list  %}
 	<div class="media_holder">
 {% if node.is_folder %}
-    <a href="{% url media_library:image_index node.id %}"
+    <a class="fancy-folder" href="{% url media_library:image_index node.id %}"
        title="{{ node.name }}">
-        <img src="/media/images/photofolder.png"
+        <img src="/media/images/photofolder_min.png"
              alt="{{ node.name }}" />
-    </a>
+    </a><div class="title"><p><b>{{ node.name }}</b></p>
     {% if can_manage %}
         <a class="delete" title="{% trans 'Delete' %}" href="{% url media_library:image_folder_delete node.id %}">{% trans "Delete" %}</a>
-    {% endif %}
+    {% endif %}</div>
 {% else %}
 {% with node.get_document as file %}
     <a class="fancy-image" href="{% media_url file library_image_full.png %}"
@@ -71,6 +73,7 @@
         <img src="{% media_url file library_image_thumbnail.png %}"
              alt="{{ file.title }}" />
     </a>
+    <p><b>{{ file.name }}</b></p>
     {% if can_manage %}
         <a class="delete" title="{% trans 'Delete' %}" href="{% url media_library:image_delete id=file.id %}">{% trans "Delete" %}</a>
     {% endif %}
