@@ -100,7 +100,7 @@ LOGIN_EXEMPT_URLS = (
     r'^billing/camera/notify/',
     r'^srv/',
     r'^api/',
-    r'^theme/',
+    #r'^theme/', непонятно, зачем это я это сделал (возможно, в состоянии аффекта)- dgk
 )
 
 # Make this unique, and don't share it with anybody.
