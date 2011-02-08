@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load media %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="/media/js/flowplayer-3.js"></script>
+    <script type="text/javascript">
+$(document).ready(function(){
+    $f(".audio_link", "http://releases.flowplayer.org/swf/flowplayer-3.2.5.swf", {
+        plugins: {
+            controls: {
+                fullscreen: false,
+                height: 30,
+                autoHide: false
+            }
+        },
+        clip: {
+            autoPlay: false
+        }
+
+    });
+});
+    </script>
+
+{% endblock %}
+
+{% block content %}
+
+<div id="filter_box">
+<h2>Аудиозаписи</h2>
+
+{% include "media_library/_audio_breadcrumb.html" %}
+
+{% if can_manage %}
+    <div class="actions">
+    <div class="but fold">
+    <a href="{% if current_folder %}{% url media_library:audio_folder_add current_folder.id %}{% else %}{% url media_library:audio_folder_add %}{% endif %}">Добавить папку</a>
+    </div>
+    <div class="but media">
+    <a href="{% if current_folder %}{% url media_library:audio_add current_folder.id %}{% else %}{% url media_library:audio_add %}{% endif %}">Добавить аудиозапись</a>
+    </div>
+    </div><br />
+{% endif %}
+
+<div id="content-main">
+
+{% for node in folders  %}
+<div class="media_holder">
+    <a class="fancy-folder" href="{% url media_library:audio_index node.id %}"
+       title="{{ node.name }}">
+        <img src="/media/images/audiofolder_min.png"
+             alt="{{ node.name }}" />
+    </a>
+    <div class="title"><p><b>{{ node.name }}</b></p>
+    {% if can_manage %}
+        <a class="delete" title="{% trans 'Delete' %}" href="{% url media_library:image_folder_delete node.id %}">{% trans "Delete" %}</a>
+    {% endif %}
+    </div>
+</div>
+{% endfor %}
+<div style="clear:both"></div>
+{% for node in files %}
+{% with node.get_document as file %}
+<div class="media_holder">
+    <div class="audio_link" style="height:30px;" href="{% media_url file main.mp3 %}"></div>
+    {% if can_manage %}
+        <a class="delete" title="{% trans 'Delete' %}" href="{% url media_library:audio_delete id=file.id %}">{% trans "Delete" %}</a>
+    {% endif %}
+</div>
+{% endwith %}
+{% endfor %}
+</div>
+
+</div>    
+{% endblock %}
