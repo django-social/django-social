@@ -1,0 +1,52 @@
+{% extends "base_head.html" %}
+{% load media %}
+{% block css %}
+{{ block.super }}
+<link href="/media/styles/page_info.css" rel="stylesheet" type="text/css" />
+
+{% endblock %}
+
+{% block body %}
+<div id="container">
+    <div id="subContainer" style="width:100%">
+
+        <div id="header_video" style="height:30px">
+            <a id="logo" href="/" style="text-decoration: none;"><h1 style="color: white;font-style: italic;">Модное место</h1></a>
+        </div>
+        <div id="menu">
+            <table cellspacing="0px" cellpadding="0px">
+            <tr>
+
+            <td class="left_corner"></td>
+            <td class="menu_but"><a href="javascript:window.close();">закрыть</a></td>
+            <td class="right_corner"></td>
+            </tr>
+            </table>
+        </div>
+
+
+    <div id="camera_holder" style="top:35px;">
+<h3>{{ app.name }}</h3>
+{% spaceless %}
+<object width="800"
+        height="600"
+        style="position:relative; left:-5px;">
+    <embed src="{% media_url app.file main.swf %}"
+        quality="high"
+        bgcolor="#869ca7"
+        width="800"
+        height="600"
+        align="middle"
+        play="true"
+        loop="false"
+        allowScriptAccess="modnoemesto.ru"
+        type="application/x-shockwave-flash"
+        pluginspage="http://www.adobe.com/go/getflashplayer">
+    </embed>
+</object>
+{% endspaceless %}
+    </div>
+    </div>
+</div>  
+{% endblock %}
+

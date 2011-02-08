@@ -58,6 +58,18 @@ class FileViewTest(TestCase):
 
         self.assertEquals('image/png', response['Content-Type'])
 
+    def test_view_file_self(self):
+        file = create_image_file()
+        file.transformation = self.TRANSFORMATION_NAME
+        file.save()
+
+        client = self.client
+        response = client.get(reverse('media:file_view',
+                           kwargs=dict(file_id=file.id,
+                                  transformation_name=self.TRANSFORMATION_NAME)))
+
+        self.assertEquals('image/png', response['Content-Type'])
+
 
     def test_view_not_existing_file(self):
         client = self.client
