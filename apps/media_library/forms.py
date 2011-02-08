@@ -14,5 +14,8 @@ class ImageAddForm(PhotoForm, MediaAddForm):
 class VideoAddForm(VideoForm, MediaAddForm):
     pass
 
+class AudioAddForm(MediaAddForm):
+    file = forms.FileField(label=_("Audio"))
+
 class FolderEditForm(forms.Form):
     name = forms.CharField(label=_("name"), required=True)

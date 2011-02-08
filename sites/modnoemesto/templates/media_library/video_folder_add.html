@@ -5,23 +5,7 @@
 {% block content %}
 <div id="filter_box">
     <h2>Добавление папки</h2>
-
-{% include "media_library/_image_breadcrumb.html" %}
-
-    <form method="post">
-    <div class="filt rounded">
-    <table>
-    <tbody>
-        <tr>
-            <td class="label"><label for="id_name">Название:</label></td>
-            <td><div class="input_holder rounded"><input type="text" id="id_name" name="name"></div></td>
-        </tr>
-    </tbody>
-    </table>
-    </div>
-    <div class="but">
-    <input type="submit" value="{% trans "Add" %}"/>
-    </div>
-    </form>
+{% include "media_library/_video_breadcrumb.html" %}
+{% include "media_library/_folder_form.html" %}
 </div>    
 {% endblock %}

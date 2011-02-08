@@ -1,0 +1,7 @@
+<div class="breadcrumb">
+<a href="{% url media_library:audio_index %}">Аудиозаписи</a>
+{% for folder in current_folder.breadcrumb %}
+&nbsp;/&nbsp;
+<a href="{% url media_library:audio_index folder.id %}">{{ folder.name }}</a>
+{% endfor %}
+</div>

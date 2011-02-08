@@ -5,41 +5,7 @@
 {% block content %}
 <div id="filter_box">
     <h2>Добавление видеозаписи</h2>
-
 {% include "media_library/_video_breadcrumb.html" %}
-
-    <form method="post" enctype="multipart/form-data">
-    <div class="filt rounded">
-    <table>
-    <tbody>
-        <tr>
-            <td class="label"><label for="id_file">Видеозапись:</label></td>
-            <td><input type="file" id="id_file" name="file"></td>
-        </tr>
-        <tr>
-             <td style="height:10px"></td>
-             <td class="empty_filt"></td>
-             <td style="height:10px"></td>
-        </tr>
-        <tr>
-            <td class="label"><label for="id_name">Заголовок:</label></td>
-            <td><div class="input_holder rounded"><input type="text" id="id_name" name="name"></div></td>
-        </tr>
-        <tr>
-             <td style="height:10px"></td>
-             <td class="empty_filt"></td>
-             <td style="height:10px"></td>
-        </tr>
-        <tr>
-            <td class="label"><label for="id_description">Описание:</label></td>
-            <td><div class="input_holder rounded"><input type="text" id="id_description" name="description"></div></td>
-        </tr>
-    </tbody>
-    </table>
-    </div>
-    <div class="but">
-    <input type="submit" value="{% trans "Add" %}"/>
-    </div>
-    </form>
+{% include "media_library/_file_form.html" %}
 </div>    
 {% endblock %}
