@@ -49,7 +49,6 @@ def add(request):
                                                           settings.APPLICATION_IMAGE_SIZES,
                                                           'APPLICATION_IMAGE_RESIZE'
                                                           )
-
             buffer = StringIO()
             for chunk in request.FILES['file'].chunks():
                 buffer.write(chunk)
@@ -79,15 +78,13 @@ def view(request, id):
     app = get_document_or_404(Application, id=id)
     return direct_to_template(request, 'applications/view.html', dict(app=app) )
 
-'''
+@user_passes_test(can_manage_applications)
+def delete(request, id):
+    app = get_document_or_404(Application, id=id)
 
-@user_passes_test(can_manage_library)
-def image_delete(request, id):
-    tree = get_library(LIBRARY_TYPE_IMAGE)
-    image = get_document_or_404(File, id=id)
-    ids = tree.remove(image)
-    tree.save()
-    messages.add_message(request, messages.SUCCESS, _('Image successfully removed'))
-    return redirect('media_library:image_index')
+    app.delete()
 
-'''
+    messages.add_message(request, messages.SUCCESS,
+                         _('Application successfully removed'))
+
+    return redirect('applications:list')
