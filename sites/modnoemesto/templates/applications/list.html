@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load media %}
+{% load i18n %}
 {% block css %}
 {{ block.super }}
 <link href="/media/styles/page_info.css" rel="stylesheet" type="text/css" />
@@ -10,7 +11,7 @@
 {{ block.super }}
 <script type="text/javascript">
 $(document).ready(function() { 
-	var link = $(".aplications a");					   
+	var link = $(".aplications a.app_link");					   
     link.click(function (e){ 
         var width=810, height=645; 
         window.open(link.attr('href'), 'game',
@@ -28,18 +29,22 @@ $(document).ready(function() {
 
     {% for app in objects.object_list %}
         <div class="aplications">
-            <h3>{{ app.name }}</h3>
-            <a href="{% url applications:view app.id %}">
+            
+            <a class="app_link" href="{% url applications:view app.id %}">
                 <img src="{% media_url app.image application_image_full.png %}" width="160" height="120" align="left" border="0"/>
             </a>
             <div class="folder_description">
+                <b>{{ app.name }}</b><br />
                 {{ app.description }}
             </div>
+            {% if can_manage %}
+        <a class="delete" title="{% trans 'Delete' %}" href="{% url applications:delete app.id %}">{% trans "Delete" %}</a>
+    {% endif %}
         </div>
     {% endfor %}
 
     {% include 'includes/paginator.html' %}
-
+<br />
     {% if can_manage %}
 <form action="{% url applications:add %}" method="post" enctype="multipart/form-data">
 		<div class="filt rounded">
@@ -47,7 +52,7 @@ $(document).ready(function() {
         <tbody>
             <tr>
                 <td class="label"><label for="id_name">Заголовок:</label></td>
-                <td><div class="input_holder rounded"><input type="text" id="id_name" name="name"></div></td>
+                <td><div class="input_holder rounded">{{ form.name }}</div></td>
             </tr>
             <tr>
                  <td style="height:10px"></td>
@@ -56,7 +61,7 @@ $(document).ready(function() {
             </tr>
             <tr>
                 <td class="label"><label for="id_description">Описание:</label></td>
-                <td><div class="input_holder rounded"><input type="text" id="id_description" name="description"></div></td>
+                <td><div class="input_holder rounded">{{ form.description }}</div></td>
             </tr>
             <tr>
                  <td style="height:10px"></td>
@@ -65,7 +70,7 @@ $(document).ready(function() {
             </tr>
             <tr>
                 <td class="label"><label for="id_file">Приложение:</label></td>
-                <td><input type="file" id="id_file" name="file"></td>
+                <td>{{ form.file }}</td>
             </tr>
             <tr>
                  <td style="height:10px"></td>
@@ -74,7 +79,7 @@ $(document).ready(function() {
             </tr>
             <tr>
                 <td class="label"><label for="id_image">Изображение:</label></td>
-                <td><input type="file" id="id_image" name="image"></td>
+                <td>{{ form.image }}</td>
             </tr>
 
 

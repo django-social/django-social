@@ -12,6 +12,11 @@
     <div class="filt rounded">
     <table>
     <tbody>
+    	<tr>
+            <td style="height:10px"></td>
+            <td class="empty_filt"></td>
+            <td style="height:10px">{{ form.file.errors }}</td>
+        </tr>
         <tr>
             <td class="label"><label for="id_file">Изображение:</label></td>
             <td><input type="file" id="id_file" name="file"></td>
@@ -22,6 +27,11 @@
              <td style="height:10px"></td>
         </tr>
         <tr>
+        <tr>
+            <td style="height:10px"></td>
+            <td class="empty_filt"></td>
+            <td style="height:10px">{{ form.name.errors }}</td>
+        </tr>
             <td class="label"><label for="id_name">Заголовок:</label></td>
             <td><div class="input_holder rounded"><input type="text" id="id_name" name="name"></div></td>
         </tr>
@@ -29,6 +39,11 @@
              <td style="height:10px"></td>
              <td class="empty_filt"></td>
              <td style="height:10px"></td>
+        </tr>
+        <tr>
+            <td style="height:10px"></td>
+            <td class="empty_filt"></td>
+            <td style="height:10px">{{ form.description.errors }}</td>
         </tr>
         <tr>
             <td class="label"><label for="id_description">Описание:</label></td>

@@ -66,12 +66,19 @@ def add(request):
             application.description = form.cleaned_data['description']
             application.save()
 
-            messages.add_message(request, messages.SUCCESS, _('Application successfully added'))
+            messages.add_message(request, messages.SUCCESS,
+                                 _('Application successfully added'))
+
             return redirect('applications:list')
 
     else:
         form = ApplicationForm()
-    return direct_to_template(request, 'media_library/image_add.html', dict(form=form) )
+    return direct_to_template(request, 'applications/list.html',
+                              dict(form=form,
+                                   can_manage=True,
+
+                                   )
+                              )
 
 
 def view(request, id):

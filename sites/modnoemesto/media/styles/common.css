@@ -1790,7 +1790,7 @@ a.fancy-folder
 	height: 128px;
 }
 	
-a.fancy-image+p+a.delete
+a.fancy-image+p+a.delete, .folder_description+a.delete
 {
 	width: 17px;
 	overflow: hidden;
@@ -1819,10 +1819,14 @@ div.folder a, div.aplications a
 }
 .folder_description
 {
-	float: right;
-	width: 310px;
-	padding: 10px;
+	float: left;
+	width: 290px;
+	padding: 0px 10px;
 	color: #666;
+}
+.folder_description b
+{
+	text-transform: uppercase;
 }
 .padtop
 {
