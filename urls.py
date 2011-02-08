@@ -27,6 +27,7 @@ urlpatterns = patterns('',
     (r'^owner/', include('apps.admin_blog.urls', namespace='admin_blog')),
     (r'^captcha/(?P<code>[\da-f]{32})/$', 'apps.supercaptcha.draw'),
     (r'^video_call/', include('apps.video_call.urls', namespace='video_call')),
+    (r'^apps/', include('apps.applications.urls', namespace='applications')),
     url(r'^robots.txt$', 'django.views.generic.simple.direct_to_template', name='robots_txt', kwargs={'template': 'robots.txt'}),
     (r'^jsi18n/$', 'django.views.i18n.javascript_catalog', {'packages':
 'django.conf'}),

@@ -34,3 +34,8 @@ LIBRARY_VIDEO_SIZES = {
         'library_video_mini.flv': { 'width': 200, 'height': 100 },
     }
 }
+
+APPLICATION_IMAGE_SIZES = {
+    'application_image_thumbnail.png': { 'width': 200, 'height': 100 },
+    'application_image_full.png': { 'width': 400, 'height': 200 },
+}
