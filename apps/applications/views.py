@@ -24,6 +24,7 @@ def can_manage_applications(user):
 
 
 def list(request):
+    form = ApplicationForm()
     items = Application.objects()
     form = ApplicationForm()
     objects = paginate(request,
@@ -36,6 +37,7 @@ def list(request):
                               dict(
                                       objects=objects,
                                       can_manage=can_manage_applications(request.user),
+                                      form=form,
                                    )
 
                               )
