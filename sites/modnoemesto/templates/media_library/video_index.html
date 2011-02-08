@@ -14,25 +14,6 @@
     <script type="text/javascript" src="/media/js/fancyplayer.js"></script>
     <script type="text/javascript">
 
-    $(function(){
-        function formatTitle(title, currentArray, currentIndex, currentOpts) {
-            return '<div id="fancybox-title-inside">' +
-                    '<b>' + title + '</b>'  + '<br />' +
-                    $(currentArray[currentIndex]).attr('_description') +
-                    '</div>';
-        }
-
-        $('a.fancy-image').fancybox({
-            'titlePosition'	: 'inside',
-            'transitionIn': 'elastic',
-            'transitionOut': 'elastic',
-            'speedIn': 600,
-            'speedOut': 200,
-            'overlayShow': true,
-            'titleFormat': formatTitle
-        });
-    });
-
 	var videopath = "";
 	var swfplayer = "/media/swf/flowplayer-3.2.5.swf";
 	
@@ -74,7 +55,7 @@
 </div>
 {% endfor %}
 <div style="clear:both"></div>
-{% for file in files %}
+{% for node in files %}
 {% with node.get_document as file %}
 <div class="media_holder">
     <a class="video_link fancy-image" href="{% media_url file library_video_mini.flv %}">
