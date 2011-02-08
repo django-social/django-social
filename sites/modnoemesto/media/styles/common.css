@@ -1800,6 +1800,8 @@ a.fancy-image+p+a.delete
 a.fancy-image+p
 {
 	float: left;
+	width: 200px;
+	overflow: hidden;
 }
 .label {
     font-weight: bold;

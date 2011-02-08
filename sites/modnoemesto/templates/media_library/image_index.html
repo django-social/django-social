@@ -80,11 +80,11 @@
         <img src="{% media_url file library_image_thumbnail.png %}"
              alt="{{ file.title }}" />
     </a>
-    <div class="title"><p><b>{{ file.name }}</b></p>
+    <p><b>{{ file.name }}</b></p>
     {% if can_manage %}
         <a class="delete" title="{% trans 'Delete' %}" href="{% url media_library:image_delete id=file.id %}">{% trans "Delete" %}</a>
     {% endif %}
-    </div>
+    
 </div>
 {% endwith %}
 {% endfor %}

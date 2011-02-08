@@ -80,11 +80,11 @@
     <a class="video_link fancy-image" href="{% media_url file library_video_mini.flv %}">
         <img src="{% media_url file library_video_thumbnail.png %}" alt="" />
     </a>
-    <div class="title"><p><b>{{ file.name }}</b></p>
+    <p><b>{{ file.name }}</b></p>
     {% if can_manage %}
         <a class="delete" title="{% trans 'Delete' %}" href="{% url media_library:video_delete id=file.id %}">{% trans "Delete" %}</a>
     {% endif %}
-    </div>
+    
 </div>
 {% endwith %}
 {% endfor %}
