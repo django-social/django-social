@@ -106,7 +106,7 @@ class Tree(Document):
                 folders.append(i)
             else:
                 files.append(i)
-        return sorted(folders, key=lambda i: i.name) + sorted(files, key=lambda i: i.name)
+        return sorted(folders, key=lambda i: i.name), sorted(files, key=lambda i: i.name)
 
     def get_data(self):
         return self.root["data"]

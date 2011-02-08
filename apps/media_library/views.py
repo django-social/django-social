@@ -89,26 +89,13 @@ def image_index(request, id=None):
         items = tree.get_children()
         current_folder = None
 
-    items = Tree.sort_by_name(items)
-
-    objects = paginate(request,
-                       items,
-                       len(items),
-                       settings.LIBRARY_IMAGES_PER_PAGE
-                       )
-
-    n = objects.paginator.count
-    for i, obj in enumerate(objects.object_list):
-        if not obj.is_folder:
-            n = i
-            break
+    folders, files = Tree.sort_by_name(items)
 
     return direct_to_template(request, 'media_library/image_index.html',
-                              dict(objects=objects,
-                                   can_manage=can_manage_library(request.user),
+                              dict(can_manage=can_manage_library(request.user),
                                    current_folder=current_folder,
-                                   folders=objects.object_list[:n],
-                                   files=objects.object_list[n:]
+                                   folders=folders,
+                                   files=files,
                                    )
                               )
 
@@ -184,26 +171,13 @@ def video_index(request, id=None):
         items = tree.get_children()
         current_folder = None
 
-    items = Tree.sort_by_name(items)
-
-    objects = paginate(request,
-                       items,
-                       len(items),
-                       settings.LIBRARY_VIDEO_PER_PAGE
-                       )
-
-    n = objects.paginator.count
-    for i, obj in enumerate(objects.object_list):
-        if not obj.is_folder:
-            n = i
-            break
+    folders, files = Tree.sort_by_name(items)
 
     return direct_to_template(request, 'media_library/video_index.html',
-                              dict(objects=objects,
-                                   can_manage=can_manage_library(request.user),
+                              dict(can_manage=can_manage_library(request.user),
                                    current_folder=current_folder,
-                                   folders=objects.object_list[:n],
-                                   files=objects.object_list[n:]
+                                   folders=folders,
+                                   files=files,
                                    ))
 
 
