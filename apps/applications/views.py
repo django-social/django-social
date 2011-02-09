@@ -50,19 +50,9 @@ def add(request):
             application.image = form.fields['image'].save('application_image',
                                                           settings.APPLICATION_IMAGE_SIZES,
                                                           'APPLICATION_IMAGE_RESIZE'
-                                                          )
-            buffer = StringIO()
-            for chunk in request.FILES['file'].chunks():
-                buffer.write(chunk)
+                    )
 
-            buffer.reset()
-
-            file = File(type='application_swf')
-            file.file.put(buffer, content_type='application/x-shockwave-flash')
-            file.transformation = 'main.swf'
-            file.save()
-
-            application.file = file
+            application.file = _make_swf(request.FILES['file'])
 
             application.name = form.cleaned_data['name']
             application.description = form.cleaned_data['description']
@@ -95,5 +85,66 @@ def delete(request, id):
 
     messages.add_message(request, messages.SUCCESS,
                          _('Application successfully removed'))
+
+    return redirect('applications:list')
+
+
+def _make_swf(file):
+    buffer = StringIO()
+    for chunk in file.chunks():
+        buffer.write(chunk)
+
+    buffer.reset()
+
+    file = File(type='application_swf')
+    file.file.put(buffer, content_type='application/x-shockwave-flash')
+    file.transformation = 'main.swf'
+    file.save()
+    return file
+
+
+@user_passes_test(can_manage_applications)
+def edit(request, id):
+    app = get_document_or_404(Application, id=id)
+    if request.POST:
+        form = ApplicationForm(request.POST, request.FILES)
+    else:
+        form = ApplicationForm(initial=app._data)
+
+    form.fields['file'].required = False
+    form.fields['image'].required = False
+
+
+    if form.is_valid():
+        need_save = False
+
+        if request.FILES.has_key('file'):
+            app.file = _make_swf(request.FILES['file'])
+            need_save = True
+
+        if request.FILES.has_key('image'):
+            app.image = form.fields['image'].save('application_image',
+                                                          settings.APPLICATION_IMAGE_SIZES,
+                                                          'APPLICATION_IMAGE_RESIZE'
+                    )
+
+            need_save = True
+
+        for attr in ('name', 'description'):
+            if getattr(app, attr) != form.cleaned_data[attr]:
+                setattr(app, attr, form.cleaned_data[attr])
+                need_save = True
+                
+        if need_save:
+            app.save()
+        
+    #messages.add_message(request, messages.SUCCESS,
+    #                     _('Application successfully updated'))
+
+    return direct_to_template(request, 'applications/edit.html',
+                              dict(app=app,
+                                   form=form,
+                                   can_manage=True
+                                   ))
 
     return redirect('applications:list')

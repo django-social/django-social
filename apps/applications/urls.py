@@ -9,5 +9,6 @@ urlpatterns = patterns('apps.applications.views',
    url(r'^$', 'list', name='list'),
    url(r'^add/$', 'add', name='add'),
    url(r'^(?P<id>[a-f0-9]{24})/$', 'view', name='view'),
+   url(r'^(?P<id>[a-f0-9]{24})/edit/$', 'edit', name='edit'),
    url(r'^(?P<id>[a-f0-9]{24})/delete/$', 'delete', name='delete'),
 )
