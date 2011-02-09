@@ -7,6 +7,19 @@ from .common import file_path, create_image_file
 from ..documents import Tree, File, Folder, TreeNode
 
 
+def file(name):
+    f = create_image_file()
+    f.name = name
+    f.save()
+    return f
+
+
+def folder(name):
+    f = Folder(name=name)
+    f.save()
+    return f
+
+
 class TreeTest(TestCase):
 
     def setUp(self):
@@ -89,29 +102,37 @@ class TreeTest(TestCase):
         self.failUnless([[ folder1.id, folder1.name,  True, [] ]] == tree.root["data"])
 
     def test_sort(self):
-        def file(name):
-            f = create_image_file()
-            f.name = name
-            f.save()
-            tree.add(f)
-
-        def folder(name):
-            f = Folder(name=name)
-            f.save()
-            tree.add(f)
-
         tree = Tree()
         tree.save()
 
-        file("qwe")
-        folder("Test")
-        file("asd")
-        folder("answe")
-        folder("Qerr")
-        file("111223")
+        tree.add_mult([
+            file("qwe"),
+            folder("Test"),
+            file("asd"),
+            folder("answe"),
+            folder("Qerr"),
+            file("111223"),
+        ])
 
         tree.save()
         tree.reload()
 
-        items = [i.name for i in Tree.sort_by_name(tree.get_children())]
+        folders, files = Tree.sort_by_name(tree.get_children())
+        items = [i.name for i in folders + files]
         self.failUnless(items == ["Qerr", "Test", "answe", "111223", "asd", "qwe"])
+
+    def test_rename(self):
+        tree = Tree()
+        tree.save()
+
+        tree.add_mult([
+            file("qwe"),
+            folder("Test"),
+            file("asd"),
+            folder("answe"),
+            folder("Qerr"),
+            file("111223"),
+        ])
+
+        tree.save()
+        tree.reload()
