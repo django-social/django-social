@@ -119,10 +119,12 @@ def edit(request, id):
         need_save = False
 
         if request.FILES.has_key('file'):
+            app.file.full_delete()
             app.file = _make_swf(request.FILES['file'])
             need_save = True
 
         if request.FILES.has_key('image'):
+            app.image.full_delete()
             app.image = form.fields['image'].save('application_image',
                                                           settings.APPLICATION_IMAGE_SIZES,
                                                           'APPLICATION_IMAGE_RESIZE'
