@@ -161,7 +161,7 @@ class VideoFileTransformationTest(TestCase):
         self.failUnless(str(thumb.file.read()[1:]).startswith('PNG'))
 
     def test_video2flv(self):
-        file = create_video_file('WNDSURF1.AVI')
+        file = create_video_file()
         sizes = {'video.flv': {}}
         transformations =  [
             Video2Flv(name, **params)
