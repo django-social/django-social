@@ -10,12 +10,12 @@
 {% block js %}
 {{ block.super }}
 <script type="text/javascript">
-$(document).ready(function() { 
-	var link = $(".aplications a.app_link");					   
-    link.click(function (e){ 
-        var width=810, height=645; 
+$(document).ready(function() {
+	var link = $(".aplications a.app_link");
+    link.click(function (e){
+        var width=810, height=645;
         window.open(link.attr('href'), 'game',
-                'width='+width+',height='+height+',left='+($(window).width()-width)/2+',top='+($(window).height()-height)/2); 
+                'width='+width+',height='+height+',left='+($(window).width()-width)/2+',top='+($(window).height()-height)/2);
         return false;
     });
 });
@@ -23,13 +23,11 @@ $(document).ready(function() {
 
 {% endblock %}
 
+
 {% block content %}
 <div id="filter_box">
-    <h2>Приложения</h2>
-
-    {% for app in objects.object_list %}
+    <h2>Редактирование приложения</h2>
         <div class="aplications">
-            
             <a class="app_link" href="{% url applications:view app.id %}">
                 <img src="{% media_url app.image application_image_full.png %}" width="160" height="120" align="left" border="0"/>
             </a>
@@ -37,17 +35,9 @@ $(document).ready(function() {
                 <b>{{ app.name }}</b><br />
                 {{ app.description }}
             </div>
-            {% if can_manage %}
-        <a class="delete" title="{% trans 'Delete' %}" href="{% url applications:delete app.id %}">{% trans "Delete" %}</a>
-        <a class="edit" title="{% trans 'Edit' %}" href="{% url applications:edit app.id %}">{% trans "Edit" %}</a>                
-        {% endif %}
         </div>
-    {% endfor %}
-
-    {% include 'includes/paginator.html' %}
-<br />
-    {% if can_manage %}
-<form action="{% url applications:add %}" method="post" enctype="multipart/form-data">
+<hr />
+<form method="post" enctype="multipart/form-data">
 		<div class="filt rounded">
         <table>
         <tbody>
@@ -88,10 +78,9 @@ $(document).ready(function() {
         </table>
         </div>
         <div class="but">
-        <input type="submit" value="Добавить"/>
+        <input type="submit" value="Сохранить"/>
         </div>
 </form>
-{% endif %}
 
 </div>
 {% endblock %}
