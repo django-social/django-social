@@ -141,49 +141,68 @@ def index(request, library, id=None):
 
 
 @permission_required('superuser')
-def image_add(request, id=None):
+def image_edit(request, id=None, file_id=None):
     tree = get_library(LIBRARY_TYPE_IMAGE)
 
-    if id:
-        folder = get_document_or_404(Folder, id=id)
-        parent = tree.get(folder.id)
-        if not parent:
-            raise Http404()
-        current_folder = parent
+    if file_id:
+        file = get_document_or_404(File, id=file_id)
+        data = file._data
+        node = tree.get(file.id)
+        current_folder = node.ancestors[0] if node.ancestors else None
     else:
-        current_folder = None
+        file = None
+        data = {}
+        if id:
+            folder = get_document_or_404(Folder, id=id)
+            current_folder = tree.get(folder.id)
+            if not current_folder:
+                raise Http404()
+        else:
+            current_folder = None
 
     if request.POST:
-        form = ImageAddForm(request.POST, request.FILES)
+        form = ImageAddForm(request.POST, request.FILES, initial=data)
         if form.is_valid():
-            file = form.fields['file'].save('library_image', settings.LIBRARY_IMAGE_SIZES, LIBRARY_IMAGE_RESIZE_TASK)
+            if form.fields['file']:
+                newfile = form.fields['file'].save('library_image', settings.LIBRARY_IMAGE_SIZES, LIBRARY_IMAGE_RESIZE_TASK)
 
-            file.name = form.cleaned_data['name']
-            file.description = form.cleaned_data['description']
-            file.save()
+                newfile.name = form.cleaned_data['name']
+                newfile.description = form.cleaned_data['description']
+                newfile.save()
+                
+                if file_id:
+                    file.delete_full()
 
-            if id:
-                tree.add(file, parent)
+            if file_id:
+                tree.rename(file, form.cleaned_data['name'])
             else:
-                tree.add(file)
+                if id:
+                    tree.add(newfile, current_folder)
+                else:
+                    tree.add(newfile)
             tree.save()
-            messages.add_message(request, messages.SUCCESS, _('Image successfully added'))
+            messages.add_message(request, messages.SUCCESS, _('Image successfully saved') if file_id else _('Image successfully added'))
             return redirect_by_id('media_library:image_index', id)
     else:
-        form = ImageAddForm()
-    return direct_to_template(request, 'media_library/image_add.html', dict( form=form, current_folder=current_folder ) )
+        form = ImageAddForm(initial=data)
+    return direct_to_template(request,
+                              'media_library/file_edit.html',
+                              dict( title= _('Editing image') if file_id else _('Adding image'),
+                                    breadcrumb='media_library/_%s_breadcrumb.html' % LIBRARY_TYPE_IMAGE,
+                                    form=form,
+                                    current_folder=current_folder,
+                                    file=file ) )
 
 
 @permission_required('superuser')
-def video_add(request, id=None):
+def video_edit(request, id=None, file_id=None):
     tree = get_library(LIBRARY_TYPE_VIDEO)
 
     if id:
         folder = get_document_or_404(Folder, id=id)
-        parent = tree.get(folder.id)
-        if not parent:
+        current_folder = tree.get(folder.id)
+        if not current_folder:
             raise Http404()
-        current_folder = parent
     else:
         current_folder = None
 
@@ -200,7 +219,7 @@ def video_add(request, id=None):
             file.save()
 
             if id:
-                tree.add(file, parent)
+                tree.add(file, current_folder)
             else:
                 tree.add(file)
             tree.save()
@@ -214,15 +233,14 @@ def video_add(request, id=None):
 
 
 @permission_required('superuser')
-def audio_add(request, id=None):
+def audio_edit(request, id=None, file_id=None):
     tree = get_library(LIBRARY_TYPE_AUDIO)
 
     if id:
         folder = get_document_or_404(Folder, id=id)
-        parent = tree.get(folder.id)
-        if not parent:
+        current_folder = tree.get(folder.id)
+        if not current_folder:
             raise Http404()
-        current_folder = parent
     else:
         current_folder = None
 
@@ -244,7 +262,7 @@ def audio_add(request, id=None):
             file.save()
 
             if id:
-                tree.add(file, parent)
+                tree.add(file, current_folder)
             else:
                 tree.add(file)
             tree.save()

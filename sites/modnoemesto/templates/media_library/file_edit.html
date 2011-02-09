@@ -1,4 +1,13 @@
+{% extends "base.html" %}
 {% load i18n %}
+{% load media %}
+
+{% block content %}
+<div id="filter_box">
+    <h2>{{ title }}</h2>
+
+{% include breadcrumb %}
+
 <form method="post" enctype="multipart/form-data">
 <div class="filt rounded">
 <table>
@@ -40,6 +49,8 @@
 </table>
 </div>
 <div class="but">
-<input type="submit" value="{% trans "Add" %}"/>
+<input type="submit" value="{% if is_edit %}{% trans 'Save' %}{% else %}{% trans 'Add' %}{% endif %}"/>
 </div>
 </form>
+</div>
+{% endblock %}

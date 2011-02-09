@@ -10,8 +10,9 @@ for library in [LIBRARY_TYPE_VIDEO, LIBRARY_TYPE_IMAGE, LIBRARY_TYPE_AUDIO]:
     urls += [
     url(r'^%s/$' % library, 'index', name='%s_index' % library, kwargs=params),
     url(r'^%s/(?P<id>[a-f0-9]{24})/$' % library, 'index', name='%s_index' % library, kwargs=params),
-    url(r'^%s/add/$' % library, '%s_add' % library, name='%s_add' % library),
-    url(r'^%s/(?P<id>[a-f0-9]{24})/add/$' % library, '%s_add' % library, name='%s_add' % library),
+    url(r'^%s/add/$' % library, '%s_edit' % library, name='%s_add' % library),
+    url(r'^%s/(?P<id>[a-f0-9]{24})/add/$' % library, '%s_edit' % library, name='%s_add' % library),
+    url(r'^%s/(?P<id>[a-f0-9]{24})/edit/$' % library, '%s_edit' % library, name='%s_edit' % library),
     url(r'^%s/(?P<id>[a-f0-9]{24})/delete/$' % library, 'file_delete', name='%s_delete' % library, kwargs=params),
 
     url(r'^%s/folder/add/$' % library, 'folder_add', name='%s_folder_add' % library, kwargs=params),
