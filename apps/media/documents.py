@@ -56,6 +56,13 @@ class File(Document):
 
         super(File, self).save(*args, **kwargs)
 
+    def full_delete(self, *args, **kwargs):
+        for derivative in File.objects(source=self):
+            derivative.full_delete(*args, **kwargs)
+
+        self.file.delete()
+
+        self.delete(*args, **kwargs)
 
     def apply_transformations(self, *transformations):
         derivatives = {}
@@ -154,12 +161,9 @@ class Tree(Document):
                 if i[0] == n.id:
                     items = i[3]
                     break
-        ids = self.get_children_ids(node) if node.is_folder else []
+        nodes = [node, ] + self.get_all_children(node) if node.is_folder else []
         items.remove(node.data)
-        return [node.id] + ids
-
-    def save_node(self, node):
-        pass
+        return nodes
 
     def clear(self):
         self.root["data"] = []
@@ -176,15 +180,15 @@ class Tree(Document):
                         return el
         return search(self.get_data())
 
-    def get_children_ids(self, node):
-        ids = []
+    def get_all_children(self, node):
+        nodes = []
         def search(items):
             for node in items:
-                ids.append(node.id)
+                nodes.append(node)
                 if node.is_folder:
                     search(node.get_children())
         search(node.get_children())
-        return ids
+        return nodes
 
     def get_children(self):
         return [TreeNode(i) for i in self.get_data()]
@@ -207,6 +211,12 @@ class TreeNode(object):
             return Folder.objects.get(id=self.id)
         else:
             return File.objects.get(id=self.id)
+
+    def full_delete(self, *args, **kwargs):
+        if self.is_folder:
+            return Folder.objects.get(id=self.id).delete(*args, **kwargs)
+        else:
+            return File.objects.get(id=self.id).full_delete(*args, **kwargs)
 
     def breadcrumb(self):
         return self.ancestors + [self]

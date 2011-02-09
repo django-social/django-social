@@ -10,16 +10,11 @@ class Application(Document):
     file = ReferenceField('File')
     image = ReferenceField('File')
 
+    def delete_files(self):
+        self.file.full_delete()
+        self.image.full_delete()
+
     def delete(self, *args, **kwargs):
-        self.file.file.delete()
-        self.file.delete()
-
-        for file in File.objects(source=self.image):
-            file.file.delete()
-            file.delete()
-
-        self.image.file.delete()
-        self.image.delete()
-
+        self.delete_files()
         return super(Application, self).delete(*args, **kwargs)
 

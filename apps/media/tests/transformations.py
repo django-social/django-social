@@ -5,6 +5,8 @@ from django.test import TestCase
 from apps.utils.stringio import StringIO
 
 from ..documents import *
+import gridfs
+from mongoengine.connection import _get_db
 from ..transformations import BatchFileTransformation, SystemCommandFileTransformation
 from ..transformations.image import ImageResize
 from ..transformations.video import VideoThumbnail
@@ -13,6 +15,21 @@ from .common import file_path, create_image_file, create_video_file, TextTransfo
 
 
 class FileTransformationTest(TestCase):
+
+    def _get_fs(self):
+         database = _get_db()
+         collection = database['fs']
+         return collection
+
+
+    def setUp(self):
+         fs = self._get_fs()
+         files = fs.files
+         chunks = fs.chunks
+         files.drop()
+         chunks.drop()
+         File.objects.delete()
+
 
     def test_dummy_transformation(self):
         TRANSFORMATION_NAME = 'dummy.png'
@@ -86,6 +103,38 @@ class FileTransformationTest(TestCase):
         self.failUnlessEqual(DERIVATIVE_FILE_TYPE, derivative.type)
 
 
+    def test_full_delete(self):
+        fs = self._get_fs()
+        files = fs.files
+        chunks = fs.chunks
+
+        self.failIf(File.objects.count())
+        self.failIf(files.count())
+        self.failIf(chunks.count())
+
+        transformation = ImageResize(name='test.png',
+                                     format='png',
+                                     width=100,
+                                     height=100)
+
+        file = create_image_file()
+        file.apply_transformations(transformation)
+
+
+        self.failUnlessEqual(2, files.count())
+        self.failUnlessEqual(2, chunks.count())
+
+        file.apply_transformations(transformation)
+
+        self.failUnlessEqual(3, files.count())
+        self.failUnlessEqual(3, chunks.count())
+
+
+        file.full_delete()
+
+        self.failIf(File.objects.count())
+        self.failIf(files.count())
+        self.failIf(chunks.count())
 
     def test_apply_transformations_before_save_raises_exc(self):
         file = File(type='image')
