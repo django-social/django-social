@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load media %}
+
+{% block content %}
+<div id="filter_box">
+    <h2>{% if is_edit %}Редактирование папки{% else %}Добавление папки{% endif %}</h2>
+{% block breadcrumb %}{% endblock %}
+<form method="post">
+<div class="filt rounded">
+<table>
+<tbody>
+    <tr>
+        <td class="label">{{ form.name.label_tag }}</td>
+        <td><div class="input_holder rounded">{{ form.name }}</div></td>
+    </tr>
+</tbody>
+</table>
+</div>
+<div class="but">
+<input type="submit" value="{% if is_edit %}{% trans 'Save' %}{% else %}{% trans 'Add' %}{% endif %}"/>
+</div>
+</form>
+</div>
+{% endblock %}
