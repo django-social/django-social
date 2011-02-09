@@ -1832,6 +1832,10 @@ div.folder a, div.aplications a
 {
 	padding-top: 50px;
 }
+.folder_description.padtop a
+{
+	text-decoration: none;
+}
 .somewhat
 {
 	float: left;

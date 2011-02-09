@@ -64,6 +64,7 @@ $(document).ready(function(){
 {% with node.get_document as file %}
 <div class="media_holder">
     <div class="audio_link" style="height:30px;" href="{% media_url file main.mp3 %}"></div>
+    <p><b>{{ file.name }}</b></p>
     {% if can_manage %}
         <a class="delete" title="{% trans 'Delete' %}" href="{% url media_library:audio_delete id=file.id %}">{% trans "Delete" %}</a>
     {% endif %}
