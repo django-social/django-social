@@ -57,7 +57,7 @@ def folder_add(request, library, id=None):
             return redirect_by_id('media_library:%s_index' % library, id)
     else:
         form = FolderEditForm()
-    return direct_to_template(request, 'media_library/%s_folder_add.html' % library, dict( form=form, current_folder=current_folder ) )
+    return direct_to_template(request, 'media_library/%s_folder_edit.html' % library, dict( form=form, current_folder=current_folder ) )
 
 
 @permission_required('superuser')
@@ -73,15 +73,14 @@ def folder_edit(request, library, id):
         form = FolderEditForm(request.POST, initial=folder._data)
 
         if form.is_valid():
-            folder.name = form.cleaned_data['name']
-            folder.save()
+            tree.rename(folder, form.cleaned_data['name'])
             current_folder.name = folder.name
             tree.save()
             messages.add_message(request, messages.SUCCESS, _('Folder successfully saved'))
             return redirect_by_id('media_library:%s_index' % library, id)
     else:
         form = FolderEditForm(initial=folder._data)
-    return direct_to_template(request, 'media_library/%s_folder_edit.html' % library, dict( form=form, current_folder=current_folder ) )
+    return direct_to_template(request, 'media_library/%s_folder_edit.html' % library, dict( is_edit=True, form=form, current_folder=current_folder ) )
 
 
 @permission_required('superuser')

@@ -130,6 +130,22 @@ class Tree(Document):
         for i in items:
             self.add(i, folder)
 
+    def rename(self, item, newname):
+        items = self.get_data()
+        node = self.get(item.id)
+        item.name = newname
+        item.save()
+        for n in node.ancestors:
+            for i in items:
+                if i[0] == n.id:
+                    items = i[3]
+                    break
+        for i in items:
+            if i[0] == node.id:
+                i[1] = item.name
+                i[2] = isinstance(item, Folder)
+                break
+
     def remove(self, item):
         items = self.get_data()
         node = self.get(item.id)
