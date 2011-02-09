@@ -126,6 +126,10 @@ class Tree(Document):
                         break
         items.append(data)
 
+    def add_mult(self, items, folder=None):
+        for i in items:
+            self.add(i, folder)
+
     def remove(self, item):
         items = self.get_data()
         node = self.get(item.id)
@@ -137,6 +141,9 @@ class Tree(Document):
         ids = self.get_children_ids(node) if node.is_folder else []
         items.remove(node.data)
         return [node.id] + ids
+
+    def save_node(self, node):
+        pass
 
     def clear(self):
         self.root["data"] = []

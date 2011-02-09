@@ -61,6 +61,30 @@ def folder_add(request, library, id=None):
 
 
 @permission_required('superuser')
+def folder_edit(request, library, id):
+    tree = get_library(library)
+
+    folder = get_document_or_404(Folder, id=id)
+    current_folder = tree.get(folder.id)
+    if not current_folder:
+        raise Http404()
+
+    if request.POST:
+        form = FolderEditForm(request.POST, initial=folder._data)
+
+        if form.is_valid():
+            folder.name = form.cleaned_data['name']
+            folder.save()
+            current_folder.name = folder.name
+            tree.save()
+            messages.add_message(request, messages.SUCCESS, _('Folder successfully saved'))
+            return redirect_by_id('media_library:%s_index' % library, id)
+    else:
+        form = FolderEditForm(initial=folder._data)
+    return direct_to_template(request, 'media_library/%s_folder_edit.html' % library, dict( form=form, current_folder=current_folder ) )
+
+
+@permission_required('superuser')
 def folder_delete(request, library, id):
     tree = get_library(library)
     folder = get_document_or_404(Folder, id=id)
