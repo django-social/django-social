@@ -10,7 +10,12 @@ from mongoengine import Document, StringField, ReferenceField, BooleanField, Lis
 
 class ApplicationForm(forms.Form):
     name = forms.CharField(label=_("Title"), required=True)
-    description = forms.CharField(label=_("Description"), required=True)
+    description = forms.CharField(label=_("Description"),
+                                  required=True,
+                                  widget=forms.Textarea(attrs=dict(
+                                          rows="10",
+                                          cols="40"
+                                          )))
     image = ImageField(label=_("Image"))
     file = forms.FileField(label=_("Application"))
 

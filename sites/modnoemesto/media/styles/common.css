@@ -1733,7 +1733,7 @@ form p
 {
 	text-align: left;
 }
-a.delete, a.done, a.cancel
+a.delete, a.done, a.cancel, a.edit
 {
 	color: #585858;
 	text-decoration: none;
@@ -1753,6 +1753,10 @@ a.cancel
 a.delete
 {
 	background: url("../images/delete.png") no-repeat;
+}
+a.edit
+{
+	background: url("../images/edit.png") no-repeat;
 }
 .theme_box
 {
@@ -1790,7 +1794,7 @@ a.fancy-folder
 	height: 128px;
 }
 	
-a.fancy-image+p+a.delete, .folder_description+a.delete
+a.fancy-image+p+a.delete, .folder_description+a.delete, a.delete+a.edit
 {
 	width: 17px;
 	overflow: hidden;

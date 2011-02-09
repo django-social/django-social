@@ -55,6 +55,7 @@ $(document).ready(function(){
     <div class="title"><p><b>{{ node.name }}</b></p>
     {% if can_manage %}
         <a class="delete" title="{% trans 'Delete' %}" href="{% url media_library:image_folder_delete node.id %}">{% trans "Delete" %}</a>
+        <a class="edit" title="{% trans 'Edit' %}" href="#">{% trans "Edit" %}</a>
     {% endif %}
     </div>
 </div>
@@ -67,6 +68,7 @@ $(document).ready(function(){
     <p><b>{{ file.name }}</b></p>
     {% if can_manage %}
         <a class="delete" title="{% trans 'Delete' %}" href="{% url media_library:audio_delete id=file.id %}">{% trans "Delete" %}</a>
+        <a class="edit" title="{% trans 'Edit' %}" href="#">{% trans "Edit" %}</a>
     {% endif %}
 </div>
 {% endwith %}
