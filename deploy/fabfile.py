@@ -214,7 +214,16 @@ def install_app_server_software():
     run('apt-get --yes install python-imaging python-software-properties')
     run('apt-get --yes install python-lxml')
     run('apt-get --yes install rabbitmq-server python-mysqldb python-redis')
+
+def install_multimedia():
+    run('wget -O /etc/apt/sources.list.d/medibuntu.list http://www.medibuntu.org/sources.list.d/$(lsb_release -cs).list')
+    run('apt-get update')
+    run('apt-get --yes --allow-unauthenticated install medibuntu-keyring')
+    run('apt-get update')
+
     run('apt-get --yes install mplayer ffmpeg')
+
+    run('apt-get --yes install w` if [ "$(uname -m | grep x86_64)" ] ; then echo 64 ; else echo 32 ; fi`codecs')
 
 
 def remove_nginx():
