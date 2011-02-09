@@ -56,6 +56,13 @@ class File(Document):
 
         super(File, self).save(*args, **kwargs)
 
+    def full_delete(self, *args, **kwargs):
+        for derivative in File.objects(source=self):
+            derivative.full_delete(*args, **kwargs)
+
+        self.file.delete()
+
+        self.delete(*args, **kwargs)
 
     def apply_transformations(self, *transformations):
         derivatives = {}
