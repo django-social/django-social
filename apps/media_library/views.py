@@ -90,8 +90,12 @@ def folder_delete(request, library, id):
     node = tree.get(folder.id)
     if not node:
         raise Http404()
-    ids = tree.remove(node)
+    nodes = tree.remove(node)
     tree.save()
+
+    for node in nodes:
+        node.full_delete()
+
     messages.add_message(request, messages.SUCCESS, _('Folder successfully removed'))
     url = 'media_library:%s_index' % library
     return redirect(url)
@@ -100,9 +104,10 @@ def folder_delete(request, library, id):
 @permission_required('superuser')
 def file_delete(request, library, id):
     tree = get_library(library)
-    image = get_document_or_404(File, id=id)
-    ids = tree.remove(image)
+    file = get_document_or_404(File, id=id)
+    tree.remove(file)
     tree.save()
+    file.full_delete()
     messages.add_message(request, messages.SUCCESS, REMOVE_MESSAGES[library])
     return redirect('media_library:%s_index' % library)
 
