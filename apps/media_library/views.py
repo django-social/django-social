@@ -57,7 +57,11 @@ def folder_add(request, library, id=None):
             return redirect_by_id('media_library:%s_index' % library, id)
     else:
         form = FolderEditForm()
-    return direct_to_template(request, 'media_library/%s_folder_edit.html' % library, dict( form=form, current_folder=current_folder ) )
+    return direct_to_template(request,
+                              'media_library/folder_edit.html',
+                              dict( breadcrumb='media_library/_%s_breadcrumb.html' % library,
+                                    form=form,
+                                    current_folder=current_folder ) )
 
 
 @permission_required('superuser')
@@ -80,7 +84,12 @@ def folder_edit(request, library, id):
             return redirect_by_id('media_library:%s_index' % library, id)
     else:
         form = FolderEditForm(initial=folder._data)
-    return direct_to_template(request, 'media_library/%s_folder_edit.html' % library, dict( is_edit=True, form=form, current_folder=current_folder ) )
+    return direct_to_template(request,
+                              'media_library/folder_edit.html',
+                              dict( breadcrumb='media_library/_%s_breadcrumb.html' % library,
+                                    form=form,
+                                    current_folder=current_folder,
+                                    is_edit=True ) )
 
 
 @permission_required('superuser')
