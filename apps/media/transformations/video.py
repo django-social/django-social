@@ -4,7 +4,7 @@ import os
 
 from apps.utils import tempdir
 
-from .base import SystemCommandFileTransformation
+from .base import SystemCommandFileTransformation, logger
 
 class VideoThumbnail(SystemCommandFileTransformation):
     SYSTEM_COMMAND = '''mplayer -frames 1 -vo %(format)s:outdir=%(destination)s:z=%(compression)s -nosound %(source)s'''
@@ -18,7 +18,13 @@ class VideoThumbnail(SystemCommandFileTransformation):
         directory = tmp_destination.name
         files = os.listdir(directory)
         assert len(files) >= 1
-        file = open(os.path.join(directory, files[0]), 'rb')
+        file_name = os.path.join(directory, files[0])
+        logger.debug('%d: Destination file "%s" %d bytes' %(
+            id(self), file_name,
+            os.stat(file_name).st_size
+        ))
+
+        file = open(file_name, 'rb')
         destination.file.put(file.read(),
                              content_type=self._get_derivative_content_type())
         destination.save()
