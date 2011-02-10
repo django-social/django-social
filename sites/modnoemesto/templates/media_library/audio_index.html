@@ -2,29 +2,6 @@
 {% load i18n %}
 {% load media %}
 
-{% block js %}
-    {{ block.super }}
-    <script type="text/javascript" src="/media/js/flowplayer-3.js"></script>
-    <script type="text/javascript">
-$(document).ready(function(){
-    $f(".audio_link", "http://releases.flowplayer.org/swf/flowplayer-3.2.5.swf", {
-        plugins: {
-            controls: {
-                fullscreen: false,
-                height: 30,
-                autoHide: false
-            }
-        },
-        clip: {
-            autoPlay: false
-        }
-
-    });
-});
-    </script>
-
-{% endblock %}
-
 {% block content %}
 
 <div id="filter_box">
@@ -64,7 +41,12 @@ $(document).ready(function(){
 {% for node in files %}
 {% with node.get_document as file %}
 <div class="media_holder">
-    <div class="audio_link" style="height:30px;" href="{% media_url file main.mp3 %}"></div>
+    <div class="audio_link">
+<object type="application/x-shockwave-flash" data="/media/swf/player_mp3_maxi.swf" width="200" height="20">
+    <param name="movie" value="/media/swf/player_mp3_maxi.swf" />
+    <param name="FlashVars" value="showvolume=1&loadingcolor=5AC6D8&buttonovercolor=5AC6D8&sliderovercolor=5AC6D8&mp3={% media_url file main.mp3 %}" />
+</object>
+    </div>
     <p><b>{{ file.name }}</b></p>
     {% if can_manage %}
         <a class="delete" title="{% trans 'Delete' %}" href="{% url media_library:audio_delete id=file.id %}">{% trans "Delete" %}</a>
