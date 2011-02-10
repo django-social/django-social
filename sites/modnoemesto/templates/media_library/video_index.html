@@ -65,7 +65,7 @@
     <p><b>{{ file.name }}</b></p>
     {% if can_manage %}
         <a class="delete" title="{% trans 'Delete' %}" href="{% url media_library:video_delete id=file.id %}">{% trans "Delete" %}</a>
-        <a class="edit" title="{% trans 'Edit' %}" href="{% url media_library:video_edit id=file.id %}">{% trans "Edit" %}</a>
+        <a class="edit" title="{% trans 'Edit' %}" href="{% url media_library:video_edit file_id=file.id %}">{% trans "Edit" %}</a>
     {% endif %}
     
 </div>
