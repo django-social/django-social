@@ -148,13 +148,19 @@ def index(request, library, id=None):
 @permission_required('superuser')
 def file_edit(request, library, id=None, file_id=None):
 
-    def image_file():
-        return form.fields['file'].save('library_image', settings.LIBRARY_IMAGE_SIZES, LIBRARY_IMAGE_RESIZE_TASK)
+    def image_file(name, description):
+        file = form.fields['file']
+        file.name = name
+        file.description = description
+        return file.save('library_image', settings.LIBRARY_IMAGE_SIZES, LIBRARY_IMAGE_RESIZE_TASK)
 
-    def video_file():
-        return form.fields['file'].save('library_video', settings.LIBRARY_VIDEO_SIZES, LIBRARY_VIDEO_RESIZE_TASK)
+    def video_file(name, description):
+        file = form.fields['file']
+        file.name = name
+        file.description = description
+        return file.save('library_video', settings.LIBRARY_VIDEO_SIZES, LIBRARY_VIDEO_RESIZE_TASK)
 
-    def audio_file():
+    def audio_file(name, description):
         buffer = StringIO()
         for chunk in request.FILES['file'].chunks():
             buffer.write(chunk)
@@ -164,7 +170,9 @@ def file_edit(request, library, id=None, file_id=None):
         file = File(type='library_audio')
         file.file.put(buffer, content_type='audio/mpeg')
         file.transformation = 'main.mp3'
-        return file
+        file.name = name
+        file.description = description
+        return file.save()
 
     params = {
         LIBRARY_TYPE_IMAGE: dict(
@@ -219,12 +227,8 @@ def file_edit(request, library, id=None, file_id=None):
             form.fields['file'].required = False
         if form.is_valid():
             if 'file' in request.FILES:
-                newfile = current_params['file']()
+                newfile = current_params['file'](form.cleaned_data['name'], form.cleaned_data['description'])
 
-                newfile.name = form.cleaned_data['name']
-                newfile.description = form.cleaned_data['description']
-                newfile.save()
-                
                 if file_id:
                     tree.remove(file)
                     file.full_delete()
