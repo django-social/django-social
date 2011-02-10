@@ -100,6 +100,11 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': True,
         },
+        'media.transformations': {
+            'handlers': ['mongo'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
     }
 }
 
