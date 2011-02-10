@@ -95,22 +95,22 @@ class SystemCommandFileTransformation(FileTransformation):
         logger.debug('%d: Run command `%s`' % (id(self), command))
         process = subprocess.Popen(shlex.split(command),
                                    bufsize=1024 * 8,
-                                   stdin=subprocess.PIPE,
                                    stdout=subprocess.PIPE,
                                    stderr=subprocess.PIPE,
                                    )
         
-        logger.debug('%d: Destination file "%s" %d bytes' %(
-            id(self), tmp_destination.name,
-            os.stat(tmp_destination.name).st_size
-        ))
-        
+
         if process.wait():
             logger.error('%d: Error executing command `%s`, stderr: %s' %
                          (id(self), command, process.stderr.read()))
             logger.debug('%d: Error executing command `%s`, stdout: %s' %
                          (id(self), command, process.stdout.read()))
 
+            
+        logger.debug('%d: Destination file "%s" %d bytes' %(
+            id(self), tmp_destination.name,
+            os.stat(tmp_destination.name).st_size
+        ))
 
 
     def _format_system_command(self, tmp_source, tmp_destination):
