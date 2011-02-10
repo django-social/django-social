@@ -1,11 +1,21 @@
+{% extends "base.html" %}
 {% load i18n %}
+{% load media %}
+
+{% block content %}
+<div id="filter_box">
+    <h2>{{ title }}</h2>
+
+{% include breadcrumb %}
+
 <form method="post" enctype="multipart/form-data">
 <div class="filt rounded">
 <table>
 <tbody>
     <tr>
         <td class="label">{{ form.file.label_tag }}</td>
-        <td>{{ form.file }}</td>
+        <td>{{ form.file }}
+        {% if file %}<img src="{% media_url file library_image_thumbnail.png %}" alt="{{ file.title }}" />{% endif %}</td>
     </tr>
     <tr>
         <td style="height:10px"></td>
@@ -40,6 +50,8 @@
 </table>
 </div>
 <div class="but">
-<input type="submit" value="{% trans "Add" %}"/>
+<input type="submit" value="{% if file %}{% trans 'Save' %}{% else %}{% trans 'Add' %}{% endif %}"/>
 </div>
 </form>
+</div>
+{% endblock %}

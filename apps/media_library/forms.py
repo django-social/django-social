@@ -6,7 +6,7 @@ from apps.media.forms import PhotoForm, VideoForm
 
 class MediaAddForm(forms.Form):
     name = forms.CharField(label=_("Title"), required=True)
-    description = forms.CharField(label=_("Description"), required=True)
+    description = forms.CharField(label=_("Description"), required=False)
 
 class ImageAddForm(PhotoForm, MediaAddForm):
     pass
