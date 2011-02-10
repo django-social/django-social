@@ -12,7 +12,7 @@
     table.log_view, .log_view th, .log_view td {
         border: 1px solid black;
         padding: 3px;
-
+        vertical-align: top;
     }
 
     .logging-filter .delete {
@@ -111,7 +111,7 @@ $(document).ready(function(){
     <tr>
         <td>{{ entry.date }}</td>
         <td>{{ entry.levelname }}</td>
-        <td>{{ entry.message }}</td>
+        <td>{{ entry.message|linebreaks }}</td>
         <td style="font-size: 8px;">
             {{ entry.pathname }}
             {{ entry.logger_name }}
