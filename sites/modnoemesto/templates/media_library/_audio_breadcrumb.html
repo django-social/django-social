@@ -1,7 +1,6 @@
 <div class="breadcrumb">
 {% if current_folder %}
 <a href="{% url media_library:audio_index %}">Аудиозаписи</a>
-{% endif %}
 {% for folder in current_folder.ancestors %}
 &nbsp;/&nbsp;
 <a href="{% url media_library:audio_index folder.id %}">{{ folder.name }}</a>
