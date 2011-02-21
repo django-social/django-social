@@ -1,6 +1,27 @@
 {% extends "base.html" %}
 {% load i18n %}
+
+{% block js %}
+{{ block.super }}
+<script type="text/javascript">
+    $(function(){
+        $("a.multiple_del").click(function(){
+            var checked = $('input.del:checked');
+
+            if(checked.length){
+                var form = $("form.multiple_del");
+                form.append(checked);
+                form.submit()
+            }
+        });
+    });
+</script>
+{% endblock %}
+
 {% block content %}
+    <form class="multiple_del" method="POST" action="{% url user_messages:multiple_delete %}">
+        <input type="hidden" name="view" value="inbox" />
+    </form>
 <div id="filter_box">
 <h2>{% trans "Messages history" %}</h2>
 
@@ -11,6 +32,7 @@
     <div class="messages">
         <h3>{% trans "Messages: inbox" %} ({{ objects.paginator.count }})</h3>
         <div class="messages_inbox">
+        <a class="multiple_del" href="javascript: void(0);">Удалить отмеченные</a>
         
             {% for msg in objects.object_list %}
             <div class="message_item {% if msg.is_read %}readed{% else %}unreaded{% endif %}">
@@ -35,7 +57,12 @@
                      {% endcomment %}
                      <p><a class="reference" href="{% url user_messages:delete_message message_id=msg.id%}">
                         {% trans "Delete" %}
-                    </a></p>
+                    </a>
+                    </p>
+                    <p>
+                        <input type="checkbox" class="del" value="{{ msg.id }}" id="del_{{ msg.id }}" name="del_{{ msg.id }}"/>
+                        <label for="del_{{ msg.id }}">Отметить</label>
+                    </p>
                 </div>
             </div>
             {% endfor %}

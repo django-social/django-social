@@ -1883,3 +1883,8 @@ div.folder a, div.aplications a
 {
 	width: 50px;
 }
+
+form.multiple_del
+{
+    display: none;
+}
