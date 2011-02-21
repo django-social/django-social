@@ -85,3 +85,23 @@ def delete_message(request, message_id):
     elif message.is_recipient(user):
         return redirect('user_messages:view_inbox')
 
+
+def multiple_delete(request):
+    view = request.POST.get('view', 'inbox')
+    user = request.user
+
+    ids = [ x[4:] for x in request.POST.keys() if x.startswith('del_') ]
+
+    for id in ids:
+        message = get_document_or_404(Message, id=id)
+        _message_acl_check(message, user)
+        message.set_user_delete(user)
+
+    if ids:
+        system_messages.add_message(request, system_messages.SUCCESS,
+                                    _('Messages deleted: %d') % len(ids) )
+
+    if view == 'inbox':
+        return redirect('user_messages:view_inbox')
+
+    return redirect('user_messages:view_sent')

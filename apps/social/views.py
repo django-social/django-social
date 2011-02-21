@@ -488,6 +488,9 @@ def in_dev(request):
 def test_error(request):
     raise Exception()
 
+def test_ip(request):
+    return HttpResponse('ip=%s' % request.META['REMOTE_ADDR'])
+
 
 def test_messages(request):
     messages.add_message(request, messages.SUCCESS, 'Успех')

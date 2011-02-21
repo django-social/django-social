@@ -1,7 +1,9 @@
 <uwsgi>
-  <!--socket>127.0.0.1:8012</socket-->
-  <pythonpath>/var/www/social/</pythonpath>
   <module>django_wsgi</module>
+  <master/>
+  <limit-as>128</limit-as>
+  <memory-report/>
+  <socket-timeout>600</socket-timeout>
 </uwsgi>
 
 

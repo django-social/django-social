@@ -1871,6 +1871,10 @@ div.folder a, div.aplications a
 {
 	margin-bottom: 10px;
 }
+.breadcrumb span
+{
+	color: #666;
+}
 .title
 {
 	width: 90px;
@@ -1882,4 +1886,9 @@ div.folder a, div.aplications a
 .title a.delete
 {
 	width: 50px;
+}
+
+form.multiple_del
+{
+    display: none;
 }

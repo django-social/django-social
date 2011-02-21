@@ -1,6 +1,54 @@
 {% extends "base.html" %}
 {% load i18n %}
+
+{% block css %}
+{{ block.super }}
+<style type="text/css">
+div.answer { display: none }
+</style>
+{% endblock %}
+
+{% block js %}
+{{ block.super }}
+<script type="text/javascript" src="/media/js/autoresize-mod.jquery.js"></script>
+<script type="text/javascript">
+    var current_answer = undefined;
+
+    function answer_hide() {
+        $('#answer-' + current_answer).hide();
+        $('#ans-' + current_answer).show();
+        current_answer = undefined;
+        return false;
+    }
+
+    $(document).ready(function() {
+        $('textarea').autoResize({extraSpace : 0});
+        $('a.ans').click(function() {
+            if (current_answer != undefined) answer_hide();
+            current_answer = this.id.split('-')[1];
+            $('#ans-' + current_answer).hide();
+            $('#answer-' + current_answer).show();
+            return false;
+        });
+        $('a.back').click(answer_hide);
+ 
+       $("a.multiple_del").click(function(){
+            var checked = $('input.del:checked');
+
+            if(checked.length){
+                var form = $("form.multiple_del");
+                form.append(checked);
+                form.submit()
+            }
+       });
+    });
+</script>
+{% endblock %}
+
 {% block content %}
+    <form class="multiple_del" method="POST" action="{% url user_messages:multiple_delete %}">
+        <input type="hidden" name="view" value="inbox" />
+    </form>
 <div id="filter_box">
 <h2>{% trans "Messages history" %}</h2>
 
@@ -11,6 +59,7 @@
     <div class="messages">
         <h3>{% trans "Messages: inbox" %} ({{ objects.paginator.count }})</h3>
         <div class="messages_inbox">
+        <a class="multiple_del" href="javascript: void(0);">Удалить отмеченные</a>
         
             {% for msg in objects.object_list %}
             <div class="message_item {% if msg.is_read %}readed{% else %}unreaded{% endif %}">
@@ -35,8 +84,30 @@
                      {% endcomment %}
                      <p><a class="reference" href="{% url user_messages:delete_message message_id=msg.id%}">
                         {% trans "Delete" %}
-                    </a></p>
+                     </a></p>
+                     <p><a class="ans reference" href="#" id="ans-{{ msg.id  }}">Ответить</a></p>
+					<p>
+                        <input type="checkbox" class="del" value="{{ msg.id }}" id="del_{{ msg.id }}" name="del_{{ msg.id }}"/>
+                        <label for="del_{{ msg.id }}">Отметить</label>
+                    </p>
                 </div>
+
+                <form method="post" action="{% url user_messages:send_message user_id=msg.sender.id %}">
+                    <div class="answer" id="answer-{{ msg.id  }}">
+                        <div class="friendTable">
+                            {% include "includes/user/micro.html" %}
+                        </div>
+                        <div class="message_text_reply rounded">
+                            <textarea name="text" cols="78" rows="5"></textarea>
+                        </div>
+
+                        <div class="but_1">
+                            <a class="back reference" href="#" id="back-{{ msg.id  }}">Отменить</a>
+                            <input type="submit" value="{% trans 'Send' %}"/>
+                        </div>
+                    </div>
+                </form>
+
             </div>
             {% endfor %}
         </div>

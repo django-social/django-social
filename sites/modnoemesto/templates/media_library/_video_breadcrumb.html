@@ -1,7 +1,13 @@
 <div class="breadcrumb">
+{% if current_folder %}
 <a href="{% url media_library:video_index %}">Видеозаписи</a>
-{% for folder in current_folder.breadcrumb %}
+{% for folder in current_folder.ancestors %}
 &nbsp;/&nbsp;
 <a href="{% url media_library:video_index folder.id %}">{{ folder.name }}</a>
 {% endfor %}
+&nbsp;/&nbsp;
+<span>{{ current_folder.name }}</span>
+{% else %}
+<span>Видеозаписи</span>
+{% endif %}
 </div>

@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+
+from tempfile import TemporaryFile
 from apps.media.transformations.base import BatchFileTransformation
 from apps.media.transformations.video import VideoThumbnail, Video2Flv
 from django.core.exceptions import ValidationError
@@ -7,7 +10,6 @@ from django.conf import settings
 from apps.media.documents import File
 from apps.media.transformations.image import ImageResize
 from apps.media.tasks import apply_file_transformations
-from apps.utils.stringio import StringIO
 from ImageFile import Parser as ImageFileParser
 from apps.media.file_validators import VideoFileValidator, FileValidator
 
@@ -31,11 +33,11 @@ class ImageField(FileField):
         if f is None:
             return None
 
-        buffer = StringIO()
+        buffer = TemporaryFile()
         for chunk in data.chunks():
             buffer.write(chunk)
 
-        buffer.reset()
+        buffer.seek(0)
         try:
             parser = ImageFileParser()
             parser.feed(buffer.read())
@@ -51,7 +53,7 @@ class ImageField(FileField):
         self.task_name = task_name or self.task_name
 
         file_object = File(type=type)
-        self.buffer.reset()
+        self.buffer.seek(0)
         file_object.file.put(self.buffer, content_type=self.content_type)
         file_object.save()
 
@@ -84,18 +86,18 @@ class VideoField(FileField):
         if f is None:
             return None
 
-        buffer = StringIO()
+        buffer = TemporaryFile()
         for chunk in data.chunks():
             buffer.write(chunk)
 
-        buffer.reset()
+        buffer.seek(0)
         try:
             validator = VideoFileValidator()
             validator.validate(buffer)
         except FileValidator.Exception:
             raise ValidationError(self.error_messages['invalid_video'])
         
-        buffer.reset()
+        buffer.seek(0)
         self.buffer = buffer
         self.content_type = f.content_type
         return data
@@ -105,7 +107,7 @@ class VideoField(FileField):
         self.task_name = task_name or self.task_name
 
         file_object = File(type=type)
-        self.buffer.reset()
+        self.buffer.seek(0)
         file_object.file.put(self.buffer, content_type=self.content_type)
         file_object.save()
 

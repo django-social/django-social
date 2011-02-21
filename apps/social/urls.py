@@ -28,6 +28,7 @@ urlpatterns = patterns('apps.social.views',
    url(r'^profile/avatar/$', 'avatar_edit', name='avatar_edit'),
 
    # тестовые страницы
-   url(ur'^ЕГГОГ$', 'test_error',),
-   url(ur'^СООБЩ$', 'test_messages',),
+   url(ur'^test_error$', 'test_error',),
+   url(ur'^test_messages$', 'test_messages',),
+   url(ur'^test_ip$', 'test_ip',),
 )
