@@ -32,13 +32,15 @@
         <h3>{% trans "Viewing a message" %}</h3>
             <div class="mess">
                 <div class="friendTable">
+                    {% if msg.sender == user %}
+                    {% with msg.recipient as user %}
+                        {% include "includes/user/micro.html" %}
+                    {% endwith %}
+                    {% else %}
                     {% with msg.sender as user %}
-                            {% include "includes/user/micro.html" %}
-                        {% endwith %}
-                    
-                 <!--   {% with msg.sender as user %}
-                            {% include "includes/user/mini.html" %}
-                        {% endwith %} -->
+                        {% include "includes/user/micro.html" %}
+                    {% endwith %}
+                    {% endif %}
                 </div>
                 <div class="message_text">
                     <p>
@@ -51,46 +53,32 @@
                     <p>{{ msg.text|linebreaks }}</p>
                 </div>
             </div>
-            {% if not msg.sender == user %}
-             <form method="post"
-              action="{% url user_messages:send_message user_id=msg.sender.id %}">
+        {% if msg.sender == user %}
+        <form method="post" action="{% url user_messages:send_message msg.recipient.id %}">
+        {% else %}
+        <form method="post" action="{% url user_messages:send_message msg.sender.id %}">
+        {% endif %}
             <div class="answer">
                 <div class="friendTable">
-
-                            {% include "includes/user/micro.html" %}
-
-                    
-                 <!--   {% with msg.sender as user %}
-                            {% include "includes/user/mini.html" %}
-                        {% endwith %} -->
-                </div>
-                <div class="message_text">
-                    <p>
-                        {% with msg.timestamp as datetime %}
-                            {% include 'includes/datetime.html' %}
-                        {% endwith %}
-                    </p>
+                    {% include "includes/user/micro.html" %}
                 </div>
                 <div class="message_text_reply rounded">
                     <textarea name="text" cols="78" rows="5"></textarea>
                 </div>
-                
+
                 <div class="but_1">
                     <a id="back" class="reference" href="javascript: void(0);">Отменить</a>
-                    <input type="submit" value="{% trans "Send" %}"/>
+                    <input type="submit" value="{% trans 'Send' %}"/>
                 </div>
             </div>
-            
+
             <div class="but_0">
                 <a class="reference" href="{% url user_messages:delete_message message_id=msg.id%}">
-                        {% trans "Delete" %}
+                    {% trans "Delete" %}
                 </a>
-                <a id="ans" class="reference" href="javascript: void(0);">Ответить</a>
+                <a id="ans" class="reference" href="javascript: void(0);">{% if msg.sender == user %}Ещё одно{% else %}Ответить{% endif %}</a>
             </div>
-            
-    </form>
-    {% endif %}
-    
+        </form>
     </div>
 </div>
 </div>
