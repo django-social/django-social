@@ -31,9 +31,8 @@ from django.contrib.auth import REDIRECT_FIELD_NAME
 
 from mongoengine.django.shortcuts import get_document_or_404
 
-from apps.user_messages.forms import MessageTextForm
 from apps.social.forms import ChangeProfileForm, LostPasswordForm, ChangeUserForm
-from apps.social.forms import SetNewPasswordForm
+from apps.social.forms import SetNewPasswordForm, ChangePasswordForm
 from apps.utils.paginator import paginate
 from apps.themes.decorators import with_user_theme
 
@@ -567,4 +566,17 @@ def set_new_password(request, code):
             return redirect('social:home')
     else:
         form = SetNewPasswordForm()
+    return direct_to_template(request, 'social/profile/set_new_password.html' , dict(form=form))
+
+
+def change_password(request):
+    if request.method == 'POST':
+        form = ChangePasswordForm(request.user, request.POST)
+        if form.is_valid():
+            request.user.set_password(form.cleaned_data['password1'])
+            request.user.save()
+            messages.add_message(request, messages.SUCCESS, _('Password successfully updated.'))
+            return redirect('social:home')
+    else:
+        form = ChangePasswordForm()
     return direct_to_template(request, 'social/profile/set_new_password.html' , dict(form=form))
