@@ -6,7 +6,7 @@
 {% if user.is_authenticated %}
 <script type="text/javascript">
 $(document).ready(function(){
-    $('#delete_note').click(function (event){
+    $('.del').click(function (event){
         if(confirm("Удалить заметку?")){
             this.trigger('click');
         }
@@ -14,7 +14,7 @@ $(document).ready(function(){
     });
 
     $("a.multiple_del").click(function(){
-            var checked = $('input.del:checked');
+            var checked = $('input.dels:checked');
 
             if(checked.length){
                 var form = $("form.multiple_del");
@@ -53,11 +53,9 @@ $(document).ready(function(){
                     <p><a href="{% url notes:note_view note.id %}">{{ note.title }}</a></p>
                 </div>
                 <div class="operation">
-                     <p><a class="reference" id="edit_note" href="{% url notes:note_edit note.id %}">{% trans 'Edit' %}</a></p>
-                     <p><a class="reference" id="delete_note" href="{% url notes:note_delete note.id %}">{% trans 'Delete' %}</a></p>
-
-                     <p>
-                        <input type="checkbox" class="del" value="{{ note.id }}" id="del_{{ note.id }}" name="del_{{ note.id }}"/>
+                     <p><a class="reference" href="{% url notes:note_edit note.id %}">{% trans 'Edit' %}</a></p>
+                     <p><a class="reference del" href="{% url notes:note_delete note.id %}">{% trans 'Delete' %}</a></p>
+					 <p><input type="checkbox" class="dels" value="{{ note.id }}" id="del_{{ note.id }}" name="del_{{ note.id }}"/>
                         <label for="del_{{ note.id }}">Отметить</label>
                     </p>
                 </div>
