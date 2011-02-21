@@ -1,6 +1,24 @@
 {% extends "base.html" %}
 {% load i18n %}
 
+{% block js %}
+{{ block.super }}
+{% if user.is_authenticated %}
+<script type="text/javascript">
+$(document).ready(function(){
+    $('#delete_note').click(function (event){
+        if(confirm("Удалить заметку?")){
+            this.trigger('click');
+        }
+        return false;
+    });
+});
+</script>
+{% endif %}
+{% endblock %}
+
+
+
 {% block content %}
 <div id="filter_box">
 <h2>{% trans "Notes" %}</h2>
@@ -20,8 +38,8 @@
                     <p><a href="{% url notes:note_view note.id %}">{{ note.title }}</a></p>
                 </div>
                 <div class="operation">
-                     <p><a class="reference" href="{% url notes:note_edit note.id %}">{% trans 'Edit' %}</a></p>
-                     <p><a class="reference" href="{% url notes:note_delete note.id %}">{% trans 'Delete' %}</a></p>
+                     <p><a class="reference" id="edit_note" href="{% url notes:note_edit note.id %}">{% trans 'Edit' %}</a></p>
+                     <p><a class="reference" id="delete_note" href="{% url notes:note_delete note.id %}">{% trans 'Delete' %}</a></p>
                 </div>
           </div>
         
