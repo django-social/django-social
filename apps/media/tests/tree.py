@@ -49,11 +49,14 @@ class TreeTest(TestCase):
     def test_add_folder(self):
         tree = Tree()
         tree.save()
+
         folder1 = Folder(name="folder1")
         folder1.save()
         tree.add(folder1)
+
         tree.save()
         tree.reload()
+
         self.failUnless([ folder1.id, folder1.name,  True, [] ] in tree.root["data"])
         node = tree.get(folder1.id)
         self.failUnless(isinstance(node, TreeNode))
@@ -63,13 +66,16 @@ class TreeTest(TestCase):
     def test_folder_add_file(self):
         tree = Tree()
         tree.save()
+
         folder1 = Folder(name="folder1")
         folder1.save()
         tree.add(folder1)
         file = create_image_file()
         tree.add(file, folder1)
+
         tree.save()
         tree.reload()
+
         node = tree.get(file.id)
         self.failUnless(len(node.ancestors) == 1)
 
@@ -78,14 +84,17 @@ class TreeTest(TestCase):
         tree.add(folder2, folder1)
         file = create_image_file()
         tree.add(file, folder2)
+
         tree.save()
         tree.reload()
+
         node = tree.get(file.id)
         self.failUnless(len(node.ancestors) == 2)
 
     def test_remove_file(self):
         tree = Tree()
         tree.save()
+
         folder1 = Folder(name="folder1")
         folder1.save()
         tree.add(folder1)
@@ -94,6 +103,7 @@ class TreeTest(TestCase):
         tree.add(folder2, folder1)
         file = create_image_file()
         tree.add(file, folder2)
+
         tree.save()
         tree.reload()
 
@@ -125,14 +135,21 @@ class TreeTest(TestCase):
         tree = Tree()
         tree.save()
 
-        tree.add_mult([
-            file("qwe"),
-            folder("Test"),
-            file("asd"),
-            folder("answe"),
-            folder("Qerr"),
-            file("111223"),
-        ])
+        folder1 = Folder(name="folder1")
+        folder1.save()
+        tree.add(folder1)
+        folder2 = Folder(name="folder2")
+        folder2.save()
+        tree.add(folder2, folder1)
+        file = create_image_file()
+        tree.add(file, folder2)
 
         tree.save()
         tree.reload()
+
+        tree.rename(folder2, "kre")
+
+        tree.save()
+        tree.reload()
+
+        self.failUnless(tree.get(folder2.id).name == "kre")

@@ -24,7 +24,7 @@ case "$1" in
     kill_if_exist "manage.py celeryd"
     sudo -u appserver bash -c 'python manage.py celeryd > /dev/null 2>/var/socnet/appserver/celeryd-err.log &'
     kill_if_exist "uwsgi"
-    sudo -u appserver bash -c 'uwsgi -s /var/socnet/appserver/uwsgi.sock -C -H venv -x django.xml -M -p 16 -l 16384 > /dev/null 2>/var/socnet/appserver/uwsgi-err.log &'
+    sudo -u appserver bash -c 'uwsgi --socket /var/socnet/appserver/uwsgi.sock --chmod-socket --home venv --xmlconfig django.xml --processes 16 --listen 16384 > /dev/null 2>/var/socnet/appserver/uwsgi-err.log &'
     ;;
   stop)
     kill_if_exist "uwsgi"

@@ -57,7 +57,11 @@ def folder_add(request, library, id=None):
             return redirect_by_id('media_library:%s_index' % library, id)
     else:
         form = FolderEditForm()
-    return direct_to_template(request, 'media_library/%s_folder_add.html' % library, dict( form=form, current_folder=current_folder ) )
+    return direct_to_template(request,
+                              'media_library/folder_edit.html',
+                              dict( breadcrumb='media_library/_%s_breadcrumb.html' % library,
+                                    form=form,
+                                    current_folder=current_folder ) )
 
 
 @permission_required('superuser')
@@ -73,15 +77,19 @@ def folder_edit(request, library, id):
         form = FolderEditForm(request.POST, initial=folder._data)
 
         if form.is_valid():
-            folder.name = form.cleaned_data['name']
-            folder.save()
+            tree.rename(folder, form.cleaned_data['name'])
             current_folder.name = folder.name
             tree.save()
             messages.add_message(request, messages.SUCCESS, _('Folder successfully saved'))
             return redirect_by_id('media_library:%s_index' % library, id)
     else:
         form = FolderEditForm(initial=folder._data)
-    return direct_to_template(request, 'media_library/%s_folder_edit.html' % library, dict( form=form, current_folder=current_folder ) )
+    return direct_to_template(request,
+                              'media_library/folder_edit.html',
+                              dict( breadcrumb='media_library/_%s_breadcrumb.html' % library,
+                                    form=form,
+                                    current_folder=current_folder,
+                                    is_edit=True ) )
 
 
 @permission_required('superuser')
@@ -91,8 +99,12 @@ def folder_delete(request, library, id):
     node = tree.get(folder.id)
     if not node:
         raise Http404()
-    ids = tree.remove(node)
+    nodes = tree.remove(node)
     tree.save()
+
+    for node in nodes:
+        node.full_delete()
+
     messages.add_message(request, messages.SUCCESS, _('Folder successfully removed'))
     url = 'media_library:%s_index' % library
     return redirect(url)
@@ -101,9 +113,10 @@ def folder_delete(request, library, id):
 @permission_required('superuser')
 def file_delete(request, library, id):
     tree = get_library(library)
-    image = get_document_or_404(File, id=id)
-    ids = tree.remove(image)
+    file = get_document_or_404(File, id=id)
+    tree.remove(file)
     tree.save()
+    file.full_delete()
     messages.add_message(request, messages.SUCCESS, REMOVE_MESSAGES[library])
     return redirect('media_library:%s_index' % library)
 
@@ -133,117 +146,109 @@ def index(request, library, id=None):
 
 
 @permission_required('superuser')
-def image_add(request, id=None):
-    tree = get_library(LIBRARY_TYPE_IMAGE)
+def file_edit(request, library, id=None, file_id=None):
 
-    if id:
-        folder = get_document_or_404(Folder, id=id)
-        parent = tree.get(folder.id)
-        if not parent:
-            raise Http404()
-        current_folder = parent
+    def image_file(name, description):
+        file = form.fields['file']
+        file.name = name
+        file.description = description
+        return file.save('library_image', settings.LIBRARY_IMAGE_SIZES, LIBRARY_IMAGE_RESIZE_TASK)
+
+    def video_file(name, description):
+        file = form.fields['file']
+        file.name = name
+        file.description = description
+        return file.save('library_video', settings.LIBRARY_VIDEO_SIZES, LIBRARY_VIDEO_RESIZE_TASK)
+
+    def audio_file(name, description):
+        buffer = StringIO()
+        for chunk in request.FILES['file'].chunks():
+            buffer.write(chunk)
+
+        buffer.reset()
+
+        file = File(type='library_audio')
+        file.file.put(buffer, content_type='audio/mpeg')
+        file.transformation = 'main.mp3'
+        file.name = name
+        file.description = description
+        return file.save()
+
+    params = {
+        LIBRARY_TYPE_IMAGE: dict(
+            file=image_file,
+            successfully=_('Image successfully saved') if file_id else _('Image successfully added'),
+            title=_('Editing image') if file_id else _('Adding image'),
+            form=ImageAddForm,
+        ),
+
+        LIBRARY_TYPE_VIDEO: dict(
+            file=video_file,
+            successfully=_('Video successfully saved') if file_id else _('Video successfully added'),
+            title=_('Editing video') if file_id else _('Adding video'),
+            form=VideoAddForm,
+        ),
+
+        LIBRARY_TYPE_AUDIO: dict(
+            file=audio_file,
+            successfully=_('Audio successfully saved') if file_id else _('Audio successfully added'),
+            title=_('Editing audio') if file_id else _('Adding audio'),
+            form=AudioAddForm,
+        ),
+    }
+
+    current_params = params[library]
+
+    tree = get_library(library)
+
+    if file_id:
+        file = get_document_or_404(File, id=file_id)
+        data = file._data
+        node = tree.get(file.id)
+        if node.ancestors:
+            current_folder = node.ancestors[-1]
+            id = current_folder.id
+        else:
+            current_folder = None
     else:
-        current_folder = None
+        file = None
+        data = {}
+        if id:
+            folder = get_document_or_404(Folder, id=id)
+            current_folder = tree.get(folder.id)
+            if not current_folder:
+                raise Http404()
+        else:
+            current_folder = None
 
     if request.POST:
-        form = ImageAddForm(request.POST, request.FILES)
+        form = current_params['form'](request.POST, request.FILES, initial=data)
+        if file_id:
+            form.fields['file'].required = False
         if form.is_valid():
-            file = form.fields['file'].save('library_image', settings.LIBRARY_IMAGE_SIZES, LIBRARY_IMAGE_RESIZE_TASK)
+            if 'file' in request.FILES:
+                newfile = current_params['file'](form.cleaned_data['name'], form.cleaned_data['description'])
 
-            file.name = form.cleaned_data['name']
-            file.description = form.cleaned_data['description']
-            file.save()
+                if file_id:
+                    tree.remove(file)
+                    file.full_delete()
 
-            if id:
-                tree.add(file, parent)
+                if id:
+                    tree.add(newfile, current_folder)
+                else:
+                    tree.add(newfile)
             else:
-                tree.add(file)
+                # is file_id
+                tree.rename(file, form.cleaned_data['name'])
             tree.save()
-            messages.add_message(request, messages.SUCCESS, _('Image successfully added'))
-            return redirect_by_id('media_library:image_index', id)
+            messages.add_message(request, messages.SUCCESS, current_params['successfully'])
+            return redirect_by_id('media_library:%s_index' % library, id)
     else:
-        form = ImageAddForm()
-    return direct_to_template(request, 'media_library/image_add.html', dict( form=form, current_folder=current_folder ) )
-
-
-@permission_required('superuser')
-def video_add(request, id=None):
-    tree = get_library(LIBRARY_TYPE_VIDEO)
-
-    if id:
-        folder = get_document_or_404(Folder, id=id)
-        parent = tree.get(folder.id)
-        if not parent:
-            raise Http404()
-        current_folder = parent
-    else:
-        current_folder = None
-
-    if request.POST:
-        form = VideoAddForm(request.POST, request.FILES)
-        if form.is_valid():
-
-
-            file = form.fields['file'].save('library_video', settings.LIBRARY_VIDEO_SIZES,
-                                            LIBRARY_VIDEO_RESIZE_TASK)
-
-            file.name = form.cleaned_data['name']
-            file.description = form.cleaned_data['description']
-            file.save()
-
-            if id:
-                tree.add(file, parent)
-            else:
-                tree.add(file)
-            tree.save()
-
-            messages.add_message(request, messages.SUCCESS, _('Video successfully added'))
-            return redirect_by_id('media_library:video_index', id)
-    else:
-        form = VideoAddForm()
-
-    return direct_to_template(request, 'media_library/video_add.html', dict( form=form, current_folder=current_folder ) )
-
-
-@permission_required('superuser')
-def audio_add(request, id=None):
-    tree = get_library(LIBRARY_TYPE_AUDIO)
-
-    if id:
-        folder = get_document_or_404(Folder, id=id)
-        parent = tree.get(folder.id)
-        if not parent:
-            raise Http404()
-        current_folder = parent
-    else:
-        current_folder = None
-
-    if request.POST:
-        form = AudioAddForm(request.POST, request.FILES)
-        if form.is_valid():
-
-            buffer = StringIO()
-            for chunk in request.FILES['file'].chunks():
-                buffer.write(chunk)
-
-            buffer.reset()
-
-            file = File(type='library_audio')
-            file.file.put(buffer, content_type='audio/mpeg')
-            file.transformation = 'main.mp3'
-            file.name = form.cleaned_data['name']
-            file.description = form.cleaned_data['description']
-            file.save()
-
-            if id:
-                tree.add(file, parent)
-            else:
-                tree.add(file)
-            tree.save()
-
-            messages.add_message(request, messages.SUCCESS, _('Audio successfully added'))
-            return redirect_by_id('media_library:audio_index', id)
-    else:
-        form = AudioAddForm()
-
-    return direct_to_template(request, 'media_library/audio_add.html', dict( form=form, current_folder=current_folder ) )
+        form = current_params['form'](initial=data)
+    return direct_to_template(request,
+                              'media_library/file_edit.html',
+                              dict( title=current_params['title'],
+                                    breadcrumb='media_library/_%s_breadcrumb.html' % library,
+                                    form=form,
+                                    current_folder=current_folder,
+                                    file=file ) )
