@@ -6,7 +6,7 @@
 {% if user.is_authenticated %}
 <script type="text/javascript">
 $(document).ready(function(){
-    $('#delete_note').click(function (event){
+    $('.del').click(function (event){
         if(confirm("Удалить заметку?")){
             this.trigger('click');
         }
@@ -38,8 +38,8 @@ $(document).ready(function(){
                     <p><a href="{% url notes:note_view note.id %}">{{ note.title }}</a></p>
                 </div>
                 <div class="operation">
-                     <p><a class="reference" id="edit_note" href="{% url notes:note_edit note.id %}">{% trans 'Edit' %}</a></p>
-                     <p><a class="reference" id="delete_note" href="{% url notes:note_delete note.id %}">{% trans 'Delete' %}</a></p>
+                     <p><a class="reference" href="{% url notes:note_edit note.id %}">{% trans 'Edit' %}</a></p>
+                     <p><a class="reference del" href="{% url notes:note_delete note.id %}">{% trans 'Delete' %}</a></p>
                 </div>
           </div>
         
