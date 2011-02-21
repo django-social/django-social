@@ -10,7 +10,7 @@
     {%  include "includes/left_menu.html" %}
 
     <div class="messages">
-    	<h3>{% trans "Messages: sent" %}</h3>
+    	<h3>{% trans "Messages: sent" %} ({{ objects.paginator.count }})</h3>
         <div class="messages_inbox">
             {% for msg in objects.object_list %}
             <div class="message_item {% if msg.is_read %}readed{% else %}unreaded{% endif %}">
