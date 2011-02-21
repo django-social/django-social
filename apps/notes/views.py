@@ -2,7 +2,8 @@ from django.views.generic.simple import direct_to_template
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponseNotFound
 from django.core.urlresolvers import reverse
-
+from django.contrib import messages as system_messages
+from django.utils.translation import ugettext_lazy as _
 from mongoengine.django.shortcuts import get_document_or_404
 
 from .documents import Note
@@ -63,9 +64,24 @@ def note_view(request, note_id):
 
 #@login_required
 def note_delete(request, note_id):
-    note = Note.objects(id=note_id, author=request.user) or \
-        Note.objects(id=note_id, is_public=True)
+    note = Note.objects(id=note_id, author=request.user)
     if not note:
         return HttpResponseNotFound()
     note.delete()
     return HttpResponseRedirect(reverse('notes:note_list'))
+
+
+def multiple_delete(request):
+    ids = [ x[4:] for x in request.POST.keys() if x.startswith('del_') ]
+    deleted = 0
+    for id in ids:
+        note = Note.objects(id=id, author=request.user)
+        if note:
+            note.delete()
+            deleted += 1
+    if deleted:
+        system_messages.add_message(request, system_messages.SUCCESS,
+                                    _('Notes deleted: %d') % deleted )
+    return HttpResponseRedirect(reverse('notes:note_list'))
+
+
