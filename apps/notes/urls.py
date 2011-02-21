@@ -10,4 +10,6 @@ urlpatterns = patterns('apps.notes.views',
     url(r'^(?P<note_id>[a-f0-9]{24})/edit/$', 'note_edit', name='note_edit'),
     url(r'^(?P<note_id>[a-f0-9]{24})/delete/$', 'note_delete',
         name='note_delete'),
+
+    url(r'^delete/$', 'multiple_delete', name='multiple_delete'),
 )
