@@ -63,8 +63,7 @@ def note_view(request, note_id):
 
 #@login_required
 def note_delete(request, note_id):
-    note = Note.objects(id=note_id, author=request.user) or \
-        Note.objects(id=note_id, is_public=True)
+    note = Note.objects(id=note_id, author=request.user)
     if not note:
         return HttpResponseNotFound()
     note.delete()
