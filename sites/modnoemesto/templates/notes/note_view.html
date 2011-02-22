@@ -34,10 +34,12 @@ $(document).ready(function(){
        <div class="note_text_view rounded">
           <p>{{ note.text }}</p>
        </div>
+        {% ifequal request.user note.author %}
         <div>
             <a class="reference del" href="{% url notes:note_delete note.id %}">{% trans 'Delete' %}</a>
             <a class="reference" href="{% url notes:note_edit note.id %}">{% trans 'Edit' %}</a>
         </div>
+        {% endifequal %}
     </div>
 </div>
 {% endblock %}
