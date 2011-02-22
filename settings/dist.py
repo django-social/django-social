@@ -175,6 +175,7 @@ INSTALLED_APPS = (
     'apps.invite',
     'apps.themes',
     'apps.applications',
+    'apps.links',
 )
 
 

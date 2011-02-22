@@ -16,6 +16,10 @@ GENDER_CHOICES = (
 
 NAME_REGEXP = ur'^[A-zА-яЁё\'\`\-]+$'
 
+PASSWORD_ERROR = _("This value may contain only letters, numbers and ./-/_/@/!/#/$/%/^/&/+/= characters.")
+
+PASSWORD_REGEXP = r'^[\w\.\-_@!#$%^&+=]+$'
+
 class PeopleFilterForm(forms.Form):
     first_name = forms.CharField(label=_(u"Имя"), required=False)
     last_name = forms.CharField(label=_(u"Фамилия"), required=False)
@@ -134,8 +138,8 @@ class UserCreationForm(forms.Form):
                                  widget=forms.PasswordInput,
                                  min_length=4,
                                  max_length=64,
-                                 regex=r'^[\w\.\-_@!#$%^&+=]+$',
-                                 error_messages={'invalid': _("This value may contain only letters, numbers and ./-/_/@/!/#/$/%/^/&/+/= characters.")})
+                                 regex=PASSWORD_REGEXP,
+                                 error_messages={'invalid': PASSWORD_ERROR})
     password2 = forms.CharField(label=_("Password confirmation"), widget=forms.PasswordInput, max_length=64)
 
     captcha = CaptchaField(label=_('Captcha'))
@@ -169,7 +173,6 @@ class MessageTextForm(forms.Form):
 
 
 class ChangeUserForm(forms.Form):
-    email = forms.EmailField(label=_("Email"), max_length=64, widget=forms.TextInput({'readonly': 'readonly'}))
     first_name = forms.RegexField(label=_("First name"),
                                   regex=NAME_REGEXP,
                                   min_length=2, max_length=64,
@@ -180,9 +183,11 @@ class ChangeUserForm(forms.Form):
                                  min_length=2, max_length=64,
                                  required=False,
                                  error_messages={'invalid': _("This value may contain only letters, numbers and ./-/_/@/!/#/$/%/^/&/+/= characters.")})
+
+class AdminChangeUserForm(ChangeUserForm):
+    email = forms.EmailField(label=_("Email"), max_length=64, widget=forms.TextInput({'readonly': 'readonly'}))
     is_banned = forms.BooleanField(required=False)
     cash = forms.FloatField(required=False)
-
 
 class ChangeProfileForm(forms.Form):
     SEX_CHOICES = (
@@ -221,8 +226,8 @@ class SetNewPasswordForm(forms.Form):
                                  widget=forms.PasswordInput,
                                  min_length=4,
                                  max_length=64,
-                                 regex=r'^[\w\.\-_@!#$%^&+=]+$',
-                                 error_messages={'invalid': _("This value may contain only letters, numbers and ./-/_/@/!/#/$/%/^/&/+/= characters.")})
+                                 regex=PASSWORD_REGEXP,
+                                 error_messages={'invalid': PASSWORD_ERROR})
     password2 = forms.CharField(label=_("Password confirmation"), widget=forms.PasswordInput, max_length=64)
 
     def clean_password2(self):
@@ -233,3 +238,34 @@ class SetNewPasswordForm(forms.Form):
                                           " match."))
         return password2
 
+
+class ChangePasswordForm(forms.Form):
+    old_password = forms.RegexField(label=_("Old Password"),
+                                    widget=forms.PasswordInput,
+                                    regex=PASSWORD_REGEXP,
+                                    error_messages={'invalid': PASSWORD_ERROR})
+    password1 = forms.RegexField(label=_("Password"),
+                                 widget=forms.PasswordInput,
+                                 min_length=4,
+                                 max_length=64,
+                                 regex=PASSWORD_REGEXP,
+                                 error_messages={'invalid': PASSWORD_ERROR})
+    password2 = forms.CharField(label=_("Password confirmation"), widget=forms.PasswordInput, max_length=64)
+
+    def __init__(self, user=None, *args, **kwargs):
+        self.user = user
+        super(ChangePasswordForm, self).__init__(*args, **kwargs)
+
+    def clean_old_password(self):
+        old_password = self.cleaned_data["old_password"]
+        if not self.user.check_password(old_password):
+            raise forms.ValidationError(_("Please enter a correct password."))
+        return old_password
+
+    def clean_password2(self):
+        password1 = self.cleaned_data.get("password1", "")
+        password2 = self.cleaned_data["password2"]
+        if password1 != password2:
+            raise forms.ValidationError(_("The two password fields didn't"
+                                          " match."))
+        return password2

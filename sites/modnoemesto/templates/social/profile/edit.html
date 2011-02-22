@@ -5,14 +5,13 @@
 <ul class="seting">
     <li><a href="{% url social:avatar_edit %}">{% trans "Edit photo" %}</a></li>
     <li><a href="{% url themes:list %}">{% trans "Change theme" %}</a></li>
+    <li><a href="{% url social:change_password %}">{% trans "Change password" %}</a></li>
 </ul>
     <br />
 <div id="filter_box">
-{% if request.user.is_superuser %}
 {% with user_form as form %}
 {% include "social/profile/_user_form.html" %}
 {% endwith %}
-{% endif %}
 
 {% with profile_form as form %}
 {% include "social/profile/_profile_form.html" %}

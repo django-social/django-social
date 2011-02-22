@@ -1,5 +1,23 @@
 {% extends "base.html" %}
 {% load i18n %}
+
+
+{% block js %}
+{{ block.super }}
+{% if user.is_authenticated %}
+<script type="text/javascript">
+$(document).ready(function(){
+    $('.del').click(function (event){
+        if(confirm("Удалить заметку?")){
+            this.trigger('click');
+        }
+        return false;
+    });
+});
+</script>
+{% endif %}
+{% endblock %}
+
 {% block content %}
 <div id="filter_box">
 <h2>{% trans "Note" %} "{{ note.title }}"</h2>
@@ -16,6 +34,12 @@
        <div class="note_text_view rounded">
           <p>{{ note.text }}</p>
        </div>
+        {% ifequal request.user note.author %}
+        <div>
+            <a class="reference del" href="{% url notes:note_delete note.id %}">{% trans 'Delete' %}</a>
+            <a class="reference" href="{% url notes:note_edit note.id %}">{% trans 'Edit' %}</a>
+        </div>
+        {% endifequal %}
     </div>
 </div>
 {% endblock %}

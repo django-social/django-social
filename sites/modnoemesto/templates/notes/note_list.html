@@ -1,10 +1,45 @@
 {% extends "base.html" %}
 {% load i18n %}
 
+{% block js %}
+{{ block.super }}
+{% if user.is_authenticated %}
+<script type="text/javascript">
+$(document).ready(function(){
+    $('.del').click(function (event){
+        if(confirm("Удалить заметку?")){
+            this.trigger('click');
+        }
+        return false;
+    });
+
+    $("a.multiple_del").click(function(){
+            var checked = $('input.dels:checked');
+
+            if(checked.length){
+                var form = $("form.multiple_del");
+                form.append(checked);
+                form.submit()
+            }
+    });
+
+});
+</script>
+{% endif %}
+{% endblock %}
+
+
+
 {% block content %}
+<form class="multiple_del" method="POST" action="{% url notes:multiple_delete %}">
+</form>
 <div id="filter_box">
 <h2>{% trans "Notes" %}</h2>
-
+{% if notes %}
+    {% ifequal request.user note.author %}
+        <a class="multiple_del" href="javascript: void(0);">Удалить отмеченные</a>
+    {% endifequal %}
+{% endif %}
 <p>
 {% for note in notes %}
     <div class="note_list">
@@ -19,9 +54,15 @@
                     </p>
                     <p><a href="{% url notes:note_view note.id %}">{{ note.title }}</a></p>
                 </div>
+
                 <div class="operation">
+                {% ifequal request.user note.author %}
                      <p><a class="reference" href="{% url notes:note_edit note.id %}">{% trans 'Edit' %}</a></p>
-                     <p><a class="reference" href="{% url notes:note_delete note.id %}">{% trans 'Delete' %}</a></p>
+                     <p><a class="reference del" href="{% url notes:note_delete note.id %}">{% trans 'Delete' %}</a></p>
+					 <p><input type="checkbox" class="dels" value="{{ note.id }}" id="del_{{ note.id }}" name="del_{{ note.id }}"/>
+                        <label for="del_{{ note.id }}">Отметить</label>
+                    </p>
+                {% endifequal %}
                 </div>
           </div>
         

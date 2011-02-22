@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-12-09 16:36+0300\n"
+"POT-Creation-Date: 2011-02-21 16:18+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,10 +23,14 @@ msgstr ""
 msgid "Text"
 msgstr "Текст"
 
-#: views.py:31
+#: views.py:32
 msgid "Message sent"
 msgstr "Сообщение отправлено"
 
-#: views.py:83
+#: views.py:82
 msgid "Message deleted"
 msgstr "Сообщение удалено"
+
+#: views.py:102
+msgid "Messages deleted: %d"
+msgstr "Удалено сообщений: %d"

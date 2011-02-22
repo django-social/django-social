@@ -1901,7 +1901,14 @@ div.folder a, div.aplications a
 	float: right;
 	
 }
-/*.title a.delete
+/*
+.title a.delete
 {
 	width: 50px;
-}*/
+}
+*/
+
+form.multiple_del
+{
+    display: none;
+}

@@ -12,9 +12,9 @@
 <script type="text/javascript">
 $(document).ready(function() { 
 	var link = $(".aplications a.app_link");					   
-    link.click(function (e){ 
-        var width=810, height=645; 
-        window.open(link.attr('href'), 'game',
+    link.click(function (e){
+        var width=810, height=645;
+        window.open($(this).attr('href'), 'game',
                 'width='+width+',height='+height+',left='+($(window).width()-width)/2+',top='+($(window).height()-height)/2); 
         return false;
     });

@@ -31,9 +31,8 @@ from django.contrib.auth import REDIRECT_FIELD_NAME
 
 from mongoengine.django.shortcuts import get_document_or_404
 
-from apps.user_messages.forms import MessageTextForm
-from apps.social.forms import ChangeProfileForm, LostPasswordForm, ChangeUserForm
-from apps.social.forms import SetNewPasswordForm
+from apps.social.forms import ChangeProfileForm, LostPasswordForm, ChangeUserForm, AdminChangeUserForm, AdminChangeUserForm
+from apps.social.forms import SetNewPasswordForm, ChangePasswordForm
 from apps.utils.paginator import paginate
 from apps.themes.decorators import with_user_theme
 
@@ -351,11 +350,10 @@ def profile_edit(request, id=None):
         if not context:
             return
 
-        if request.user.is_superuser:
-            answer = user_form(request, user)
-            if not answer:
-                return
-            context.update(answer)
+        answer = user_form(request, user)
+        if not answer:
+            return
+        context.update(answer)
 
         camera = user.get_camera()
         if camera or request.user.is_superuser:
@@ -381,8 +379,10 @@ def profile_edit(request, id=None):
 
 
 def user_form(request, user):
+    Form = AdminChangeUserForm if request.user.is_superuser else ChangeUserForm
+
     if request.POST and request.POST.get('form', None) == 'user':
-        form = ChangeUserForm(request.POST)
+        form = Form(request.POST)
         if form.is_valid():
             for k, v in form.cleaned_data.items():
                 setattr(user, k, v if v else None)
@@ -391,7 +391,7 @@ def user_form(request, user):
             messages.add_message(request, messages.SUCCESS, _('User successfully updated'))
             return
     else:
-        form = ChangeUserForm(user._data)
+        form = Form(user._data)
     return dict(user_form=form)
 
 
@@ -567,4 +567,17 @@ def set_new_password(request, code):
             return redirect('social:home')
     else:
         form = SetNewPasswordForm()
+    return direct_to_template(request, 'social/profile/set_new_password.html' , dict(form=form))
+
+
+def change_password(request):
+    if request.method == 'POST':
+        form = ChangePasswordForm(request.user, request.POST)
+        if form.is_valid():
+            request.user.set_password(form.cleaned_data['password1'])
+            request.user.save()
+            messages.add_message(request, messages.SUCCESS, _('Password successfully updated.'))
+            return redirect('social:home')
+    else:
+        form = ChangePasswordForm()
     return direct_to_template(request, 'social/profile/set_new_password.html' , dict(form=form))
