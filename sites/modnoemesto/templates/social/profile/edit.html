@@ -17,6 +17,11 @@
 {% include "social/profile/_profile_form.html" %}
 {% endwith %}
 
+{% with dating_form as form %}
+{% include "social/profile/_dating_form.html" %}
+{% endwith %}
+
+
 {% if camera or request.user.is_superuser %}
 {% with cam_form as form %}
 {% include "social/profile/_cam_form.html" %}

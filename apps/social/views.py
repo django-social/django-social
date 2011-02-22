@@ -31,7 +31,7 @@ from django.contrib.auth import REDIRECT_FIELD_NAME
 
 from mongoengine.django.shortcuts import get_document_or_404
 
-from apps.social.forms import ChangeProfileForm, LostPasswordForm, ChangeUserForm, AdminChangeUserForm, AdminChangeUserForm
+from apps.social.forms import ChangeProfileForm, LostPasswordForm, ChangeUserForm, AdminChangeUserForm, AdminChangeUserForm, ChangeDatingForm
 from apps.social.forms import SetNewPasswordForm, ChangePasswordForm
 from apps.utils.paginator import paginate
 from apps.themes.decorators import with_user_theme
@@ -67,6 +67,16 @@ def index(request):
 
         if data['gender']:
             filter_profile_data['sex'] = data['gender']
+
+        if data['is_dating']:
+            if data['age_from']:
+                filter_profile_data['age__gte'] = data['age_from']
+
+            if data['age_to']:
+                filter_profile_data['age__lte'] = data['age_to']
+
+            if data['interests']:
+                filter_profile_data['interests__icontains'] = data['interests']
 
         if data['has_photo']:
             filter_user_data['avatar__exists'] = True
@@ -355,6 +365,12 @@ def profile_edit(request, id=None):
             return
         context.update(answer)
 
+        dating = dating_form(request, user)
+        if not dating:
+            return
+        context.update(dating)
+
+
         camera = user.get_camera()
         if camera or request.user.is_superuser:
             answer = cam_form(request, user, camera)
@@ -395,8 +411,25 @@ def user_form(request, user):
     return dict(user_form=form)
 
 
+def dating_form(request, user):
+    profile = user.profile
+
+    if request.POST and request.POST.get('form', None) == 'dating':
+        form = ChangeDatingForm(request.POST)
+        if form.is_valid():
+            for k, v in form.cleaned_data.items():
+                setattr(profile, k, v if v else None)
+            profile.save()
+            messages.add_message(request, messages.SUCCESS, _('Profile successfully updated'))
+            return
+    else:
+        form = ChangeDatingForm(profile._data)
+
+    return dict(dating_form=form)
+
 def profile_form(request, user):
     profile = user.profile
+
     if request.POST and request.POST.get('form', None) == 'profile':
         form = ChangeProfileForm(request.POST)
         if form.is_valid():

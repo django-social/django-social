@@ -1,6 +1,23 @@
 {% extends "base.html" %}
 {% load i18n media %}
 
+
+{% block css %}
+{{ block.super }}
+<style type="text/css">
+.dating {
+    display: none;
+}
+
+.dating #id_age_from, .dating #id_age_to{
+    width: 20px;
+    border: 1px solid #CCC;
+}
+
+</style>
+{% endblock %}
+
+
 {% block js %}
 {{ block.super }}
 <script type="text/javascript">
@@ -23,6 +40,15 @@ $(document).ready(function(){
             return false;
         }
     });
+
+    $('#id_is_dating').click(function(e){
+        $('.dating').toggle();
+    });
+
+    if($('#id_is_dating').is(':checked')){
+        $('.dating').show();
+    }
+
 });
 </script>
 {% endblock %}
@@ -89,8 +115,43 @@ $(document).ready(function(){
         </tr>
 
         <tr>
-            <td style="height:10px"></td>
+            <th colspan="4">
+            	Искать по знакомствам:
+            </th>
+            <td class="empty_filt"></td>
+			<td>
+				{{ form.is_dating }}
+			</td>
         </tr>
+        <tr>
+            <td colspan="4" style="height:10px"></td>
+        </tr>
+        <tr class="dating">
+            <th>
+            	Интересы:
+            </th>
+            <td class="empty_filt"></td>
+			<td>
+                <div class="rounded" style="background: white none repeat scroll 0px 0px; padding: 3px 4px;">
+				    {{ form.interests }}
+                </div>
+			</td>
+            <th>
+            	Возраст:
+            </th>
+            <td class="empty_filt"></td>
+			<td>
+                <div class="rounded" style="background: white none repeat scroll 0px 0px; padding: 3px 4px; width: 90px;">
+		    		от: {{ form.age_from }} до: {{ form.age_to }}
+                </div>
+
+			</td>
+        </tr>
+
+
+        <!--tr>
+            <td style="height:10px"></td>
+        </tr-->
     </tbody>
     </table>
 

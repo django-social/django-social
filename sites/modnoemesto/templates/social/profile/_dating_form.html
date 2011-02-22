@@ -1,0 +1,32 @@
+{% load i18n %}
+
+<h2>Знакомства</h2>
+
+<form method="post" class="baseform">
+    <input type="hidden" name="form" value="dating" />
+    <div class="filt rounded">
+        <table class="group_add">
+        <tr>
+            <th><label for="id_age">Возраст:</label></th>
+            <td class="empty_filt"></td>
+            <td>
+                {{ form.age.errors }}
+                <div class="input_holder rounded">{{ form.age }}</div></td>
+        </tr>
+        <tr>
+        	<td style="height:10px"></td>
+        </tr>
+        <tr>
+            <th><label for="id_interests">Интересы:</label></th>
+            <td class="empty_filt"></td>
+            <td>
+                {{ form.interests.errors }}
+                <div class="input_holder rounded">{{ form.interests }}</div></td>
+        </tr>
+        </table>
+    </div>
+    <div class="but">
+        <input type="submit"
+           value="{% trans 'Save' %}" />
+    </div>
+</form>

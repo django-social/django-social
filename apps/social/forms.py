@@ -9,9 +9,9 @@ from apps.supercaptcha import CaptchaField
 
 
 GENDER_CHOICES = (
-    ('', _(u'Не выбран')),
-    ('m', _(u'Male')),
-    ('f', _(u'Female')),
+('', _(u'Не выбран')),
+('m', _(u'Male')),
+('f', _(u'Female')),
 )
 
 NAME_REGEXP = ur'^[A-zА-яЁё\'\`\-]+$'
@@ -28,10 +28,10 @@ class PeopleFilterForm(forms.Form):
     mobile = forms.CharField(label=_(u"Сотовый телефон"), required=False)
     website = forms.CharField(label=_(u"Сайт"), required=False)
     gender = forms.CharField(label=_(u"Пол"),
-        widget=forms.Select(choices=GENDER_CHOICES,
-                            #attrs={'class':'gender-selectbox'}
-        ),
-        required=False)
+                             widget=forms.Select(choices=GENDER_CHOICES,
+                                                 #attrs={'class':'gender-selectbox'}
+                                                 ),
+                             required=False)
     city = forms.CharField(label=_(u"Город"), required=False)
     university_name = forms.CharField(label=_(u"Университет"), required=False)
     university_department = forms.CharField(label=_(u"Факультет"), required=False)
@@ -39,12 +39,30 @@ class PeopleFilterForm(forms.Form):
     is_online = forms.BooleanField(label=_(u'На сайте'), required=False, initial=True)
     has_photo = forms.BooleanField(label=_(u'C фото'), required=False)
 
+    # dating
+    is_dating = forms.BooleanField(label=_(u'Участвовать в знакомствах'), required=False)
+    interests = forms.CharField(label=_("Interests"), required=False)
+    age_from = forms.CharField(label=_("Age"), max_length=3, required=False)
+    age_to = forms.CharField(label=_("Age"), max_length=3, required=False)
+
     def clean_first_name(self):
         return self.cleaned_data["first_name"].strip()
 
     def clean_last_name(self):
         return self.cleaned_data["last_name"].strip()
 
+    def clean_age_from(self):
+        try:
+            return int(self.cleaned_data["age_from"])
+        except:
+            raise forms.ValidationError(u"Возраст 'от' введен не правильно")
+
+
+    def clean_age_to(self):
+        try:
+            return int(self.cleaned_data["age_to"])
+        except:
+            raise forms.ValidationError(u"Возраст 'до' введен не правильно")
 
 class LoginForm(forms.Form):
     email = forms.EmailField(label=_("Email"))
@@ -89,8 +107,8 @@ class LoginForm(forms.Form):
 class PhoneNumberMultiWidget(forms.MultiWidget):
     def __init__(self, attrs=None):
         widgets = (
-            forms.TextInput(attrs={'size':'3', 'maxlength':'3'}),
-            forms.TextInput(attrs={'size':'7', 'maxlength':'7'}),
+        forms.TextInput(attrs={'size': '3', 'maxlength': '3'}),
+        forms.TextInput(attrs={'size': '7', 'maxlength': '7'}),
         )
         super(PhoneNumberMultiWidget, self).__init__(widgets, attrs)
 
@@ -117,23 +135,26 @@ class PhoneNumberMultiWidget(forms.MultiWidget):
 
 class UserCreationForm(forms.Form):
     """
-    A form that creates a user, with no privileges, from the given username
-    and password.
-    """
+A form that creates a user, with no privileges, from the given username
+and password.
+"""
     first_name = forms.RegexField(label=_("First name"),
                                   regex=NAME_REGEXP,
                                   min_length=2, max_length=64,
-                                  error_messages={'invalid': _("This value may contain only letters, numbers and '/`/- characters.")})
+                                  error_messages={'invalid': _(
+                                          "This value may contain only letters, numbers and '/`/- characters.")})
     last_name = forms.RegexField(label=_("Last name"),
                                  regex=NAME_REGEXP,
                                  min_length=2, max_length=64,
-                                 error_messages={'invalid': _("This value may contain only letters, numbers and ./-/_/@/!/#/$/%/^/&/+/= characters.")})
+                                 error_messages={'invalid': _(
+                                         "This value may contain only letters, numbers and ./-/_/@/!/#/$/%/^/&/+/= characters.")})
     email = forms.EmailField(label=_("Email"), max_length=64)
     phone = forms.RegexField(label=_("Phone"),
                              required=False,
                              regex=r'^\d{3}-\d{7}$',
                              widget=PhoneNumberMultiWidget,
-                             error_messages={'invalid': _("Phone number is invalid or can not be used. Check your spelling. For example: +7 916 3564334")})
+                             error_messages={'invalid': _(
+                                     "Phone number is invalid or can not be used. Check your spelling. For example: +7 916 3564334")})
     password1 = forms.RegexField(label=_("Password"),
                                  widget=forms.PasswordInput,
                                  min_length=4,
@@ -177,12 +198,14 @@ class ChangeUserForm(forms.Form):
                                   regex=NAME_REGEXP,
                                   min_length=2, max_length=64,
                                   required=False,
-                                  error_messages={'invalid': _("This value may contain only letters, numbers and '/`/- characters.")})
+                                  error_messages={'invalid': _(
+                                          "This value may contain only letters, numbers and '/`/- characters.")})
     last_name = forms.RegexField(label=_("Last name"),
                                  regex=NAME_REGEXP,
                                  min_length=2, max_length=64,
                                  required=False,
-                                 error_messages={'invalid': _("This value may contain only letters, numbers and ./-/_/@/!/#/$/%/^/&/+/= characters.")})
+                                 error_messages={'invalid': _(
+                                         "This value may contain only letters, numbers and ./-/_/@/!/#/$/%/^/&/+/= characters.")})
 
 class AdminChangeUserForm(ChangeUserForm):
     email = forms.EmailField(label=_("Email"), max_length=64, widget=forms.TextInput({'readonly': 'readonly'}))
@@ -191,9 +214,9 @@ class AdminChangeUserForm(ChangeUserForm):
 
 class ChangeProfileForm(forms.Form):
     SEX_CHOICES = (
-        ('', _('None selected')),
-        ('f', _('Female')),
-        ('m', _('Male')),
+    ('', _('None selected')),
+    ('f', _('Female')),
+    ('m', _('Male')),
     )
 
     hometown = forms.CharField(label=_("Hometown"), max_length=30, required=False)
@@ -204,7 +227,8 @@ class ChangeProfileForm(forms.Form):
                               required=False,
                               regex=r'^\d{3}-\d{7}$',
                               widget=PhoneNumberMultiWidget,
-                              error_messages={'invalid': _("Phone number is invalid or can not be used. Check your spelling. For example: +7 916 3564334")})
+                              error_messages={'invalid': _(
+                                      "Phone number is invalid or can not be used. Check your spelling. For example: +7 916 3564334")})
     website = forms.URLField(label=_("Website"), required=False)
     university = forms.CharField(label=_("University"), max_length=30, required=False)
     department = forms.CharField(label=_("Department"), max_length=30, required=False)
@@ -212,9 +236,15 @@ class ChangeProfileForm(forms.Form):
     announce = forms.CharField(label=_("Announce"), max_length=512,
                                required=True, widget=forms.Textarea)
     get_news = forms.BooleanField(label=_("Get news"), required=False, initial=True)
+    is_dating = forms.BooleanField(label=_("Is dating"), required=False)
 
     def clean_mobile(self):
         return self.cleaned_data["mobile"].replace('-', '')
+
+class ChangeDatingForm(forms.Form):
+    interests = forms.CharField(label=_("Interests"), max_length=512,
+                                required=False, widget=forms.Textarea)
+    age = forms.CharField(label=_("Age"), max_length=3, required=False)
 
 
 class LostPasswordForm(forms.Form):

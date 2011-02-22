@@ -14,7 +14,7 @@ from django.utils.encoding import smart_unicode
 
 from apps.groups.documents import GroupUser
 from mongoengine.document import Document
-from mongoengine.fields import ReferenceField, StringField, URLField
+from mongoengine.fields import ReferenceField, StringField, URLField, IntField
 from mongoengine.fields import BooleanField, DateTimeField, FloatField
 from mongoengine.fields import ListField, DateTimeField
 from apps.utils.decorators import cached_property
@@ -63,6 +63,11 @@ class Profile(Document):
     inviter = ReferenceField('User')
 
     theme = ReferenceField('Theme')
+
+    # dating
+    is_dating = BooleanField()
+    age = IntField()
+    interests = StringField(max_length=512)
 
     meta = {
         'indexes': [
