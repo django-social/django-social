@@ -69,6 +69,7 @@ def index(request):
             filter_profile_data['sex'] = data['gender']
 
         if data['is_dating']:
+            filter_profile_data['is_dating'] = True
             if data['age_from']:
                 filter_profile_data['age__gte'] = data['age_from']
 
