@@ -173,7 +173,6 @@ class MessageTextForm(forms.Form):
 
 
 class ChangeUserForm(forms.Form):
-    email = forms.EmailField(label=_("Email"), max_length=64, widget=forms.TextInput({'readonly': 'readonly'}))
     first_name = forms.RegexField(label=_("First name"),
                                   regex=NAME_REGEXP,
                                   min_length=2, max_length=64,
@@ -184,9 +183,11 @@ class ChangeUserForm(forms.Form):
                                  min_length=2, max_length=64,
                                  required=False,
                                  error_messages={'invalid': _("This value may contain only letters, numbers and ./-/_/@/!/#/$/%/^/&/+/= characters.")})
+
+class AdminChangeUserForm(ChangeUserForm):
+    email = forms.EmailField(label=_("Email"), max_length=64, widget=forms.TextInput({'readonly': 'readonly'}))
     is_banned = forms.BooleanField(required=False)
     cash = forms.FloatField(required=False)
-
 
 class ChangeProfileForm(forms.Form):
     SEX_CHOICES = (
