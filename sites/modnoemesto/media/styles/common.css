@@ -1771,9 +1771,13 @@ a.edit
 	float: left;
 	overflow: hidden;
 	margin-right: 10px;
-	width: 225px;
+	width: 240px;
 	height: 140px;
-	padding: 0px 9px 9px 10px;
+	padding: 0px 0px 9px 10px;
+}
+.media_holder.audio
+{
+	height: 80px;
 }
 a.fancy-image
 {
@@ -1794,12 +1798,26 @@ a.fancy-folder
 	height: 128px;
 }
 	
-a.fancy-image+p+a.delete, .folder_description+a.delete, a.delete+a.edit
+a.fancy-image+p+a.delete, .folder_description+a.delete, a.fancy-image+p+a.delete+a.edit
 {
 	width: 17px;
 	overflow: hidden;
 	padding: 0px;
 	text-indent: 9999px;
+}
+a.delete+a.edit.audio
+{
+	color: #585858;
+	text-decoration: none;
+	padding-left: 20px;
+	display: block;
+	width: 100px;
+	margin-bottom: 5px;
+	text-indent: inherit;
+}
+p.file_name
+{
+	margin-bottom: 3px;
 }
 a.fancy-image+p
 {
@@ -1877,16 +1895,18 @@ div.folder a, div.aplications a
 }
 .title
 {
-	width: 90px;
+	width: 106px;
 	height: 128px;
-	text-align: center;
+	/*text-align: center;*/
 	float: right;
 	
 }
+/*
 .title a.delete
 {
 	width: 50px;
 }
+*/
 
 form.multiple_del
 {

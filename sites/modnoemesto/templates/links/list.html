@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<div id="filter_box">
+<h2>Ссылки</h2>
+    <form method="post">
+        <table>
+            {{ link_category_form.as_table }}
+        </table>
+        <input type="submit" value="Создать категорию" />
+    </form>
+    {% if categories %}
+    <form method="post">
+        <table>
+            {{ link_form.as_table }}
+        </table>
+        <input type="submit" value="Создать ссылку" />
+    </form>
+    {% endif %}
+</div>
+{% endblock %}
