@@ -12,6 +12,7 @@ def list(request):
 
     form = request.POST.get('form')
 
+
     if request.POST and form in ('category', 'link'):
         if form=='category':
             link_category_form = LinkCategoryForm(request.POST)
@@ -24,10 +25,18 @@ def list(request):
 
         if form=='link':
             link_form = LinkForm(request.POST)
+            categories = LinkCategory.objects(author=user)
+
+            link_form.fields['category'].choices = tuple(
+                [('', _('Select link category'))] +
+                [ (x.id, x.title) for x in categories ]
+            )
+
+
             if link_form.is_valid():
                 url = link_form.cleaned_data['url']
                 category_id = link_form.cleaned_data['category']
-                category = LinkCategory.objects(id=category_id, author=user)
+                category = LinkCategory.objects(id=category_id, author=user).first()
                 Link.objects.get_or_create(url=url,
                                            category=category,
                                            author=user)
@@ -38,17 +47,17 @@ def list(request):
         link_form = LinkForm()
         link_category_form = LinkCategoryForm()
 
-
-
     categories = LinkCategory.objects(author=user)
 
-        
     link_form.fields['category'].choices = tuple(
-            [('', _('Select link category'))] +
-            [ (x.id, x.title) for x in categories ]
+        [('', _('Select link category'))] +
+        [ (x.id, x.title) for x in categories ]
     )
+        
 
     links = Link.objects(author=user)
+    
+
     return direct_to_template(request, "links/list.html",
                               dict(
                                     categories=categories,
