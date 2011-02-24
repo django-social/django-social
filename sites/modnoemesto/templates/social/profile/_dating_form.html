@@ -1,5 +1,26 @@
 {% load i18n %}
 
+{% block css %}
+{{ block.super }}
+<style type="text/css">
+.kino input{
+    width: 20px;
+}
+
+.kino li {
+    display: inline-block;
+    width: 130px;
+}
+
+.kino label {
+
+}
+
+
+
+</style>
+{% endblock %}
+
 <h2>Знакомства</h2>
 
 <form method="post" class="baseform">
@@ -23,6 +44,19 @@
                 {{ form.interests.errors }}
                 <div class="input_holder rounded">{{ form.interests }}</div></td>
         </tr>
+        <tr>
+        	<td style="height:10px"></td>
+        </tr>
+        <tr>
+            <th><label for="id_kino">Кино:</label></th>
+            <td class="empty_filt"></td>
+            <td>
+                {{ form.kino.errors }}
+                <div class="input_holder rounded kino">{{ form.kino }}</div></td>
+        </tr>
+
+
+
         </table>
     </div>
     <div class="but">

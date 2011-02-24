@@ -6,7 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from documents import User
 from django.contrib.auth import authenticate
 from apps.supercaptcha import CaptchaField
-
+from apps.social import choices
 
 GENDER_CHOICES = (
 ('', _(u'Не выбран')),
@@ -42,8 +42,15 @@ class PeopleFilterForm(forms.Form):
     # dating
     is_dating = forms.BooleanField(label=_(u'Участвовать в знакомствах'), required=False)
     interests = forms.CharField(label=_("Interests"), required=False)
-    age_from = forms.CharField(label=_("Age"), max_length=3, required=False)
-    age_to = forms.CharField(label=_("Age"), max_length=3, required=False)
+    age_from = forms.CharField(label=_("Age"), required=False)
+    age_to = forms.CharField(label=_("Age"), required=False)
+
+    kino = forms.MultipleChoiceField(
+        label=_("Kino"),
+        widget=forms.CheckboxSelectMultiple(),
+        required=False,
+        choices=[[i, i] for i in choices.kino]
+    )
 
     def clean_first_name(self):
         return self.cleaned_data["first_name"].strip()
@@ -52,15 +59,23 @@ class PeopleFilterForm(forms.Form):
         return self.cleaned_data["last_name"].strip()
 
     def clean_age_from(self):
+        value = self.cleaned_data["age_from"]
+        value = value.strip()
+        if value == '':
+            return ''
         try:
-            return int(self.cleaned_data["age_from"])
+            return int(value)
         except:
             raise forms.ValidationError(u"Возраст 'от' введен не правильно")
 
 
     def clean_age_to(self):
+        value = self.cleaned_data["age_to"]
+        value = value.strip()
+        if value == '':
+            return ''
         try:
-            return int(self.cleaned_data["age_to"])
+            return int(value)
         except:
             raise forms.ValidationError(u"Возраст 'до' введен не правильно")
 
@@ -245,6 +260,14 @@ class ChangeDatingForm(forms.Form):
     interests = forms.CharField(label=_("Interests"), max_length=512,
                                 required=False, widget=forms.Textarea)
     age = forms.CharField(label=_("Age"), max_length=3, required=False)
+    kino = forms.MultipleChoiceField(
+        label=_("Kino"),
+        widget=forms.CheckboxSelectMultiple(
+            #attrs={'class': 'kino'}
+        ),
+        required=False,
+        choices=[[i, i] for i in choices.kino]
+    )
 
 
 class LostPasswordForm(forms.Form):

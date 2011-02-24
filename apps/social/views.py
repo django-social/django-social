@@ -46,6 +46,9 @@ def index(request):
         return _index_unreg(request)
 
     params = dict(request.GET.items())
+    if 'kino' in params and params['kino']:
+        params['kino'] = request.GET.getlist('kino')
+
     if 'page' in params:
         del params['page']
 
@@ -78,6 +81,10 @@ def index(request):
 
             if data['interests']:
                 filter_profile_data['interests__icontains'] = data['interests']
+
+            if data['kino']:
+                filter_profile_data['kino__in'] = data['kino']
+
 
         if data['has_photo']:
             filter_user_data['avatar__exists'] = True

@@ -19,7 +19,7 @@ from mongoengine.fields import BooleanField, DateTimeField, FloatField
 from mongoengine.fields import ListField, DateTimeField
 from apps.utils.decorators import cached_property
 
-
+from apps.social import choices
 
 OFFLINE_TIMEDELTA = 300
 
@@ -68,6 +68,7 @@ class Profile(Document):
     is_dating = BooleanField()
     age = IntField()
     interests = StringField(max_length=512)
+    kino = ListField(StringField())
 
     meta = {
         'indexes': [
