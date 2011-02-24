@@ -1,22 +1,87 @@
 {% extends "base.html" %}
 {% load i18n %}
 
+{% block js %}
+{{ block.super }}
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#id_category').selectbox();
+    });
+</script>
+{% endblock %}
+
+
 {% block content %}
 <div id="filter_box">
 <h2>Ссылки</h2>
-    <form method="post">
-        <table>
-            {{ link_category_form.as_table }}
-        </table>
-        <input type="submit" value="Создать категорию" />
-    </form>
-    {% if categories %}
-    <form method="post">
-        <table>
-            {{ link_form.as_table }}
-        </table>
-        <input type="submit" value="Создать ссылку" />
-    </form>
+     <div class="filt rounded">
+        <form method="post">
+        	<input type="hidden" name="form" value="category"/>
+           <table class="group_add">
+                <tr>
+                    <td style="height:10px"></td>
+                    <td class="empty_filt"></td>
+                    <td style="height:10px"> {{ link_category_form.title.errors }}</td>
+                </tr>
+                <tr>
+                    <td class="label"><label for="id_title">{{ link_category_form.title.label }}:</label></td>
+                    <td class="empty_filt"></td>
+                    <td>
+                        
+                        <div class="input_holder rounded">
+                            {{ link_category_form.title }}
+                        </div>
+                    </td>
+                </tr>
+           </table>
+            <div class="but">
+                <input type="submit" value="Создать категорию" />
+            </div>
+        </form>
+        {% if categories %} 
+        <form method="post">
+        	
+                <input type="hidden" name="form" value="link"/>
+            
+             <table class="group_add">
+                <tr>
+                    <td style="height:10px"></td>
+                    <td class="empty_filt"></td>
+                    <td style="height:10px">{{ link_form.url.errors }}</td>
+                </tr>
+                <tr>
+                    <td class="label"><label for="id_url">{{ link_form.url.label }}:</label></td>
+                    <td class="empty_filt"></td>
+                    <td>
+                        
+                        <div class="input_holder rounded">
+                            {{ link_form.url }}
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="height:10px"></td>
+                    <td class="empty_filt"></td>
+                    <td style="height:10px">{{ link_form.category.errors }}</td>
+                </tr>
+                <tr>
+                    <td class="label"><label for="id_category">{{ link_form.category.label }}:</label></td>
+                    <td class="empty_filt"></td>
+                    <td>
+                        
+                        <div>
+                            {{ link_form.category }}
+                        </div>
+                    </td>
+                </tr>
+           </table>
+           <div class="but">
+                <input type="submit" value="Создать ссылку" />
+            </div>
+        </form>
     {% endif %}
+	</div>
+
+
 </div>
 {% endblock %}

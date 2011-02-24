@@ -318,6 +318,10 @@ li#group
 {
     background:url(../images/group.jpg) no-repeat 4% 50%;
 }
+li#link
+{
+    background:url(../images/link.png) no-repeat 4% 50%;
+}
 li#foto
 {
     background:url(../images/foto_noactive.png) no-repeat 4% 50%;
