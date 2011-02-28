@@ -77,6 +77,7 @@
                     {% trans "Delete" %}
                 </a>
                 <a id="ans" class="reference" href="javascript: void(0);">{% if msg.sender == user %}Ещё одно{% else %}Ответить{% endif %}</a>
+                <a id="ans" class="reference" href="{% if msg.sender == user %}{% url user_messages:view_sent %}{% else %}{% url user_messages:view_inbox %}{% endif %}">Закрыть</a>
             </div>
         </form>
     </div>
