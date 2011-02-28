@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load media i18n %}
+
+{% block content %}
+    <div>
+        {% for item in items %}
+            {% include "ads/view.html" %}
+        {% endfor %}
+    </div>
+{% endblock %}

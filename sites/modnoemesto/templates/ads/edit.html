@@ -1,5 +1,30 @@
 {% extends "base.html" %}
 {% load i18n %}
+
+{% block css %}
+{{ block.super }}
+
+
+{% endblock %}
+
+{% block js %}
+{{ block.super }}
+    $(document).ready(function(){
+        $('#id_country').select(function(){
+            $.ajax({
+                url: "{% url ads:get_cities %}",
+                type: "POST",
+                data:{
+                    country: $('#id_country').val()
+                },
+                success: function(data){
+                    
+                }
+            });
+        });
+    });
+{% endblock %}
+
 {% block content %}
 <div id="filter_box">
 <h2>
