@@ -41,12 +41,59 @@
             <img src="{% media_url item.photo ad_photo_thumbnail.png %}" />
         </a>
     {% endif %}
-       <div class="message_text">
+        <div class="message_text">
            <p>{% trans "Created:" %} {{ item.ctime|date:"d.m.Y" }}</p>
-       </div>
-       <div class="note_text_view rounded">
+        </div>
+        <div class="note_text_view rounded">
           <p>{{ item.text|linebreaksbr }}</p>
-       </div>
+        </div>
+        <br />
+
+        <table>
+        <tr>
+            <td>
+              <p><b>{% trans "Section" %}:</b></p>
+            </td>
+            <td>
+                 {{ item.section }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <p><b>{% trans "Category" %}:</b></p>
+            </td>
+            <td>
+                 {{ item.category }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <p><b>{% trans "Country" %}:</b></p>
+            </td>
+            <td>
+                 {{ item.country }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <p><b>{% trans "City" %}:</b></p>
+            </td>
+            <td>
+                {{ item.city }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <p><b>{% trans "Price" %}:</b></p>
+            </td>
+            <td>
+                {{ item.price }} {{ item.currency }}
+            </td>
+
+        </tr>
+        </table>
+
+        <br />
     </div>
     {% ifequal request.user item.author %}
     <div>
