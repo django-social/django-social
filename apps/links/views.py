@@ -35,10 +35,12 @@ def list(request):
 
             if link_form.is_valid():
                 url = link_form.cleaned_data['url']
+                title = link_form.cleaned_data['title']
                 category_id = link_form.cleaned_data['category']
                 category = LinkCategory.objects(id=category_id, author=user).first()
                 Link.objects.get_or_create(url=url,
                                            category=category,
+                                           title=title,
                                            author=user)
 
             link_category_form = LinkCategoryForm()
@@ -56,7 +58,12 @@ def list(request):
         
 
     links = Link.objects(author=user)
-    
+
+    for category in categories:
+        category.links = [ x for x in links if x.category==category ]
+        print category.links
+        for link in category.links:
+            print link.title, link.url
 
     return direct_to_template(request, "links/list.html",
                               dict(

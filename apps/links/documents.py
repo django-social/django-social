@@ -13,6 +13,7 @@ class LinkCategory(Document):
 class Link(Document):
     author = ReferenceField('User')
     category = ReferenceField('LinkCategory')
+    title = StringField()
     url = URLField()
     creation_time = DateTimeField(default=datetime.now)
 
