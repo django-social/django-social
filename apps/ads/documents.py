@@ -5,6 +5,7 @@ from mongoengine import (Document, StringField, ReferenceField,
                          BooleanField, DateTimeField, IntField)
 
 class Ad(Document):
+    author = ReferenceField('User')
     creation_time = DateTimeField(default=datetime.now)
 
     title = StringField()

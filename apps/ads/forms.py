@@ -20,12 +20,12 @@ class AdForm(forms.Form):
     country = forms.ChoiceField(label=_('Country'),
                                 choices=tuple([ (x, x) for x in geo_data.keys() ]))
 
-    city = forms.ChoiceField(label=_('City'))
+    city = forms.ChoiceField(label=_('City'), required=False)
 
     section = forms.ChoiceField(label=_('Section'),
                                 choices=tuple([ (x, x) for x in type_ads.keys() ]))
 
-    category = forms.ChoiceField(label=_('Category'))
+    category = forms.ChoiceField(label=_('Category'), required=False)
     price = forms.FloatField(label=_('Price'))
     currency = forms.ChoiceField(label=_('Currency'),
                                  choices=tuple([ (x, x) for x in currency_data ]))
@@ -34,3 +34,6 @@ class AdForm(forms.Form):
     text = forms.CharField(label=_('Text'), widget=forms.Textarea)
 
     photo = forms.FileField(label=_('Photo'), required=False)
+
+    def _clean_city(self):
+        pass

@@ -1,5 +1,41 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load media %}
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="/media/styles/fancybox.css" type="text/css" media="screen" />
+{% endblock %}
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="/media/js/jquery.fancybox-1.3.4.js"></script>
+    <script type="text/javascript" src="/media/js/jquery.easing-1.3.pack.js"></script>
+
+    <script type="text/javascript">
+
+
+    $(function(){
+        function formatTitle(title, currentArray, currentIndex, currentOpts) {
+            return '<div id="fancybox-title-inside">' +
+                    '<b>' + title + '</b>'  + '<br />' +
+                    $(currentArray[currentIndex]).attr('_description') +
+                    '</div>';
+        }
+
+        $('a.fancy-image').fancybox({
+            'titlePosition'	: 'inside',
+            'transitionIn': 'elastic',
+            'transitionOut': 'elastic',
+            'speedIn': 600,
+            'speedOut': 200,
+            'overlayShow': true,
+            'titleFormat': formatTitle
+        });
+    });
+
+    </script>
+
+{% endblock %}
+
 {% block content %}
 <div id="filter_box">
 <h2>{{ item.title }}</h2>
@@ -9,6 +45,10 @@
               {% include "includes/user/micro.html" %}
            {% endwith %}
        </div>
+    <a class="fancy-image" href="{% media_url item.photo ad_photo_full.png %}"
+       title="{{ file.name }}" _description="{{ file.description }}">
+        <img src="{% media_url item.photo ad_photo_thumbnail.png %}" />
+    </a>
        <div class="message_text">
            <p>{% trans "Created:" %} {{ item.ctime|date:"d.m.Y" }}</p>
        </div>

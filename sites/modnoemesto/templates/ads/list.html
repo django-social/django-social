@@ -1,6 +1,15 @@
 {% extends "base.html" %}
 {% load i18n %}
 
+{% block js %}
+{{ block.super }}
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#id_country, #id_section, #id_city, #id_category, #id_currency').selectbox();
+    });
+</script>
+{% endblock %}
+
 {% block content %}
 <div id="filter_box">
 <h2>Объявления</h2>
