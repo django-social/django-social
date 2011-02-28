@@ -62,7 +62,6 @@ def add(request):
             'currency',
             ):
             setattr(ad, field, form.cleaned_data[field])
-
         if request.FILES.has_key('photo'):
             ad.photo = form.fields['photo'].save('ad_photo',
                                      settings.AD_PHOTO_SIZES, 'AD_PHOTO_RESIZE')
@@ -92,4 +91,11 @@ def view(request, id):
                               )
 
 def delete(request, id):
-    pass
+    item = get_document_or_404(Ad, id=id, author=request.user)
+    if item.photo:
+        item.photo.full_delete()
+    item.delete()
+    messages.add_message(request, messages.SUCCESS,
+                             _('Ad successfully deleted'))
+
+    return redirect('ads:list')

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from apps.media.fields import ImageField
 
 from django import forms
 from django.utils import simplejson
@@ -34,10 +35,10 @@ class AdForm(forms.Form):
     title = forms.CharField(label=_('Title'))
     text = forms.CharField(label=_('Text'), widget=forms.Textarea)
 
-    photo = forms.FileField(label=_('Photo'), required=False)
+    photo = ImageField(label=_('Photo'), required=False)
 
-    def __init__(self, data, *args, **kwargs):
-        super(AdForm, self).__init__(data, *args, **kwargs)
+    def __init__(self, data, files, *args, **kwargs):
+        super(AdForm, self).__init__(data, files, *args, **kwargs)
         if data:
             country = data.get('country')
             self.fields['city'].choices = tuple([(u'', u''),] + [(x, x)
