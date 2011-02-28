@@ -8,7 +8,11 @@
 #id_category, #id_city{
     width: 100px;
 }
-    </style>
+#id_price_from, #id_price_to{
+    border: 1px solid #CCC;
+    width: 40px;
+}
+</style>
 {% endblock %}
 
 
@@ -97,9 +101,10 @@
         </tr>
 
         <tr>
-            <th>{{ form.price.label_tag }}:</th>
+            <th><label for="id_price_from">Цена</label>:</th>
             <td class="empty_filt"></td>
-			<td><div class="rounded" style="background: white none repeat scroll 0px 0px; padding: 3px 4px;">{{ form.price }}</div></td>
+			<td><div class="rounded" style="background: white none repeat scroll 0px 0px; padding: 3px 4px;">
+                от:{{ form.price_from }} до:{{ form.price_to }}</div></td>
             <th>{{ form.currency.label_tag }}:</th>
             <td class="empty_filt"></td>
 			<td>{{ form.currency }}</td>
@@ -109,11 +114,10 @@
         </tr>
 
         <tr>
-            <th>
+            <th colspan="3">
             	{{ form.has_photo.label_tag }}:
             </th>
-            <td class="empty_filt"></td>
-			<td>
+			<td colspan="3">
 				{{ form.has_photo }}
 			</td>
         </tr>

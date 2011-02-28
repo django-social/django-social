@@ -32,9 +32,30 @@ def ajax_get_categories(request):
         return HttpResponse(dumps(categories), mimetype='application/javascript')
 
 def list(request):
-    form = AdsFilterForm(request.POST or None)
+    form = AdsFilterForm(request.GET or None)
+    if form.is_valid():
+        filter_data = {}
+        fields = [
+            'country',
+            'city',
+            'section',
+            'category',
+            'currency',
+            'has_photo',
+        ]
+        for field in fields:
+            if form.cleaned_data[field]:
+                filter_data[field] = form.cleaned_data[field]
 
-    ads = Ad.objects.all()
+        if form.cleaned_data['price_from']:
+            filter_data['price__gte'] = form.cleaned_data['price_from']
+
+        if form.cleaned_data['price_to']:
+            filter_data['price__lte'] = form.cleaned_data['price_to']
+        ads = Ad.objects.filter(**filter_data)
+    else:
+        ads = Ad.objects.all()
+
     objects = paginate(request, ads, ads.count(), 12)
 
     return direct_to_template(request, 'ads/list.html',
