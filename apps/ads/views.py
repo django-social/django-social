@@ -1,19 +1,28 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import redirect
-
 from django.views.generic.simple import direct_to_template
 from django.conf import settings
 
+from apps.utils.paginator import paginate
+
 from .documents import Ad
-from .forms import AdForm
+from .forms import AdForm, AdsFilterForm
 
 def ajax_get_cities(request):
     pass
 
 def list(request):
-    items = Ad.objects.all()
+    form = AdsFilterForm(request.POST or None)
+
+    ads = Ad.objects.all()
+
+    objects = paginate(request, ads, ads.count(), 12)
+
     return direct_to_template(request, 'ads/list.html',
-                              dict(items=items,)
+                              dict(
+                                      objects=objects,
+                                      form=form,
+                                  )
                               )
 
 def add(request):
