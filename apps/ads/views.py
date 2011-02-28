@@ -80,7 +80,11 @@ def edit(request, id=None):
 
         ad.save()
 
-        messages.add_message(request, messages.SUCCESS,
+        if id:
+            messages.add_message(request, messages.SUCCESS,
+                                 _('Ad successfully edited'))
+        else:
+            messages.add_message(request, messages.SUCCESS,
                              _('Ad successfully added'))
 
         return redirect('ads:view', id=ad.id)
