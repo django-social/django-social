@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.views.generic.simple import direct_to_template
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.conf import settings
 
 from .documents import Ad
