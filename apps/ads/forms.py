@@ -29,3 +29,8 @@ class AdForm(forms.Form):
     price = forms.FloatField(label=_('Price'))
     currency = forms.ChoiceField(label=_('Currency'),
                                  choices=tuple([ (x, x) for x in currency_data ]))
+
+    title = forms.CharField(label=_('Title'))
+    text = forms.CharField(label=_('Text'), widget=forms.Textarea)
+
+    photo = forms.FileField(label=_('Photo'), required=False)
