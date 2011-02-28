@@ -1920,3 +1920,12 @@ form.multiple_del
 {
     display: none;
 }
+.links li
+{
+	margin: 15px 11px;
+	width: 150px;
+	color: #6F6F6F;
+	display: inline-block;
+}
+
+
