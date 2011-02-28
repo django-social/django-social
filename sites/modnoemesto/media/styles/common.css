@@ -314,6 +314,10 @@ li#notes
 {
     background:url(../images/notes.jpg) no-repeat 4% 50%;
 }
+li#ad
+{
+    background:url(../images/ad.png) no-repeat 4% 50%;
+}
 li#group
 {
     background:url(../images/group.jpg) no-repeat 4% 50%;
