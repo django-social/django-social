@@ -36,6 +36,9 @@ div.answer { display: none }
             var checked = $('input.del:checked');
 
             if(checked.length){
+                if (!confirm('Вы действительно хотите удалить '
+                        + checked.length + ' сообщений?'))
+                    return;
                 var form = $("form.multiple_del");
                 form.append(checked);
                 form.submit()
@@ -82,7 +85,8 @@ div.answer { display: none }
                      {% comment %}
                      <p><a class="reference" href="#">Спам</a></p>
                      {% endcomment %}
-                     <p><a class="reference" href="{% url user_messages:delete_message message_id=msg.id%}">
+                     <p><a class="reference" href="{% url user_messages:delete_message message_id=msg.id%}"
+                             onclick="javascript:return confirm('Вы действительно хотите удалить сообщение?')">
                         {% trans "Delete" %}
                      </a></p>
                      <p><a class="ans reference" href="#" id="ans-{{ msg.id  }}">Ответить</a></p>
