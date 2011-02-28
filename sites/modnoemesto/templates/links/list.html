@@ -44,6 +44,21 @@
                 <input type="hidden" name="form" value="link"/>
             
              <table class="group_add">
+                 <tr>
+                     <td style="height:10px"></td>
+                     <td class="empty_filt"></td>
+                     <td style="height:10px">{{ link_form.title.errors }}</td>
+                 </tr>
+                 <tr>
+                     <td class="label"><label for="id_title">{{ link_form.title.label }}:</label></td>
+                     <td class="empty_filt"></td>
+                     <td>
+
+                         <div class="input_holder rounded">
+                             {{ link_form.title }}
+                         </div>
+                     </td>
+                 </tr>
                 <tr>
                     <td style="height:10px"></td>
                     <td class="empty_filt"></td>
@@ -81,6 +96,24 @@
         </form>
     {% endif %}
 	</div>
+	<ul class="links">
+        {% for link in links %}
+            <li>
+                {{ link.category.title }}:
+                <a href="{{ link.url }}">{{ link.title }}</a>
+          	</li>
+        {% endfor %}
+    </ul>
+
+{% comment %}
+    {% for category in categories %}
+                {{ category.title }}
+            {{ category.links }}
+                {% for link in category.links %}
+                    <a href="{{ link.url }}">zz{{ link.title }}</a>
+                {% endfor %}
+    {% endfor %}
+{% endcomment %}
 
 
 </div>

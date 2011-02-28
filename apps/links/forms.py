@@ -7,5 +7,6 @@ class LinkCategoryForm(forms.Form):
 
 
 class LinkForm(forms.Form):
+    title = forms.CharField(label=_("Title"), max_length=50)
     url = forms.URLField(label=_("Url"))
     category = forms.ChoiceField(label=_('Link category'))
