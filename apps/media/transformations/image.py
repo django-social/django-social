@@ -15,7 +15,7 @@ class ImageResize(FileTransformation):
         crop_box = self._get_crop_box(source_image.size,
                                       (self.width, self.height))
         image = source_image.crop(crop_box)
-        image = image.resize((self.width, self.height), Image.ANTIALIAS)
+        image = image.resize((self.width, self.height), Image.BICUBIC)
         buffer = StringIO()
         image.save(buffer, self.format)
         buffer.reset()
