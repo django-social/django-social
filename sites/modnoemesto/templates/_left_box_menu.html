@@ -42,6 +42,8 @@ $(document).ready(function() {
 {% endwith %}
             <li id="notes"><a href="{% url notes:note_list %}">Заметки</a></li>
 
+			<li id="ad"><a href="{% url notes:note_list %}">Оъявления</a></li>
+
             <li id="group"><a href="{% url user_group_list %}">Мои группы{% if user.groups_events_count %} <b>({{ user.groups_events_count }})</b>{% endif %}</a></li>
             
             <li id="link"><a href="{% url links:list %}">Ссылки</a></li>

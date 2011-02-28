@@ -176,6 +176,7 @@ INSTALLED_APPS = (
     'apps.themes',
     'apps.applications',
     'apps.links',
+    'apps.ads',
 )
 
 
