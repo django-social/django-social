@@ -328,7 +328,7 @@ li#link
 }
 li#foto
 {
-    background:url(../images/foto_noactive.png) no-repeat 4% 50%;
+    background:url(../images/foto.jpg) no-repeat 4% 50%;
 }
 li#video
 {
@@ -1407,12 +1407,13 @@ div.operation p
 
 .but_1 input[type="submit"]
 {
-    background: #FFF;
+    background: transparent;
     color: #027A98;
     text-decoration: underline;
     font-size: 12px;
     font-family: Arial, Helvetica, sans-serif;
     cursor: pointer;
+    float:right;
 }
 .but_0 a, .but_1 a
 {
