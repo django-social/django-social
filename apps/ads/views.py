@@ -92,6 +92,7 @@ def edit(request, id=None):
     return direct_to_template(request, 'ads/edit.html',
                                 dict(
                                       form=form,
+                                      is_new=id is None
                                       )
                               )
 
