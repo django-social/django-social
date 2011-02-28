@@ -42,6 +42,7 @@ def list(request):
                                            category=category,
                                            title=title,
                                            author=user)
+                link_form = LinkForm()
 
             link_category_form = LinkCategoryForm()
 
@@ -61,6 +62,7 @@ def list(request):
 
     for category in categories:
         category.links = [ x for x in links if x.category==category ]
+        # TODO почему не выводятся в шаблоне??!!
         print category.links
         for link in category.links:
             print link.title, link.url
