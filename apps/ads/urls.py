@@ -12,4 +12,6 @@ urlpatterns = patterns('apps.ads.views',
     url(r'^(?P<id>[a-f0-9]{24})/delete/$', 'delete', name='delete'),
 
     url(r'^get_cities/$', 'ajax_get_cities', name='get_cities'),
+    url(r'^get_categories/$', 'ajax_get_categories', name='get_categories'),
+
 )

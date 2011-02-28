@@ -1,25 +1,40 @@
 # -*- coding: utf-8 -*-
+
+from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.views.generic.simple import direct_to_template
 from django.conf import settings
+
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 
 from mongoengine.django.shortcuts import get_document_or_404
 
+from django.utils.simplejson import dumps
+
+
 from apps.utils.paginator import paginate
 
 from .documents import Ad
 from .forms import AdForm, AdsFilterForm
+from .choices import geo_data, type_ads
 
 def ajax_get_cities(request):
-    pass
+    country = request.POST.get('country', '')
+    if country:
+        cities = geo_data[country]
+        return HttpResponse(dumps(cities, ensure_ascii=False), mimetype='application/javascript')
+
+def ajax_get_categories(request):
+    section = request.POST.get('section', '')
+    if section:
+        categories = type_ads[section]
+        return HttpResponse(dumps(categories), mimetype='application/javascript')
 
 def list(request):
     form = AdsFilterForm(request.POST or None)
 
     ads = Ad.objects.all()
-
     objects = paginate(request, ads, ads.count(), 12)
 
     return direct_to_template(request, 'ads/list.html',
