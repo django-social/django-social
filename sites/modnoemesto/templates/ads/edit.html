@@ -4,52 +4,56 @@
 {% block css %}
 {{ block.super }}
 <style>
-#id_country, #id_section,
-#id_category, #id_city{
-    width: 200px;
-}
-    </style>
+
+</style>
 {% endblock %}
 
 {% block js %}
 {{ block.super }}
     <script type="text/javascript">
     $(document).ready(function(){
-        $('#id_country').change(function(){
+        $('#id_country, #id_section, #id_city, #id_category, #id_currency').selectbox();
+        $('#id_country_container li').bind('click', function(){
             $.ajax({
                 url: "{% url ads:get_cities %}",
                 type: "POST",
                 dataType: "json",
                 data:{
-                    country: $('#id_country').val()
+                    country: $('#id_country_input').val()
                 },
                 success: function(data){
                     var options = '';
                     for (var i = 0; i < data.length; i++) {
                         options += '<option value="' + data[i] + '">' + data[i] + '</option>';
                     }
-                    $("select#id_city").html(options);
+                    $("#id_city").html(options);
+                    $('#id_city_input').remove();
+                    $('#id_city_container').remove();
+                    $('#id_city').selectbox();
                 }
             });
         });
-        $('#id_section').change(function(){
+        $('#id_section_container li').bind('click', function(){
             $.ajax({
                 url: "{% url ads:get_categories %}",
                 type: "POST",
                 dataType: "json",
                 data:{
-                    section: $('#id_section').val()
+                    section: $('#id_section_input').val()
                 },
                 success: function(data){
                     var options = '';
                     for (var i = 0; i < data.length; i++) {
                         options += '<option value="' + data[i] + '">' + data[i] + '</option>';
                     }
-                    $("select#id_category").html(options);
+                    $("#id_category").html(options);
+                    $('#id_category_input').remove();
+                    $('#id_category_container').remove();
+                    $('#id_category').selectbox();
+
                 }
             });
         });
-
     });
     </script>
 {% endblock %}
