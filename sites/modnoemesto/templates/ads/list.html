@@ -26,7 +26,6 @@
                     country: $('#id_country').val()
                 },
                 success: function(data){
-                    alert(data)
                     var options = '';
                     for (var i = 0; i < data.length; i++) {
                         options += '<option value="' + data[i] + '">' + data[i] + '</option>';
@@ -153,4 +152,7 @@
 {% include "includes/paginator.html" %}
 
 <div class="but">
-<a class="reference" href="{% url ads:add %}">Создать объявление</
+<a class="reference" href="{% url ads:add %}">Создать объявление</a>
+</div>
+</div>
+{% endblock %}
