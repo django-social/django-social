@@ -26,6 +26,7 @@
                     country: $('#id_country').val()
                 },
                 success: function(data){
+                    alert(data)
                     var options = '';
                     for (var i = 0; i < data.length; i++) {
                         options += '<option value="' + data[i] + '">' + data[i] + '</option>';
@@ -62,7 +63,7 @@
 <h2>Объявления</h2>
 
 <form method="get">
-<div class="filt rounded" style="-moz-border-radius: 10px 10px 10px 10px;">
+<div id="filter_sort" class="filt rounded" style="-moz-border-radius: 10px 10px 10px 10px;">
 
     <table class="camera_edit">
         <tbody>
@@ -93,7 +94,7 @@
         <tr>
             <th>{{ form.price.label_tag }}:</th>
             <td class="empty_filt"></td>
-			<td>{{ form.price }}</td>
+			<td><div class="rounded" style="background: white none repeat scroll 0px 0px; padding: 3px 4px;">{{ form.price }}</div></td>
             <th>{{ form.currency.label_tag }}:</th>
             <td class="empty_filt"></td>
 			<td>{{ form.currency }}</td>
@@ -152,7 +153,4 @@
 {% include "includes/paginator.html" %}
 
 <div class="but">
-<a class="reference" href="{% url ads:add %}">Создать объявление</a>
-</div>
-</div>
-{% endblock %}
+<a class="reference" href="{% url ads:add %}">Создать объявление</
