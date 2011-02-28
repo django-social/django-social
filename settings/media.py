@@ -39,3 +39,8 @@ APPLICATION_IMAGE_SIZES = {
     'application_image_thumbnail.png': { 'width': 200, 'height': 100 },
     'application_image_full.png': { 'width': 400, 'height': 200 },
 }
+
+AD_PHOTO_SIZES = {
+    'ad_photo_thumbnail.png': { 'width': 200, 'height': 100 },
+    'ad_photo_full.png': { 'width': 400, 'height': 200 },
+}

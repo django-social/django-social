@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
+
 from django.http import HttpResponse
+from django.shortcuts import redirect
 from django.views.generic.simple import direct_to_template
-from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.conf import settings
 from django.utils.simplejson import dumps
+
+from apps.utils.paginator import paginate
 
 from .documents import Ad
 from .forms import AdForm, AdsFilterForm
@@ -23,19 +26,9 @@ def ajax_get_categories(request):
 
 def list(request):
     form = AdsFilterForm(request.POST or None)
-    ads_list = Ad.objects.all()
 
-    paginator = Paginator(ads_list, settings.ADS_PER_PAGE)
-
-    try:
-        page = int(request.GET.get('page', '1'))
-    except ValueError:
-        page = 1
-
-    try:
-        objects = paginator.page(page)
-    except (EmptyPage, InvalidPage):
-        objects = paginator.page(paginator.num_pages)
+    ads = Ad.objects.all()
+    objects = paginate(request, ads, ads.count(), 12)
 
     return direct_to_template(request, 'ads/list.html',
                               dict(
@@ -45,7 +38,17 @@ def list(request):
                               )
 
 def add(request):
-    form = AdForm(request.POST or None)
+    form = AdForm(request.POST or None, request.FILES)
+    if form.is_valid():
+        ad = Ad()
+
+        if request.FILES.has_key('photo'):
+            ad.photo = form.fields['photo'].save('ad_photo',
+                                     settings.AD_PHOTO_SIZES, 'AD_PHOTO_RESIZE')
+
+        ad.save()    
+        return redirect('ads:view', id=ad.id)
+
     return direct_to_template(request, 'ads/edit.html',
                                 dict(
                                       form=form,
