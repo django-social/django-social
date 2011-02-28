@@ -39,6 +39,7 @@ class AdForm(forms.Form):
 
     def __init__(self, data, files, *args, **kwargs):
         super(AdForm, self).__init__(data, files, *args, **kwargs)
+        data = data or kwargs['initial']
         if data:
             country = data.get('country')
             self.fields['city'].choices = tuple([(u'', u''),] + [(x, x)
