@@ -3,26 +3,55 @@
 
 {% block css %}
 {{ block.super }}
-
-
+<style>
+#id_country, #id_section,
+#id_category, #id_city{
+    width: 200px;
+}
+    </style>
 {% endblock %}
 
 {% block js %}
 {{ block.super }}
+    <script type="text/javascript">
     $(document).ready(function(){
-        $('#id_country').select(function(){
+        $('#id_country').change(function(){
             $.ajax({
                 url: "{% url ads:get_cities %}",
                 type: "POST",
+                dataType: "json",
                 data:{
                     country: $('#id_country').val()
                 },
                 success: function(data){
-                    
+                    var options = '';
+                    for (var i = 0; i < data.length; i++) {
+                        options += '<option value="' + data[i] + '">' + data[i] + '</option>';
+                    }
+                    $("select#id_city").html(options);
                 }
             });
         });
+        $('#id_section').change(function(){
+            $.ajax({
+                url: "{% url ads:get_categories %}",
+                type: "POST",
+                dataType: "json",
+                data:{
+                    section: $('#id_section').val()
+                },
+                success: function(data){
+                    var options = '';
+                    for (var i = 0; i < data.length; i++) {
+                        options += '<option value="' + data[i] + '">' + data[i] + '</option>';
+                    }
+                    $("select#id_category").html(options);
+                }
+            });
+        });
+
     });
+    </script>
 {% endblock %}
 
 {% block content %}
