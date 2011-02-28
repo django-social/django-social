@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<div id="filter_box">
+<h2>
+    {% if create %}
+        Создание Объявления
+    {% else %}
+        Редактирование Объявления
+    {% endif %}
+</h2>
+<form method="post">
+<div class="filt rounded">
+    <table class="group_add">
+        <tr>
+            <td style="height:10px"></td>
+            <td style="height:10px" class="empty_filt"></td>
+            <td style="height:10px"></td>
+        </tr>
+        <tr>
+            <th><label for="id_country">Страна:</label></th>
+            <td class="empty_filt"></td>
+            <td>
+                <div class="input_holder rounded">{{ form.country }}</div>
+            </td>
+        </tr>
+        <tr>
+            <td style="height:10px"></td>
+            <td style="height:10px" class="empty_filt"></td>
+            <td style="height:10px">{{ form.country.errors }}</td>
+        </tr>
+        <tr>
+            <th><label for="id_city">Город:</label></th>
+            <td class="empty_filt"></td>
+            <td>
+                <div class="input_holder rounded">{{ form.city }}</div>
+            </td>
+        </tr>
+        <tr>
+            <td style="height:10px"></td>
+            <td style="height:10px" class="empty_filt"></td>
+            <td style="height:10px">{{ form.city.errors }}</td>
+        </tr>
+        <tr>
+            <th><label for="id_section">Раздел:</label></th>
+            <td class="empty_filt"></td>
+            <td>
+                <div class="input_holder rounded">{{ form.section }}</div>
+            </td>
+        </tr>
+        <tr>
+            <td style="height:10px"></td>
+            <td style="height:10px" class="empty_filt"></td>
+            <td style="height:10px">{{ form.section.errors }}</td>
+        </tr>
+        <tr>
+            <th><label for="id_category">Категория:</label></th>
+            <td class="empty_filt"></td>
+            <td>
+                <div class="input_holder rounded">{{ form.category }}</div>
+            </td>
+        </tr>
+        <tr>
+            <td style="height:10px"></td>
+            <td style="height:10px" class="empty_filt"></td>
+            <td style="height:10px">{{ form.category.errors }}</td>
+        </tr>
+        <tr>
+            <th><label for="id_title">Заголовок:</label></th>
+            <td class="empty_filt"></td>
+            <td>
+                <div class="input_holder rounded">{{ form.title }}</div>
+            </td>
+        </tr>
+        <tr>
+            <td style="height:10px"></td>
+            <td style="height:10px" class="empty_filt"></td>
+            <td style="height:10px">{{ form.title.errors }}</td>
+        </tr>
+        <tr>
+            <th><label for="id_text">Текст:</label></th>
+            <td class="empty_filt"></td>
+            <td>
+                <div class="input_holder rounded">{{ form.text }}</div>
+            </td>
+        </tr>
+        <tr>
+            <td style="height:10px"></td>
+            <td style="height:10px" class="empty_filt"></td>
+            <td style="height:10px">{{ form.text.errors }}</td>
+        </tr>
+        <tr>
+            <th><label for="id_photo">Фотография:</label></th>
+            <td class="empty_filt"></td>
+            <td>
+                <div class="input_holder rounded">{{ form.photo }}</div>
+            </td>
+        </tr>
+        <tr>
+            <td style="height:10px"></td>
+            <td style="height:10px" class="empty_filt"></td>
+            <td style="height:10px">{{ form.photo.errors }}</td>
+        </tr>
+        <tr>
+            <th><label for="id_price">Цена:</label></th>
+            <td class="empty_filt"></td>
+            <td>
+                <div class="input_holder rounded">{{ form.price }}</div>
+            </td>
+        </tr>
+        <tr>
+            <td style="height:10px"></td>
+            <td style="height:10px" class="empty_filt"></td>
+            <td style="height:10px">{{ form.price.errors }}</td>
+        </tr>
+        <tr>
+            <th><label for="id_currency">Валюта:</label></th>
+            <td class="empty_filt"></td>
+            <td>
+                <div class="input_holder rounded">{{ form.currency }}</div>
+            </td>
+        </tr>
+        <tr>
+            <td style="height:10px"></td>
+            <td style="height:10px" class="empty_filt"></td>
+            <td style="height:10px">{{ form.currency.errors }}</td>
+        </tr>
+    </table>
+</div>
+    <div class="but">
+        <input type="submit"
+               value="{% if create %}{% trans 'Add' %}{% else %}{% trans 'Save' %}{% endif %}" />
+    </div>
+
+</form>
+</div>
+{% endblock %}
