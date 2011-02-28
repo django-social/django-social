@@ -19,7 +19,7 @@
             'transitionOut': 'elastic',
             'speedIn': 600,
             'speedOut': 200,
-            'overlayShow': true,
+            'overlayShow': true
         });
     });
 
@@ -37,10 +37,9 @@
            {% endwith %}
        </div>
     {% if item.photo %}
-    <a class="fancy-image" href="{% media_url item.photo ad_photo_full.png %}"
-       title="{{ file.name }}" _description="{{ file.description }}">
-        <img src="{% media_url item.photo ad_photo_thumbnail.png %}" />
-    </a>
+        <a class="fancy-image" href="{% media_url item.photo ad_photo_full.png %}">
+            <img src="{% media_url item.photo ad_photo_thumbnail.png %}" />
+        </a>
     {% endif %}
        <div class="message_text">
            <p>{% trans "Created:" %} {{ item.ctime|date:"d.m.Y" }}</p>
@@ -49,5 +48,12 @@
           <p>{{ item.text|linebreaksbr }}</p>
        </div>
     </div>
+    {% ifequal request.user item.author %}
+    <div>
+        <a class="reference del" href="{% url ads:delete item.id %}">{% trans 'Delete' %}</a>
+        <a class="reference" href="{% url ads:edit item.id %}">{% trans 'Edit' %}</a>
+    </div>
+    {% endifequal %}
+
 </div>
 {% endblock %}

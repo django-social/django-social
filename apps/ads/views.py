@@ -44,14 +44,8 @@ def list(request):
                                   )
                               )
 
-def add(request):
-    form = AdForm(request.POST or None, request.FILES or None)
-
-    if form.is_valid():
-        ad = Ad()
-        ad.author = request.user
-
-        for field in (
+def edit(request, id=None):
+    fields = (
             'country',
             'city',
             'category',
@@ -60,7 +54,24 @@ def add(request):
             'text',
             'price',
             'currency',
-            ):
+            )
+    if id:
+        ad = get_document_or_404(Ad, id=id, author=request.user)
+
+        initial = {}
+
+        for field in fields:
+            initial[field] = getattr(ad, field)
+
+    else:
+        ad = None
+        initial = {}
+
+    form = AdForm(request.POST or None, request.FILES or None, initial=initial)
+
+    if form.is_valid():
+        ad = ad or Ad(author=request.user)
+        for field in fields:
             setattr(ad, field, form.cleaned_data[field])
 
         if request.FILES.has_key('photo'):
@@ -69,7 +80,11 @@ def add(request):
 
         ad.save()
 
-        messages.add_message(request, messages.SUCCESS,
+        if id:
+            messages.add_message(request, messages.SUCCESS,
+                                 _('Ad successfully edited'))
+        else:
+            messages.add_message(request, messages.SUCCESS,
                              _('Ad successfully added'))
 
         return redirect('ads:view', id=ad.id)
@@ -77,11 +92,10 @@ def add(request):
     return direct_to_template(request, 'ads/edit.html',
                                 dict(
                                       form=form,
+                                      is_new=id is None
                                       )
                               )
 
-def edit(request, id):
-    pass
 
 def view(request, id):
     item = get_document_or_404(Ad, id=id)
@@ -92,4 +106,11 @@ def view(request, id):
                               )
 
 def delete(request, id):
-    pass
+    item = get_document_or_404(Ad, id=id, author=request.user)
+    if item.photo:
+        item.photo.full_delete()
+    item.delete()
+    messages.add_message(request, messages.SUCCESS,
+                             _('Ad successfully deleted'))
+
+    return redirect('ads:list')

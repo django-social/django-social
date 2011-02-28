@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-28 13:29+0300\n"
+"POT-Creation-Date: 2011-02-28 15:45+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,44 +16,57 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
-#: forms.py:11 forms.py:20
+#: forms.py:12 forms.py:22
 msgid "Country"
 msgstr "Страна"
 
-#: forms.py:12 forms.py:23
+#: forms.py:13 forms.py:25
 msgid "City"
 msgstr "Город"
 
-#: forms.py:13 forms.py:25
+#: forms.py:14 forms.py:27
 msgid "Section"
 msgstr "Раздел"
 
-#: forms.py:14 forms.py:28
+#: forms.py:15 forms.py:30
 msgid "Category"
 msgstr "Категория"
 
-#: forms.py:15 forms.py:29
+#: forms.py:16 forms.py:31
 msgid "Price"
 msgstr "Цена"
 
-#: forms.py:16 forms.py:30
+#: forms.py:17 forms.py:32
 msgid "Currency"
 msgstr "Валюта"
 
-#: forms.py:17
+#: forms.py:18
 msgid "Has photo"
 msgstr "С фотографией"
 
-#: forms.py:33
+#: forms.py:35
 msgid "Title"
 msgstr "Заголовок"
 
-#: forms.py:34
+#: forms.py:36
 msgid "Text"
 msgstr "Текст"
 
-#: forms.py:36
+#: forms.py:38
 msgid "Photo"
 msgstr "Фотография"
+
+#: views.py:85
+msgid "Ad successfully edited"
+msgstr "Объявление успешно отредактировано"
+
+#: views.py:88
+msgid "Ad successfully added"
+msgstr "Объявление успешно добавлено"
+
+#: views.py:113
+msgid "Ad successfully deleted"
+msgstr "Объявление успешно удалено"
