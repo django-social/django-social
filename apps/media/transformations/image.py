@@ -12,10 +12,10 @@ class ImageResize(FileTransformation):
         parser = ImageFileParser()
         parser.feed(source.file.read())
         source_image = parser.close()
-        crop_box = self._get_crop_box(source_image.size,
-                                      (self.width, self.height))
+        crop_box = ImageResize.cropbox(source_image.size,
+                                       (self.width, self.height))
         image = source_image.crop(crop_box)
-        image = image.resize((self.width, self.height), Image.BICUBIC)
+        image = image.thumbnail((self.width, self.height), Image.BICUBIC)
         buffer = StringIO()
         image.save(buffer, self.format)
         buffer.reset()
@@ -29,24 +29,22 @@ class ImageResize(FileTransformation):
         destination.save()
         return destination
 
-    def _get_crop_box(self, source, destination):
-        wo, ho = source
-        wr, hr = destination
-        ko = float(wo)/ho
-        kr = float(wr)/hr
-        if ko < kr:
-            wc = wo
-            hc = wo*hr/wr
-            lc = 0
-            tc = (ho - hc)/2
-        elif ko > kr:
-            wc = ho*wr/hr
-            hc = ho
-            lc = (wo - wc)/2
-            tc = 0
-        else:
-            wc = wo
-            hc = ho
-            lc = 0
-            tc = 0
-        return lc, tc, lc + wc, tc + hc
+    @staticmethod
+    def cropbox(image, thumb):
+        imagewidth, imageheight = image
+        thumbwidth, thumbheight = thumb
+
+        # determine scale factor
+        fx = float(imagewidth)/thumbwidth
+        fy = float(imageheight)/thumbheight
+        f = fx if fx < fy else fy
+
+        # calculate size of crop area
+        cropheight, cropwidth = int(thumbheight*f), int(thumbwidth*f)
+
+        # center the crop area on the source image
+        dx = (imagewidth - cropwidth)/2
+        dy = (imageheight - cropheight)/2
+
+        # return bounding box of crop area
+        return dx, dy, cropwidth + dx, cropheight + dy

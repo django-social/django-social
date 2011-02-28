@@ -38,7 +38,8 @@ $(document).ready(function() {
                 {{ app.description }}
             </div>
             {% if can_manage %}
-        <a class="delete" title="{% trans 'Delete' %}" href="{% url applications:delete app.id %}">{% trans "Delete" %}</a>
+        <a class="delete" title="{% trans 'Delete' %}" href="{% url applications:delete app.id %}"
+                onclick="javascript:return confirm('Вы действительно хотите удалить приложение?')">{% trans "Delete" %}</a>
         <a class="edit" title="{% trans 'Edit' %}" href="{% url applications:edit app.id %}">{% trans "Edit" %}</a>                
         {% endif %}
         </div>
