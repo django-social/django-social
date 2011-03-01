@@ -7,6 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.views.generic.simple import direct_to_template
 
 from mongoengine.django.shortcuts import get_document_or_404
+from mongoengine.queryset import Q
 
 from .forms import MessageTextForm
 
@@ -35,6 +36,36 @@ def send_message(request, user_id):
         #@todo: use separate form and screen to handle each situation
         return direct_to_template(request, 'user_messages/write_message.html',
                               { 'page_user': recipient, 'msgform': msgform })
+
+
+def view_message_by_user(request, user_id, action=''):
+    by_user = get_document_or_404(User, id=user_id)
+    owner  = request.user
+    template = 'by_user.html'
+    if action == 'sent':
+        messages = Message.objects(sender=owner,
+                               recipient=by_user,
+                               sender_delete=None)
+        template = 'by_user_sent.html'
+
+    elif action == 'inbox':
+        messages = Message.objects(recipient=request.user,
+                               sender=by_user,
+                               recipient_delete=None)
+    else:
+        messages = Message.objects(
+                            Q(sender=owner, recipient=by_user, sender_delete=None) |
+                            Q(sender=by_user, recipient=owner, recipient_delete=None),
+                               )
+    objects = paginate(request,
+                       messages,
+                       messages.count(),
+                       10)
+    return direct_to_template(request, 'user_messages/%s' % template,
+                              { 'objects': objects,
+                                'by_user': by_user,
+                                })
+
 
 
 def view_inbox(request):

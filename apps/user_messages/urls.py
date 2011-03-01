@@ -15,4 +15,16 @@ urlpatterns = patterns('apps.user_messages.views',
 
     url(r'^delete/$', 'multiple_delete', name='multiple_delete'),
 
+
+
+    url(r'^user/(?P<user_id>[a-f0-9]{24})/(?P<action>sent|inbox)/$', 'view_message_by_user',
+        name='view_message_by_user'),
+
+    url(r'^user/(?P<user_id>[a-f0-9]{24})/$', 'view_message_by_user',
+          name='view_message_by_user'),
+
+#url(r'^user/(?P<user_id>[a-f0-9]{24})/(?P<action>sent|inbox)/$', 'view_message_by_user',
+ #       name='view_message_by_user'),
+
+
     )
