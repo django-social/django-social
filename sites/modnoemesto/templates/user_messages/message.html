@@ -80,7 +80,7 @@
                 </a>
                 <a id="ans" class="reference" href="javascript: void(0);">{% if msg.sender == user %}Ещё одно{% else %}Ответить{% endif %}</a>
                 <a class="reference" href="{% if msg.sender == user %}{% url user_messages:view_sent %}{% else %}{% url user_messages:view_inbox %}{% endif %}">Закрыть</a>
-                <a class="reference" href="{% if msg.sender == user %}{% url user_messages:view_sent %}{% else %}{% url user_messages:view_inbox %}{% endif %}">История</a>
+                <a class="reference" href="{% url user_messages:view_message_by_user user_id=msg.sender.id %}">История</a>
             </div>
         </form>
     </div>

@@ -106,12 +106,10 @@ div.answer { display: none }
                     <a href="{% url user_messages:view_message_by_user user_id=msg.sender.id %}">История</a>
                 </div>
             </td>
-            <td>
+            </tr>
+            </table>
                 <form method="post" action="{% url user_messages:send_message user_id=msg.sender.id %}">
                     <div class="answer" id="answer-{{ msg.id  }}">
-                        <div class="friendTable">
-                            {% include "includes/user/micro.html" %}
-                        </div>
                         <div class="message_text_reply rounded">
                             <textarea name="text" cols="78" rows="5"></textarea>
                         </div>
@@ -122,9 +120,6 @@ div.answer { display: none }
                         </div>
                     </div>
                 </form>
-            </td>
-            </tr>
-            </table>
             </div>
             {% endfor %}
         </div>

@@ -7,8 +7,6 @@
 div.answer { display: none }
 .message_text
 {
-    float: left;
-    padding: 7px;
     width: 240px;
     /*cursor: pointer;*/
 }
@@ -60,6 +58,7 @@ div.answer { display: none }
     <form class="multiple_del" method="POST" action="{% url user_messages:multiple_delete %}">
         <input type="hidden" name="view" value="inbox" />
     </form>
+
 <div id="filter_box">
 <h2>{% trans "Messages history" %}</h2>
 
@@ -123,35 +122,38 @@ div.answer { display: none }
                                  onclick="javascript:return confirm('Вы действительно хотите удалить сообщение?')">
                             {% trans "Delete" %}
                          </a></p>
-                         <p><a class="ans reference" href="#" id="ans-{{ msg.id  }}">Ответить</a></p>
+
+                        {% if msg.sender == user %}
+                            <p><a class="reference" href="{% url user_messages:send_message user_id=msg.recipient.id %}">Ещё одно</a></p>
+                        {% else %}
+                            <p><a class="ans reference" href="#" id="ans-{{ msg.id  }}">Ответить</a></p>
+                        {% endif %}
+                    
                     </div>
                 </td>
-                <td>
-                    <form method="post" action="{% url user_messages:send_message user_id=msg.sender.id %}">
-                        <div class="answer" id="answer-{{ msg.id  }}">
-                            <div class="friendTable">
-                                {% include "includes/user/micro.html" %}
-                            </div>
-                            <div class="message_text_reply rounded">
-                                <textarea name="text" cols="78" rows="5"></textarea>
-                            </div>
 
-                            <div class="but_1">
-                                <a class="back reference" href="#" id="back-{{ msg.id  }}">Отменить</a>
-                                <input type="submit" value="{% trans 'Send' %}"/>
-                            </div>
-                        </div>
-                    </form>
-                </td>
                 </tr>
                 </table>
+                <form method="post" action="{% url user_messages:send_message msg.sender.id %}">
+                    <div class="answer" id="answer-{{ msg.id  }}">
+                        <div class="message_text_reply rounded">
+                            <textarea name="text" cols="78" rows="5"></textarea>
+                        </div>
+
+                        <div class="but_1">
+                            <a class="back reference" href="#" id="back-{{ msg.id  }}">Отменить</a>
+                            <input type="submit" value="{% trans 'Send' %}"/>
+                        </div>
+                    </div>
+                </form>
+                
 
             </div>
             {% endfor %}
+
+
+            {% include "includes/paginator.html" %}
         </div>
-
-{% include "includes/paginator.html" %}
-
     </div>
 </div>
 </div>

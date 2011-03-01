@@ -104,26 +104,23 @@ div.answer { display: none }
                          <p><a class="ans reference" href="#" id="ans-{{ msg.id  }}">Ответить</a></p>
                     </div>
                 </td>
-                <td>
-                    <form method="post" action="{% url user_messages:send_message user_id=msg.sender.id %}">
-                        <div class="answer" id="answer-{{ msg.id  }}">
-                            <div class="friendTable">
-                                {% include "includes/user/micro.html" %}
-                            </div>
-                            <div class="message_text_reply rounded">
-                                <textarea name="text" cols="78" rows="5"></textarea>
-                            </div>
-
-                            <div class="but_1">
-                                <a class="back reference" href="#" id="back-{{ msg.id  }}">Отменить</a>
-                                <input type="submit" value="{% trans 'Send' %}"/>
-                            </div>
-                        </div>
-                    </form>
-                </td>
                 </tr>
                 </table>
+                <form method="post" action="{% url user_messages:send_message user_id=msg.sender.id %}">
+                    <div class="answer" id="answer-{{ msg.id  }}">
+                        <div class="friendTable">
+                            {% include "includes/user/micro.html" %}
+                        </div>
+                        <div class="message_text_reply rounded">
+                            <textarea name="text" cols="78" rows="5"></textarea>
+                        </div>
 
+                        <div class="but_1">
+                            <a class="back reference" href="#" id="back-{{ msg.id  }}">Отменить</a>
+                            <input type="submit" value="{% trans 'Send' %}"/>
+                        </div>
+                    </div>
+                </form>
             </div>
             {% endfor %}
         </div>
