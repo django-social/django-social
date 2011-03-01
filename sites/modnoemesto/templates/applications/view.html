@@ -39,6 +39,9 @@
         align="middle"
         play="true"
         loop="false"
+        {% if app.flashvars %}
+        flashvars="{{ app.flashvars|safe }}"
+        {% endif %}
         allowScriptAccess="modnoemesto.ru"
         type="application/x-shockwave-flash"
         pluginspage="http://www.adobe.com/go/getflashplayer">

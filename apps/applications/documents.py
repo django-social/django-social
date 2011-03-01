@@ -9,6 +9,7 @@ class Application(Document):
     description = StringField()
     file = ReferenceField('File')
     image = ReferenceField('File')
+    flashvars = StringField()
 
     def delete_files(self):
         self.file.full_delete()
