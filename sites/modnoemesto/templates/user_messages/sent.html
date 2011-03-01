@@ -77,7 +77,7 @@
                              onclick="javascript:return confirm('Вы действительно хотите удалить сообщение?')">
                         {% trans "Delete" %}
                     </a></p>
-                    <a href="{% url user_messages:view_message_by_user user_id=msg.recipient.id action='sent' %}">История</a>
+                    <a href="{% url user_messages:view_message_by_user user_id=msg.recipient.id %}">История</a>
                 </div>
             </td>
             </tr>

@@ -103,7 +103,7 @@ div.answer { display: none }
                         {% trans "Delete" %}
                      </a></p>
                      <p><a class="ans reference" href="#" id="ans-{{ msg.id  }}">Ответить</a></p>
-                    <a href="{% url user_messages:view_message_by_user user_id=msg.sender.id action='inbox' %}">История</a>
+                    <a href="{% url user_messages:view_message_by_user user_id=msg.sender.id %}">История</a>
                 </div>
             </td>
             <td>

@@ -5,14 +5,6 @@
 {{ block.super }}
 <style type="text/css">
 div.answer { display: none }
-.message_text
-{
-    float: left;
-    padding: 7px;
-    width: 240px;
-    /*cursor: pointer;*/
-}
-
 </style>
 {% endblock %}
 
@@ -68,7 +60,7 @@ div.answer { display: none }
     {% include "includes/left_menu.html" %}
 
     <div class="messages">
-        <h3>Переписка с {{ by_user }} ({{ objects.paginator.count }})</h3>
+        <h3>Сообщения полученные от пользователя {{ by_user }} ({{ objects.paginator.count }})</h3>
         <div class="messages_inbox">
         <a class="multiple_del" href="javascript: void(0);">Удалить отмеченные</a>
 
@@ -81,23 +73,9 @@ div.answer { display: none }
                     <input type="checkbox" class="del" value="{{ msg.id }}" id="del_{{ msg.id }}" name="del_{{ msg.id }}"/>
                 </p>
                 </td>
-                <td valign="top">
-                <div class="friendTable">
-                {% with request.user as user %}
-                    {% include "includes/user/micro.html" %}
-                {% endwith %}
-                </div>
-                </td>
                 <td>
-                    {% if msg.sender == request.user %}
-                        &rarr;
-                    {% else %}
-                        &larr;
-                    {% endif %}
-                </td>
-                <td valign="top">
                 <div class="friendTable">
-                {% with by_user as user %}
+                {% with msg.sender as user %}
                     {% include "includes/user/micro.html" %}
                 {% endwith %}
                 </div>

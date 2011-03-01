@@ -42,6 +42,7 @@ def view_message_by_user(request, user_id, action=''):
     by_user = get_document_or_404(User, id=user_id)
     owner  = request.user
     template = 'by_user.html'
+    
     if action == 'sent':
         messages = Message.objects(sender=owner,
                                recipient=by_user,
@@ -52,6 +53,8 @@ def view_message_by_user(request, user_id, action=''):
         messages = Message.objects(recipient=request.user,
                                sender=by_user,
                                recipient_delete=None)
+        template = 'by_user_inbox.html'
+
     else:
         messages = Message.objects(
                             Q(sender=owner, recipient=by_user, sender_delete=None) |
@@ -64,6 +67,7 @@ def view_message_by_user(request, user_id, action=''):
     return direct_to_template(request, 'user_messages/%s' % template,
                               { 'objects': objects,
                                 'by_user': by_user,
+                                'action': action,
                                 })
 
 
