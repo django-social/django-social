@@ -150,7 +150,8 @@
     {% ifequal request.user item.author %}
         <div class="operation">
             <p><a class="reference" href="{% url ads:edit item.id %}">{% trans 'Edit' %}</a></p>
-            <p><a class="reference" href="{% url ads:delete item.id %}">{% trans 'Delete' %}</a></p>
+            <p><a class="reference" href="{% url ads:delete item.id %}"
+                    onclick="javascript:return confirm('Вы действительно хотите удалить объявление?')">{% trans 'Delete' %}</a></p>
         </div>
     {% endifequal %}
         </div>

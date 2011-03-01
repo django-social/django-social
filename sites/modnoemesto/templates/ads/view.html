@@ -42,7 +42,7 @@
         </a>
     {% endif %}
         <div class="message_text">
-           <p>{% trans "Created:" %} {{ item.ctime|date:"d.m.Y" }}</p>
+           <p>{% trans "Created:" %} {{ item.creation_time|date:"d.m.Y" }}</p>
         </div>
         <div class="note_text_view rounded">
           <p>{{ item.text|linebreaksbr }}</p>

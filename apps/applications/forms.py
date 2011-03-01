@@ -18,6 +18,13 @@ class ApplicationForm(forms.Form):
                                           )))
     image = ImageField(label=_("Image"))
     file = forms.FileField(label=_("Application"))
+    flashvars = forms.CharField(label=_("Flashvars"),
+                                  required=False,
+                                  widget=forms.Textarea(attrs=dict(
+                                          rows="10",
+                                          cols="40"
+                                          )))
+
 
 
 

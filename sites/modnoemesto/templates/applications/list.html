@@ -38,7 +38,8 @@ $(document).ready(function() {
                 {{ app.description }}
             </div>
             {% if can_manage %}
-        <a class="delete" title="{% trans 'Delete' %}" href="{% url applications:delete app.id %}">{% trans "Delete" %}</a>
+        <a class="delete" title="{% trans 'Delete' %}" href="{% url applications:delete app.id %}"
+                onclick="javascript:return confirm('Вы действительно хотите удалить приложение?')">{% trans "Delete" %}</a>
         <a class="edit" title="{% trans 'Edit' %}" href="{% url applications:edit app.id %}">{% trans "Edit" %}</a>                
         {% endif %}
         </div>
@@ -82,7 +83,15 @@ $(document).ready(function() {
                 <td class="label"><label for="id_image">Изображение:</label></td>
                 <td>{{ form.image }}</td>
             </tr>
-
+            <tr>
+                 <td style="height:10px"></td>
+                 <td class="empty_filt"></td>
+                 <td style="height:10px"></td>
+            </tr>
+            <tr>
+                <td class="label"><label for="id_flashvars">Flashvars:</label></td>
+                <td>{{ form.flashvars }}</td>
+            </tr>
 
         </tbody>
         </table>

@@ -56,6 +56,7 @@ def add(request):
 
             application.name = form.cleaned_data['name']
             application.description = form.cleaned_data['description']
+            application.flashvars = form.cleaned_data['flashvars']
             application.save()
 
             messages.add_message(request, messages.SUCCESS,
@@ -132,7 +133,7 @@ def edit(request, id):
 
             need_save = True
 
-        for attr in ('name', 'description'):
+        for attr in ('name', 'description', 'flashvars'):
             if getattr(app, attr) != form.cleaned_data[attr]:
                 setattr(app, attr, form.cleaned_data[attr])
                 need_save = True

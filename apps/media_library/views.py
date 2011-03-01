@@ -150,15 +150,20 @@ def file_edit(request, library, id=None, file_id=None):
 
     def image_file(name, description):
         file = form.fields['file']
+        file = file.save('library_image', settings.LIBRARY_IMAGE_SIZES, LIBRARY_IMAGE_RESIZE_TASK)
         file.name = name
         file.description = description
-        return file.save('library_image', settings.LIBRARY_IMAGE_SIZES, LIBRARY_IMAGE_RESIZE_TASK)
+        file.save()
+        return file
+
 
     def video_file(name, description):
         file = form.fields['file']
+        file = file.save('library_video', settings.LIBRARY_VIDEO_SIZES, LIBRARY_VIDEO_RESIZE_TASK)
         file.name = name
         file.description = description
-        return file.save('library_video', settings.LIBRARY_VIDEO_SIZES, LIBRARY_VIDEO_RESIZE_TASK)
+        file.save()
+        return file
 
     def audio_file(name, description):
         buffer = StringIO()
