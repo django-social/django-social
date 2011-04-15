@@ -1452,6 +1452,18 @@ div.operation p
     width: 490px;
     margin-right: 0;
 }
+.note.answer .message_text_reply
+{
+    width: auto;
+    margin-right: 0;
+}
+.note.answer .message_text_reply textarea {
+    width: auto;
+}
+.note.answer .but_1
+{
+    margin: 10px 10px 10px 0;
+}
 .friend_list_online
 {
     overflow: hidden;

@@ -5,15 +5,17 @@
 {% block js %}
 {{ block.super }}
 {% if user.is_authenticated %}
+<script type="text/javascript" src="/media/js/autoresize-mod.jquery.js"></script>
 <script type="text/javascript">
-$(document).ready(function(){
-    $('.del').click(function (event){
-        if(confirm("Удалить заметку?")){
-            this.trigger('click');
-        }
-        return false;
+    $(document).ready(function(){
+        $('textarea').autoResize({extraSpace : 0});
+        $('.del').click(function (event){
+            if(confirm("Удалить заметку?")){
+                this.trigger('click');
+            }
+            return false;
+        });
     });
-});
 </script>
 {% endif %}
 {% endblock %}
@@ -32,7 +34,7 @@ $(document).ready(function(){
            <p>{{ note.title }}</p>
        </div>
        <div class="note_text_view rounded">
-          <p>{{ note.text }}</p>
+           <p>{{ note.text }}</p>
        </div>
         {% ifequal request.user note.author %}
         <div>
@@ -41,5 +43,63 @@ $(document).ready(function(){
         </div>
         {% endifequal %}
     </div>
+
+    <div class="messages">
+        <h3>{% trans "Comments" %}</h3>
+        <div class="messages_inbox">
+
+            {% for msg in objects.object_list %}
+            <div class="message_item">
+
+            <table>
+            <tr>
+            <td>
+            <div class="friendTable">
+            {% with msg.sender as user %}
+                {% include "includes/user/micro.html" %}
+            {% endwith %}
+            </div>
+            </td>
+            <td>
+                <div class="message_text">
+                    <p>
+                        {% with msg.timestamp as datetime %}
+                            {% include 'includes/datetime.html' %}
+                        {% endwith %}
+                    </p>
+                    <p>{{ msg.text }}</p>
+                </div>
+            </td>
+            <td>
+                <div class="operation">
+                    {% if msg.can_manage %}
+                     <p><a class="reference" href="{% url notes:comment_delete comment_id=msg.id%}"
+                             onclick="javascript:return confirm('Вы действительно хотите удалить комментарий?')">
+                        {% trans "Delete" %}
+                     </a></p>
+                    {% endif %}
+                </div>
+            </td>
+            </tr>
+            </table>
+            </div>
+            {% endfor %}
+        </div>
+
+{% include "includes/paginator.html" %}
+
+    </div>
+
+    <form method="post">
+        <div class="note answer">
+            <div class="message_text_reply rounded">
+                <textarea name="text" cols="98" rows="5"></textarea>
+            </div>
+
+            <div class="but_1">
+                <input type="submit" value="{% trans 'Send' %}"/>
+            </div>
+        </div>
+    </form>
 </div>
 {% endblock %}

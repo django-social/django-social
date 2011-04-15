@@ -12,4 +12,7 @@ urlpatterns = patterns('apps.notes.views',
         name='note_delete'),
 
     url(r'^delete/$', 'multiple_delete', name='multiple_delete'),
+
+    url(r'^comment/(?P<comment_id>[a-f0-9]{24})/delete/$', 'comment_delete', name='comment_delete'),
+
 )

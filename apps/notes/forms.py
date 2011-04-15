@@ -7,3 +7,7 @@ class NoteForm(forms.Form):
     title = forms.CharField(label=_('Title'), max_length=128)
     text = forms.CharField(label=_('Text'), widget=forms.Textarea(attrs=dict(rows="10", cols="40")))
     is_public = forms.BooleanField(label=_('Is public'), required=False)
+
+
+class CommentTextForm(forms.Form):
+    text = forms.CharField(label=_('Text'), max_length=500, widget=forms.Textarea, required=True)

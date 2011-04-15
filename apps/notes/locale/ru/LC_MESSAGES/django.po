@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-21 17:08+0300\n"
+"POT-Creation-Date: 2011-04-15 18:39+0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,7 +23,7 @@ msgstr ""
 msgid "Title"
 msgstr "Заголовок"
 
-#: forms.py:8
+#: forms.py:8 forms.py:13
 msgid "Text"
 msgstr "Текст"
 
@@ -31,7 +31,15 @@ msgstr "Текст"
 msgid "Is public"
 msgstr "Публичная"
 
-#: views.py:84
+#: views.py:66
+msgid "Comment deleted"
+msgstr "Комментарий удалён"
+
+#: views.py:81
+msgid "Comment sent"
+msgstr "Комментарий отправлен"
+
+#: views.py:112
 #, python-format
 msgid "Notes deleted: %d"
 msgstr "Удалено заметок: %d"
