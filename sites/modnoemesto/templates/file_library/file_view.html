@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load media %}
+
+{% block content %}
+<div id="filter_box">
+    <h2>{{ file.name }}</h2>
+    <div>
+        Категория: <a href="{% url file_library:category_view id=file.category.id %}">
+        {{ file.category.title }}
+            </a>
+    </div>
+    <div>
+        {{ file.description }}
+    </div>
+    <div>
+        <a href="{% media_url file get %}">
+            Скачать
+        </a>
+    </div>
+</div>
+{% endblock %}

@@ -30,6 +30,7 @@ urlpatterns = patterns('',
     (r'^apps/', include('apps.applications.urls', namespace='applications')),
     (r'^links/', include('apps.links.urls', namespace='links')),
     (r'^ads/', include('apps.ads.urls', namespace='ads')),
+    (r'^files/', include('apps.file_library.urls', namespace='file_library')),
     
     url(r'^robots.txt$', 'django.views.generic.simple.direct_to_template', name='robots_txt', kwargs={'template': 'robots.txt'}),
     (r'^jsi18n/$', 'django.views.i18n.javascript_catalog', {'packages':

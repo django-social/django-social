@@ -177,6 +177,7 @@ INSTALLED_APPS = (
     'apps.applications',
     'apps.links',
     'apps.ads',
+    'apps.file_library',
 )
 
 

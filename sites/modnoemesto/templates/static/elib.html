@@ -27,5 +27,11 @@
             <a href="{% url media_library:audio_index %}"><b>Аудиозаписи</b></a>
         </div>
     </div>
+    <div class="folder">
+        <a href="{% url file_library:index %}"><img src="/media/images/photofolder.png" alt="audio" /></a>
+        <div class="folder_description padtop">
+            <a href="{% url file_library:index %}"><b>Файлы</b></a>
+        </div>
+    </div>
 </div>
 {% endblock %}

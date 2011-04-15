@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load media %}
+
+{% block content %}
+<div id="filter_box">
+<h2>Файлы{% if category %} категории {{ category.title }}{% endif %}</h2>
+{% if category %}
+    <a href="{% url file_library:index %}">
+        Все категории
+    </a>
+<br />
+{% endif %}
+{% if can_manage %}
+    <div class="actions">
+    <div class="but media">
+    <a href="{% url file_library:add_file %}">Добавить файл</a>
+    </div>
+    <div class="but media">
+    <a href="{% url file_library:add_category %}">Добавить категорию</a>
+    </div>
+    </div><br />
+{% endif %}
+
+<div id="content-main">
+
+{% for file in files %}
+    <div class="media_holder">
+        <a href="{% url file_library:file_view id=file.id %}">
+            {{ file.name }}
+        </a>
+    {% if not category %}
+        Категория: <a href="{% url file_library:category_view id=file.category.id %}">
+        {{ file.category.title }}
+            </a>
+    {% endif %}
+    {% if can_manage %}
+        <a class="delete" title="{% trans 'Delete' %}"
+           href="{% url file_library:file_delete id=file.id %}">
+            {% trans "Delete" %}
+        </a>
+        <a class="edit" title="{% trans 'Edit' %}"
+            href="{% url file_library:file_edit id=file.id %}">{% trans "Edit" %}
+        </a>
+    {% endif %}
+    
+</div>
+{% endfor %}
+</div>
+
+</div>    
+{% endblock %}
