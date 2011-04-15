@@ -6,8 +6,9 @@ from django.shortcuts import redirect
 from django.conf import settings
 from django.utils.encoding import iri_to_uri
 
-from documents import File
+from pytils.translit import translify
 
+from documents import File
 
 
 def file_view(request, transformation_name, file_id=None):
@@ -47,12 +48,15 @@ def _file_view(request, transformation_name, file_id=None, download=False):
             user_agent = request.META.get('HTTP_USER_AGENT', '').lower()
             file_name = (file.name or str(file.id)) + ('.%s' % file.extension
                                                     if file.extension else '')
-            file_name = iri_to_uri(file_name)
 
-            if user_agent.find('opera') == -1:
-                pass
-            if user_agent.find('msie') != -1:
-                file_name.replace('+', '%20')
+            file_name = translify(file_name)
+            if 0: #TODO
+                file_name = iri_to_uri(file_name)
+
+                if user_agent.find('opera') == -1:
+                    pass
+                if user_agent.find('msie') != -1:
+                    file_name.replace('+', '%20')
 
             response['Content-Disposition'] = 'attachment; filename="%s";' % file_name
 
