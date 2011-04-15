@@ -25,6 +25,8 @@ class File(Document):
     name = StringField()
     description = StringField()
 
+    extension = StringField()
+
     meta = {
         'indexes': [
                 'author',
