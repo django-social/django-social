@@ -33,7 +33,10 @@
         Категория: <a href="{% url file_library:category_view id=file.category.id %}">
         {{ file.category.title }}
             </a>
+
     {% endif %}
+    size:         {{ file.size|filesizeformat }}
+
     {% if can_manage %}
         <a class="delete" title="{% trans 'Delete' %}"
            href="{% url file_library:file_delete id=file.id %}">
