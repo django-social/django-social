@@ -14,7 +14,7 @@
 {% if can_manage %}
     <div class="actions">
     <div class="but media">
-    <a href="{% url file_library:add_file %}">Добавить файл</a>
+    <a href="{% url file_library:add_file %}" >Добавить файл</a>
     </div>
     <div class="but media">
     <a href="{% url file_library:add_category %}">Добавить категорию</a>
@@ -24,16 +24,27 @@
 
 <div id="content-main">
 
+<table class="media-files" border="1" width="100%" cellpadding="0" cellspacing="0">
+<tr>
+    <th>Название файла</th>
+    <th>Категория</th>
+    <th>Управление</th>
+</tr>
 {% for file in files %}
-    <div class="media_holder">
+<tr>
+    <td>
         <a href="{% url file_library:file_view id=file.id %}">
             {{ file.name }}
         </a>
+    </td>
+    <td>
     {% if not category %}
-        Категория: <a href="{% url file_library:category_view id=file.category.id %}">
-        {{ file.category.title }}
-            </a>
+        <a href="{% url file_library:category_view id=file.category.id %}">
+            {{ file.category.title }}
+        </a>
     {% endif %}
+    </td>
+    <td>
     {% if can_manage %}
         <a class="delete" title="{% trans 'Delete' %}"
            href="{% url file_library:file_delete id=file.id %}">
@@ -43,9 +54,10 @@
             href="{% url file_library:file_edit id=file.id %}">{% trans "Edit" %}
         </a>
     {% endif %}
-    
-</div>
+    </td>
+</tr>
 {% endfor %}
+</table>
 </div>
 
 </div>    

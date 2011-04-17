@@ -1892,7 +1892,8 @@ div.folder a, div.aplications a
 }
 .but.media a
 {
-	padding: 2px 28px 5px;
+	padding: 2px 0px 5px;
+    width: 181px;
 }
 .but.fold
 {
@@ -1901,6 +1902,8 @@ div.folder a, div.aplications a
 .but.media
 {
 	float: right;
+    text-align: center;
+    padding-left: 10px;
 }
 .actions
 {
@@ -1941,4 +1944,18 @@ form.multiple_del
 	display: inline-block;
 }
 
+.media-files {
+    border-collapse: collapse;
+}
+
+.media-files td {
+    border: 1px solid #CCC;
+    padding: 3px;
+}
+
+.media-files th {
+    border: 1px solid #CCC;
+    padding: 3px;
+    font-weight: bold;
+}
 
