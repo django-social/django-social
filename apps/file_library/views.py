@@ -12,13 +12,17 @@ from apps.utils.stringio import StringIO
 
 from mongoengine.django.shortcuts import get_document_or_404
 
-from .forms import FileForm, FileCategoryForm
+from .forms import FileForm, FileCategoryForm, FilterFileLibraryForm
 from .documents import LibraryFile, LibraryFileCategory
 
 def file_view(request, id):
     file = get_document_or_404(LibraryFile, id=id)
     return direct_to_template(request, 'file_library/file_view.html',
-        dict(file=file))
+        dict(
+                file=file,
+                can_manage=request.user.has_perm('superuser')
+            )
+    )
 
 @permission_required('superuser')
 def file_delete(request, id):
@@ -102,15 +106,31 @@ def _write_uploaded_file(file, uploaded_file):
 
 
 def index(request):
-    files = LibraryFile.objects()
     categories = LibraryFileCategory.objects.all()
     extensions = LibraryFile.objects.distinct('extension')
+
+    if request.method == 'POST':
+        form = FilterFileLibraryForm(request.POST)
+        if form.is_valid():
+            filter_params = {}
+
+            if form.cleaned_data['category']:
+                filter_params['category'] = form.cleaned_data['category']
+
+            if form.cleaned_data['extension']:
+                filter_params['extension'] = form.cleaned_data['extension']
+
+            files = LibraryFile.objects.filter(**filter_params)
+    else:
+        form = FilterFileLibraryForm()
+        files = LibraryFile.objects.all()
 
     return direct_to_template(request, 'file_library/index.html',
                               dict(can_manage=request.user.has_perm('superuser'),
                                    files=files,
                                    categories=categories,
                                    extensions=extensions,
+                                   form=form,
                                    ))
 
 def category_view(request, id):

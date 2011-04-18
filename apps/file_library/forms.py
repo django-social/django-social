@@ -2,7 +2,7 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
-from .documents import LibraryFileCategory
+from .documents import LibraryFileCategory, LibraryFile
 
 
 class FileForm(forms.Form):
@@ -20,3 +20,16 @@ class FileForm(forms.Form):
 
 class FileCategoryForm(forms.Form):
     title = forms.CharField(label=_("Title"), required=True)
+
+class FilterFileLibraryForm(forms.Form):
+    category = forms.ChoiceField(
+        label=_('Category'),
+        required=False,
+        choices=[('', _('All categories'))] + [(category.id, category.title) for category in LibraryFileCategory.objects.all()]
+    )
+
+    extension = forms.ChoiceField(
+        label=_('Extension'),
+        required=False,
+        choices=[('', _('All extensions'))] + [(extension, extension) for extension in LibraryFile.objects.distinct('extension')]
+    )

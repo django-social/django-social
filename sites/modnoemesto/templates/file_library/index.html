@@ -2,25 +2,94 @@
 {% load i18n %}
 {% load media %}
 
+{% block js %}
+{{ block.super }}
+<script type="text/javascript">
+$(document).ready(function(){
+    $('#id_category, #id_extension').selectbox();
+    $('#id_category_input, #id_extension_input').addClass('rounded');
+});
+</script>
+{% endblock %}
+
+
+
+
+
+
 {% block content %}
 <div id="filter_box">
 <h2>Файлы{% if category %} категории {{ category.title }}{% endif %}</h2>
+{% if can_manage %}
+    <div class="actions">
+        <div class="but fold">
+            <a href="{% url file_library:add_file %}" >Добавить файл</a>
+        </div>
+        <div class="but media">
+            <a href="{% url file_library:add_category %}">Добавить категорию</a>
+        </div>
+    </div>
+    <br />
+{% endif %}
+
 {% if category %}
     <a href="{% url file_library:index %}">
         Все категории
     </a>
 <br />
+<br />
 {% endif %}
-{% if can_manage %}
-    <div class="actions">
-    <div class="but media">
-    <a href="{% url file_library:add_file %}" >Добавить файл</a>
+
+
+
+<form action="." method="post">
+<div class="filt rounded" style="border-top-left-radius: 10px 10px; border-top-right-radius: 10px 10px; border-bottom-left-radius: 10px 10px; border-bottom-right-radius: 10px 10px; ">
+<table>
+    <tbody>
+    <tr>
+        <th>{{ form.category.label_tag }}:</th>
+        <td class="empty_filt"></td>
+        <td>
+            {{ form.category }}
+        </td>
+    <tr>
+    </tr>
+        <th>{{ form.extension.label_tag }}:</th>
+        <td class="empty_filt"></td>
+        <td>
+            {{ form.extension }}
+        </td>
+    </tr>
+</table>
+</div>
+    <div class="but">
+        <input type="submit" value="Фильтровать" class="button"/>
     </div>
-    <div class="but media">
-    <a href="{% url file_library:add_category %}">Добавить категорию</a>
-    </div>
-    </div><br />
-{% endif %}
+    <br />
+</form>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <div id="content-main">
 
@@ -28,7 +97,11 @@
 <tr>
     <th>Название файла</th>
     <th>Категория</th>
+    <th>Размер</th>
+    <th>Расширение</th>
+    {% if can_manage %}
     <th>Управление</th>
+    {% endif %}
 </tr>
 {% for file in files %}
 <tr>
@@ -38,14 +111,18 @@
         </a>
     </td>
     <td>
-    {% if not category %}
-        <a href="{% url file_library:category_view id=file.category.id %}">
-            {{ file.category.title }}
-        </a>
-    {% endif %}
+        {{ file.category.title }}
     </td>
     <td>
+        {{ file.size|filesizeformat }}
+    </td>
+    <td>
+        {{ file.extension|default:"" }}
+    </td>
+
     {% if can_manage %}
+    <td>
+
         <a class="delete" title="{% trans 'Delete' %}"
            href="{% url file_library:file_delete id=file.id %}">
             {% trans "Delete" %}
@@ -53,8 +130,8 @@
         <a class="edit" title="{% trans 'Edit' %}"
             href="{% url file_library:file_edit id=file.id %}">{% trans "Edit" %}
         </a>
-    {% endif %}
     </td>
+    {% endif %}
 </tr>
 {% endfor %}
 </table>

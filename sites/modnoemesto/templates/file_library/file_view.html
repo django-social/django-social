@@ -4,19 +4,40 @@
 
 {% block content %}
 <div id="filter_box">
-    <h2>{{ file.name }}</h2>
-    <div>
-        Категория: <a href="{% url file_library:category_view id=file.category.id %}">
-        {{ file.category.title }}
-            </a>
-    </div>
-    <div>
-        {{ file.description }}
-    </div>
-    <div>
-        <a href="{% media_download_url file file %}">
-            Скачать
-        </a>
-    </div>
+    <h2>Файл {{ file.name }}</h2>
+
+    <table class="media-files">
+        <tr>
+            <th>Название файла: </th>
+            <td>{{ file.name }}</td>
+        </tr>
+        <tr>
+            <th>Описание файла: </th>
+            <td>{{ file.description }}</td>
+        </tr>
+        <tr>
+            <th>Категория: </th>
+            <td>
+                <a href="{% url file_library:category_view id=file.category.id %}">
+                    {{ file.category.title }}
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <th>Размер: </th>
+            <td>{{ file.size|filesizeformat }}</td>
+        </tr>
+        <tr>
+            <th>Управление: </th>
+            <td>
+                <a href="{% media_download_url file file %}">
+                    Скачать
+                </a>
+            </td>
+        </tr>
+    </table>
+    <br />
+    <a href="{% url file_library:index %}">Назад к файлам</a>
+
 </div>
 {% endblock %}
