@@ -11,9 +11,10 @@ import os
 register = template.Library()
 
 class MediaURLNode(Node):
-    def __init__(self, file_obj, transformation_name):
+    def __init__(self, file_obj, transformation_name, download=False):
         self.file_obj = file_obj
         self.transformation_name = transformation_name
+        self.download = download
 
     def render(self, context):
         path = self.file_obj.split('.')
@@ -32,7 +33,8 @@ class MediaURLNode(Node):
                 raise TemplateSyntaxError(
                         "First argument is not File object or None")
 
-            return reverse('media:file_view',
+            view = 'media:file_download' if self.download else 'media:file_view'
+            return reverse(view,
                            kwargs=dict(file_id=file.id,
                                transformation_name=transformation_name))
 
@@ -47,8 +49,7 @@ class MediaURLNode(Node):
             return url
 
 
-@register.tag
-def media_url(parser, token):
+def _media_url(parser, token, download=False):
     bits = token.split_contents()
     if len(bits) < 3:
         raise TemplateSyntaxError("'%s' takes at least two arguments"
@@ -57,4 +58,13 @@ def media_url(parser, token):
     file_obj = bits[1]
     transformation_name = bits[2]
 
-    return MediaURLNode(file_obj, transformation_name)
+    return MediaURLNode(file_obj, transformation_name, download)
+
+
+@register.tag
+def media_url(parser, token):
+    return _media_url(parser, token, download=False)
+
+@register.tag
+def media_download_url(parser, token):
+    return _media_url(parser, token, download=True)

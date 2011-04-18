@@ -11,19 +11,22 @@ from mongoengine import DateTimeField
 from mongoengine import FileField
 from mongoengine import DictField
 from mongoengine import StringField
-from mongoengine import ListField
+from mongoengine import IntField
 
 class File(Document):
     author = ReferenceField('User')
     type = StringField(regex='^\w+$', required=True)
     ctime = DateTimeField()
     file = FileField()
+    size = IntField()
 
     source = ReferenceField('File')
     transformation = StringField()
 
     name = StringField()
     description = StringField()
+
+    extension = StringField()
 
     meta = {
         'indexes': [
@@ -48,11 +51,15 @@ class File(Document):
         self.ctime = self.ctime or datetime.now()
 
     def save(self, *args, **kwargs):
-        if self.file.read() is None:
+        content = self.file.read()
+
+        if content is None:
             raise File.SourceFileEmpty()
 
         if self.file.content_type is None:
             raise File.ContentTypeUnspecified()
+
+        self.size = len(content)
 
         super(File, self).save(*args, **kwargs)
 

@@ -37,6 +37,22 @@ def file_edit(request, id):
         form = FileForm(request.POST,
                       request.FILES, initial=initial)
         form.fields['file'].required = False
+        if form.is_valid():
+
+            file.category = LibraryFileCategory.objects.get(id=
+                form.cleaned_data['category'])
+            file.name = form.cleaned_data['name']
+            file.description = form.cleaned_data['description']
+
+            uploaded_file = request.FILES.get('file')
+
+            if uploaded_file:
+                file.file.delete()
+                _write_uploaded_file(file, uploaded_file)
+
+            file.save()
+            messages.add_message(request, messages.SUCCESS,
+                                 _('File successfully updated'))
 
     else:
         form = FileForm(initial=initial)
@@ -45,30 +61,6 @@ def file_edit(request, id):
     return direct_to_template(request, 'file_library/file_edit.html',
         dict(form=form))
 
-
-
-def index(request):
-    files = LibraryFile.objects()
-    categories = LibraryFileCategory.objects.all()
-
-    return direct_to_template(request, 'file_library/index.html',
-                              dict(can_manage=request.user.has_perm('superuser'),
-                                   files=files,
-                                   categories=categories,
-                                   ))
-
-def category_view(request, id):
-    category = get_document_or_404(LibraryFileCategory, id=id)
-    files = LibraryFile.objects().filter(category=category)
-    categories = LibraryFileCategory.objects.all()
-
-
-    return direct_to_template(request, 'file_library/index.html',
-                              dict(can_manage=request.user.has_perm('superuser'),
-                                   files=files,
-                                   categories=categories,
-                                   category=category,
-                                   ))
 
 @permission_required('superuser')
 def add_file(request):
@@ -79,28 +71,62 @@ def add_file(request):
         form = FileForm()
 
     if form.is_valid():
-        file = request.FILES['file']
+        file = LibraryFile(type='file_library')
 
-        buffer = StringIO()
-        for chunk in file.chunks():
-            buffer.write(chunk)
+        _write_uploaded_file(file, request.FILES['file'])
 
-        buffer.seek(0)
-        file_object = LibraryFile(type='file_library')
-        file_object.file.put(buffer, content_type=file.content_type)
-        file_object.transformation ='get'
+        file.transformation ='file'
 
-        file_object.category = LibraryFileCategory.objects.get(id=
-                form.cleaned_data['category'])
-        file_object.name = form.cleaned_data['name']
-        file_object.description = form.cleaned_data['description']
-        file_object.save()
-
+        file.category = LibraryFileCategory.objects.get(id=
+             form.cleaned_data['category'])
+        file.name = form.cleaned_data['name']
+        file.description = form.cleaned_data['description']
+        file.save()
+        messages.add_message(request, messages.SUCCESS,
+                             _('File successfully added'))
 
         return redirect('file_library:add_file')
 
     return direct_to_template(request, 'file_library/file_edit.html',
         dict(form=form))
+
+def _write_uploaded_file(file, uploaded_file):
+    buffer = StringIO()
+    for chunk in uploaded_file.chunks():
+        buffer.write(chunk)
+
+    buffer.seek(0)
+    file.file.put(buffer, content_type=uploaded_file.content_type)
+    if uploaded_file.name and uploaded_file.name.find('.') != -1:
+        file.extension = uploaded_file.name.split('.')[-1]
+
+
+def index(request):
+    files = LibraryFile.objects()
+    categories = LibraryFileCategory.objects.all()
+    extensions = LibraryFile.objects.distinct('extension')
+
+    return direct_to_template(request, 'file_library/index.html',
+                              dict(can_manage=request.user.has_perm('superuser'),
+                                   files=files,
+                                   categories=categories,
+                                   extensions=extensions,
+                                   ))
+
+def category_view(request, id):
+    category = get_document_or_404(LibraryFileCategory, id=id)
+    files = LibraryFile.objects().filter(category=category)
+    categories = LibraryFileCategory.objects.all()
+    extensions = LibraryFile.objects.distinct('extension')
+
+    return direct_to_template(request, 'file_library/index.html',
+                              dict(can_manage=request.user.has_perm('superuser'),
+                                   files=files,
+                                   categories=categories,
+                                   category=category,
+                                   extensions=extensions,
+                                   ))
+
 
 @permission_required('superuser')
 def add_category(request):
