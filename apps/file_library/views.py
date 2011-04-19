@@ -63,7 +63,7 @@ def file_edit(request, id):
 
 
     return direct_to_template(request, 'file_library/file_edit.html',
-        dict(form=form))
+        dict(form=form, edit=True))
 
 
 @permission_required('superuser')
@@ -92,7 +92,7 @@ def add_file(request):
         return redirect('file_library:add_file')
 
     return direct_to_template(request, 'file_library/file_edit.html',
-        dict(form=form))
+        dict(form=form, edit=False))
 
 def _write_uploaded_file(file, uploaded_file):
     buffer = StringIO()
@@ -138,6 +138,7 @@ def category_view(request, id):
     files = LibraryFile.objects().filter(category=category)
     categories = LibraryFileCategory.objects.all()
     extensions = LibraryFile.objects.distinct('extension')
+    form = FilterFileLibraryForm(initial=dict(category=id))
 
     return direct_to_template(request, 'file_library/index.html',
                               dict(can_manage=request.user.has_perm('superuser'),
@@ -145,6 +146,7 @@ def category_view(request, id):
                                    categories=categories,
                                    category=category,
                                    extensions=extensions,
+                                   form=form,
                                    ))
 
 

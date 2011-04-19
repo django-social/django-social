@@ -4,8 +4,7 @@
 
 {% block content %}
 <div id="filter_box">
-    <h2>{{ title }}</h2>
-
+    <h2>{% if edit %}Редактирование файла{% else %}Добавление файла{% endif %}</h2>
 
 <form method="post" enctype="multipart/form-data">
 <div class="filt rounded">
@@ -62,8 +61,13 @@
 </table>
 </div>
 <div class="but">
-<input type="submit" value="{% if file %}{% trans 'Save' %}{% else %}{% trans 'Add' %}{% endif %}"/>
+<input type="submit" value="{% if edit %}{% trans 'Save' %}{% else %}{% trans 'Add' %}{% endif %}"/>
 </div>
 </form>
+</div>
+<div>
+    <a href="{% url file_library:index %}">
+        Вернуться к списку файлов
+    </a>
 </div>
 {% endblock %}
